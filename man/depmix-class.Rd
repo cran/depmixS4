@@ -1,0 +1,69 @@
+\name{depmix-class}
+
+\docType{class}
+
+\alias{depmix-class}
+
+\alias{nresp}
+\alias{nresp,depmix-method}
+
+\alias{ntimes}
+\alias{ntimes,depmix-method}
+
+\title{Class "depmix"}
+
+\description{A \code{\link{depmix}} model.}
+
+\section{Slots}{
+
+	\describe{
+
+	\item{\code{response}:}{List of list of \code{response} objects.}
+
+	\item{\code{transition}}{List of \code{\link{transInit}} objects.}
+	
+	\item{\code{prior}:}{\code{\link{transInit}} object.}
+	
+	\item{\code{dens}:}{Array of dimension sum(ntimes)*nresp*nstates
+		providing the densities of the observed responses for each state.}
+	
+	\item{\code{trDens}:}{Array of dimension \code{sum(ntimes)}*nstates
+		providing the probability of a state transition depending on the
+		predictors.}
+	
+	\item{\code{init}:}{Array of dimension \code{length(ntimes)}*nstates with 
+		the current predictions for the initial state probabilities.}
+	
+	\item{\code{stationary}:}{Logical indicating whether the transitions are
+		time-dependent or not; for internal use.}
+	
+	\item{\code{ntimes}:}{A vector containing the lengths of independent time
+		series; if data is provided, sum(ntimes) must be equal to
+		nrow(data).}
+
+	\item{\code{nstates}:}{The number of states of the model.}
+
+	\item{\code{nresp}:}{The number of independent responses.}
+
+	\item{\code{npars}:}{The total number of parameters of the model. This is not
+		the degrees of freedom, ie there are redundancies in the
+		parameters, in particular in the multinomial models for the
+		transitions and prior.}
+
+	}
+}
+
+\section{Accessor Functions}{
+	The following functions should be used for accessing the corresponding
+	slots:
+	\describe{
+		\item{\code{npar}:}{The number of parameters of the model.}
+		\item{\code{nresp}:}{The number of responses.}
+		\item{\code{nstates}:}{The number of states.}
+		\item{\code{ntimes}:}{The vector of independent time series lengths.}
+	}
+}
+
+\author{Ingmar Visser}
+
+\keyword{classes}
