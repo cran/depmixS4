@@ -54,6 +54,6 @@
   These are not to be called by the user.
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}

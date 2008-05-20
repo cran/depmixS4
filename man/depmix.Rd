@@ -57,14 +57,14 @@
 		ntimes=NULL,...)
 	
 	\S4method{summary}{depmix}(object)
-	\S4method{logLik}{depmix}(object)
-	\S4method{AIC}{depmix}(object)
-	\S4method{BIC}{depmix}(object)
-	\S4method{nobs}{depmix}(object)
+	\S4method{logLik}{depmix}(object, method="lystig")
+	\S4method{AIC}{depmix}(object, ..., k=2)
+	\S4method{BIC}{depmix}(object, ...)
+	\S4method{nobs}{depmix}(object, ...)
 	
 	\S4method{npar}{depmix}(object)
 	\S4method{freepars}{depmix}(object)
-	\S4method{setpars}{depmix}(object,which="pars",...)
+	\S4method{setpars}{depmix}(object,values,which="pars",...)
 	\S4method{getpars}{depmix}(object,which="pars",...)	
 	
 }
@@ -107,6 +107,13 @@
 		assumed to form a single time series. If the data argument has an
 		attribute ntimes, then this is used.}
 	
+	\item{method}{Can be used to compute the likelihood by calling the
+		forward backward routine instead of the recursion defined by Lystig
+		& Hughes (2002).  The latter is faster as it does not compute
+		backward variables which are not neccessary for computing the
+		likelihood.  This option is likely to be removed in future versions
+		as it serves no purpose.}
+	
 	\item{which}{The default "pars" returns a vector of all parameters of a
 		\code{depmix} object; the alternative value "fixed" return a
 		logical vector of the same length indicating which parameters are
@@ -116,7 +123,13 @@
 		\code{getpars} and \code{setpars} functions for \code{depmix} 
 		objects simply call the functions of the same name for the response
 		and transition models.}
-		
+	
+	\item{values}{In \code{setpars} used to set the parameters to these
+		values.}
+	
+	\item{k}{The penalty factor in the AIC which defaults to 2.
+		log(nobs) can be used to get the BIC.}
+
 	\item{...}{Not used currently.}
 	
 }
@@ -189,7 +202,7 @@ number of observations, ie \code{sum(ntimes)} that is used in computing the
 
 }
 
-\author{Ingmar Visser \email{i.visser@uva.nl}} 
+\author{Ingmar Visser \email{i.visser@uva.nl} & Maarten Speekenbrink} 
 
 \seealso{
 
@@ -226,7 +239,6 @@ mod
 # state probabilities model
 mod <- setpars(mod, getpars(mod,which="fixed"))
 mod
-
 
 }
 
