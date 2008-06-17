@@ -1,7 +1,6 @@
 import(methods)
 
 importFrom(stats, predict)
-importFrom(stats4, AIC, BIC, logLik, plot, summary)
 
 export(	
 	makeDepmix,

@@ -80,6 +80,6 @@ formulae and family objects.
 
 }
 
-\author{Ingmar Visser} 
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \keyword{methods}

@@ -69,6 +69,6 @@
 	\code{depmix.fitted} extends the \code{depmix} class.
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{classes}

@@ -53,6 +53,6 @@ models.}
 	}
 }
 
-\author{Ingmar Visser}
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \keyword{classes}
