@@ -23,7 +23,14 @@
 
 \usage{data(speed)}
 
-\format{Data.frame}
+\format{
+  A data frame with 439 observations on the following 3 variables.
+  \describe{
+	\item{\code{rt}}{a numeric vector}
+	\item{\code{corr}}{a numeric vector}
+	\item{\code{Pacc}}{a numeric vector}
+  }
+}
 
 \source{
 
@@ -31,6 +38,11 @@
 	Phase Transitions in the Trade-Off between Speed and Accuracy in Choice
 	Reaction Time Tasks.  \emph{Manuscript in preparation}. 
 
+}
+
+\examples{
+data(speed)
+## maybe str(speed) ; plot(speed) ...
 }
 
 \keyword{datasets}

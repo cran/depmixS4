@@ -6,8 +6,9 @@
 
 \alias{GLMresponse-class}
 \alias{transInit-class}
+\alias{MVNresponse-class}
 
-\title{Class "GLmresponse" and class "transInit"}
+\title{Class "GLMresponse" and class "transInit"}
 
 \description{Specific instances of response models for \code{\link{depmix}}
 models.}
@@ -53,6 +54,6 @@ models.}
 	}
 }
 
-\author{Maarten Speekenbrink & Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
-\keyword{classes}
+\keyword{ methods }

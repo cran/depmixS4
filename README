@@ -1,5 +1,5 @@
 
-depmixS4 provides a framework for specifying and fitting hidden Markov models. Currently, it has an interface to the gaussian() family of glm for specifying gaussian responses with covariates. There is also a multinomial() family function that provides functionality for multinomial logistic responses with covariates. The transition matrix and the initial state probabilities are also modeled as multinomial logistics with the possibility of including covariates. Optimization is by default done by the EM algorithm. When linear constraints are included, Rdonlp2 is used for optimization (see details below). New response distributions can be added by extending the response-class and writing appropriate methods for it (dens, and getpars and setpars). 
+depmixS4 provides a framework for specifying and fitting hidden Markov models. Currently, it interfaces the glm functions to specify the state dependent measurement models. There is also a multinomial() family function that provides functionality for multinomial logistic responses with covariates. The transition matrix and the initial state probabilities are also modeled as multinomial logistics with the possibility of including covariates. Optimization is by default done by the EM algorithm. When linear constraints are included, Rdonlp2 is used for optimization (see details below). New response distributions can be added by extending the response-class and writing appropriate methods for it (dens, and getpars and setpars). depmixS4 also fits latent class and mixture models. 
 
 The latest development version of depmix can be found at: 
 https://r-forge.r-project.org/projects/depmix/
@@ -7,11 +7,11 @@ https://r-forge.r-project.org/projects/depmix/
 
 DIFFERENCES BETWEEN DEPMIXS4 AND DEPMIX
 
-depmixS4 is a completely new implementation of the depmix package using S4 classes. Model specification now uses formulae and family objects, familiar from the lm and glm functions. Moreover, the transition matrix and the initial state probabilities (as well as multinomial responses) are now modeled by default as multinomial logistics with a baseline. 
+depmixS4 is a completely new implementation of the depmix package using S4 classes. Model specification now uses formulae and family objects, familiar from the lm and glm functions. Moreover, the transition matrix and the initial state probabilities (as well as multinomial responses) are now modeled by default as multinomial logistics with a baseline. Specification of linear constraints uses the same mechanism as was used in depmix, with the only difference that constraints are passed as arguments to the fit function rather than the model specification function. See the help files for further details.
 
 
 USING RDONLP2
 
-Optimization of models with general linear constraints can only be done using the Rdonlp2 package, written Ryuichi Tamura(ry.tamura @ gmail.com), which is available from: http://arumat.net/Rdonlp2/
+Optimization of models with (general) linear (in-)equality constraints can be done using the Rdonlp2 package, written Ryuichi Tamura(ry.tamura @ gmail.com), which is available from: http://arumat.net/Rdonlp2/
 
-Optimization with Rdonlp2 is automatically selected when constraints are specified in the depmix.fit function. 
+Optimization with Rdonlp2 is automatically selected when constraints are specified in the fit function. 

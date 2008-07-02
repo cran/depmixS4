@@ -1,0 +1,1 @@
+# depends on logLik and freeparssetMethod("AIC", signature(object="depmix"),	function(object, ..., k=2){		c(-2 * logLik(object) + freepars(object) * k)	})# depends on logLik and freeparssetMethod("AIC", signature(object="mix"),	function(object, ..., k=2){		c(-2 * logLik(object) + freepars(object) * k)	})

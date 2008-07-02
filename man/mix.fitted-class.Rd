@@ -1,40 +1,30 @@
-\name{depmix.fitted-class}
+\name{mix.fitted-class}
 
 \docType{class}
 
-\alias{depmix.fitted}
-\alias{depmix.fitted-class}
+\alias{mix.fitted-class}
 
-\title{Class "depmix.fitted"}
+\title{Class "mix.fitted"}
 
-\description{A fitted \code{\link{depmix}} model.}
+\description{A fitted \code{\link{mix}} model.}
 
 \section{Slots}{
 	
-	A \code{depmix.fitted} object is a \code{depmix} object with three 
+	A \code{mix.fitted} object is a \code{mix} object with three 
 	additional slots, here is the complete list:
 	
 	\describe{
 
 		\item{\code{response}:}{List of list of \code{response} objects.}
 
-		\item{\code{transition}}{List of \code{transInit} objects.}
-		
 		\item{\code{prior}:}{\code{transInit} object.}
 		
 		\item{\code{dens}:}{Array of dimension sum(ntimes)*nresp*nstates
 			providing the densities of the observed responses for each state.}
-		
-		\item{\code{trDens}:}{Array of dimension \code{sum(ntimes)}*nstates
-			providing the probability of a state transition depending on the
-			predictors.}
-		
+				
 		\item{\code{init}:}{Array of dimension \code{length(ntimes)}*nstates with 
 			the current predictions for the initial state probabilities.}
-		
-		\item{\code{stationary}:}{Logical indicating whether the transitions are
-			time-dependent or not; for internal use.}
-		
+				
 		\item{\code{ntimes}:}{A vector containing the lengths of independent time
 			series; if data is provided, sum(ntimes) must be equal to
 			nrow(data).}
@@ -56,8 +46,8 @@
 		
 		\item{\code{lin.lower}}{The lower bounds on the linear constraints.}
 
-		\item{\code{lin.upper}}{The upper bounds on the linear constraints.}		
-		
+		\item{\code{lin.upper}}{The upper bounds on the linear constraints.}
+			
 		\item{\code{posterior}:}{Posterior (Viterbi) state sequence (not
 			implemented currently).}
 	}
@@ -71,9 +61,13 @@
 }
 
 \section{Extends}{
-	\code{depmix.fitted} extends the \code{depmix} class.
+	Class \code{"\linkS4class{mix}"}, directly.
 }
 
 \author{Ingmar Visser}
+
+\examples{
+	showClass("mix.fitted")
+}
 
 \keyword{classes}
