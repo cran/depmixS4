@@ -53,6 +53,6 @@ A generic \code{\link{response}} model for \code{\link{depmix}} models.
 	}
 }
 
-\author{Maarten Speekenbrink & Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{classes}

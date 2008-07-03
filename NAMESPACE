@@ -1,24 +1,30 @@
 import(methods)
 
-importFrom(stats, predict)
+importFrom(stats, predict, simulate)
 
 export(	
 	makeDepmix,
+	makeMix,
 	lystig,
 	fb,
+	forwardbackward,
+	MVNresponse,
 	llratio,
 	multinomial,
 	em,
 	viterbi,
-	viterbi.fb,
 	mlogit
 )
 
 exportClasses(
 	depmix,
+	depmix.sim,
+	mix,
 	depmix.fitted,
+	mix.fitted,
 	response,
 	GLMresponse,
+	MVNresponse,
 	transInit
 )
 
@@ -28,11 +34,14 @@ exportMethods(
 	fit,
 	npar,
 	freepars,
+	nlin,
 	getdf,
 	nobs,
 	nresp,
 	ntimes,
+	nstates,
 	depmix,
+	mix,
 	posterior,
 	GLMresponse,
 	transInit,
@@ -42,5 +51,6 @@ exportMethods(
 	predict,
 	dens,
 	show,
+	simulate,
 	summary
 )

@@ -1,0 +1,38 @@
+
+
+Changes in depmixS4 version 0.2-0
+
+  o restructured R and Rd (help) files; added depmixS4 help with a short
+    overview of the package and links to appropriate help files
+  
+  o added function 'simulate' to generate new data from a (fitted) model
+  
+  o added function 'forwardbackward' to access the forward and backward 
+    variables as well as the smoothed transition and state variables
+  
+  o added new glm distributions: gamma, poisson
+  
+  o added multivariate normal distribution
+  
+  o freepars now works correctly on both depmix and depmix.fitted objects
+  
+  o added function 'nlin' to compute the number of linear constraints in 
+    a fitted model object
+
+  o added mix class for mixture and latent class models; the depmix class 
+    extends this mix class and adds a transition model to it
+  
+  o added help file for makeDepmix to provide full control in specifying 
+    models
+  
+  o minor changes to make depmixS4 compatible with R 2.7.1
+  
+  o 
+
+
+Changes in depmixS4 version 0.1-1
+
+  o adjusted for R 2.7.0
+
+
+First version released on CRAN: 0.1-0

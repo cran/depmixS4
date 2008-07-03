@@ -6,21 +6,31 @@
 \alias{logDens}
 \alias{lystig}
 
-\alias{makeDepmix}
+\alias{makeMix}
 \alias{makePriorModel}
 \alias{makeResponseModels}
 \alias{makeTransModels}
 
 \alias{mlogit}
 \alias{multinomial}
-\alias{nstates}
+
 \alias{pa2conr}
 \alias{viterbi}
+\alias{viterbi2}
 \alias{viterbi.fb}
+
+\alias{nlin}
+\alias{nlin,depmix.fitted-method}
+\alias{nlin,mix.fitted-method}
 
 \alias{dens,GLMresponse-method}
 \alias{dens,BINOMresponse-method}
 \alias{dens,NORMresponse-method}
+
+\alias{dens,GAMMAresponse-method}
+\alias{dens,POISSONresponse-method}
+\alias{dens,MVNresponse-method}
+
 \alias{dens,MULTINOMresponse-method}
 \alias{dens,transInit-method}
 
@@ -42,6 +52,10 @@
 \alias{getpars,GLMresponse-method}
 \alias{setpars,GLMresponse-method}
 
+\alias{getpars,MVNresponse-method}
+\alias{setpars,MVNresponse-method}
+
+
 \alias{npar,response-method}
 
 \title{Depmix internal functions}
@@ -54,6 +68,6 @@
   These are not to be called by the user.
 }
 
-\author{Ingmar Visser & Maarten Speekenbrink}
+\author{Ingmar Visser}
 
-\keyword{methods}
+\keyword{internal}
