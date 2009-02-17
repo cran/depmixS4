@@ -1,19 +1,3 @@
-
-# 
-# Started by Ingmar Visser & Maarten Speekenbrink, 31-1-2007
-# 
-# Usage: go to trunk directory and source this file in R, if the program
-# still works it should return TRUE at every test (or make immediate sense
-# otherwise)
-
-# Changes: 
-# 
-# 16-5-2007, made this a new copy with basic tests of computing the
-# likelihood, copying parameters etc
-# 
-# Other tests with optimization of models are moved to depmix-test2.R
-# 
-
 # 
 # TEST 1: speed data model with optimal parameters, compute the likelihood
 # 
@@ -128,24 +112,3 @@ ll <- logLik(mod)
 cat("Test 4: ll is now larger than speedll, ie ll is better due to introduction of a covariate \n")
 cat("Test 4: ", ll,"\t", logl, "\n")
 cat("Test 4: ", ll > logl, "\n")
-
-
-# 
-# test getpars and setpars
-# 
-
-trstart=c(0.896,0.104,0.084,0.916)
-trstart=c(trstart[1:2],0,0.01,trstart[3:4],0,0.01)
-instart=c(0,1)
-resp <- c(5.52,0.202,0.472,0.528,6.39,0.24,0.098,0.902)
-
-mod <- depmix(list(rt~1,corr~1),data=speed,family=list(gaussian(),multinomial()),transition=~Pacc,trstart=trstart,instart=instart,respst=resp,nst=2)
-
-mod1 <- setpars(mod,getpars(mod))
-
-cat("Test 5: ", all.equal(getpars(mod),getpars(mod1)), "(getpars and setpars) \n")
-
-
-
-
-

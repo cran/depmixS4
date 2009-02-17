@@ -5,6 +5,7 @@
 \alias{simulate}
 
 \alias{simulate,response-method}
+\alias{simulate,mix-method}
 \alias{simulate,depmix-method}
 \alias{simulate,GLMresponse-method}
 \alias{simulate,transInit-method}
@@ -16,29 +17,31 @@
 \alias{simulate,NORMresponse-method}
 \alias{simulate,POISSONresponse-method}
 
-\title{Methods to simulate from depmix models}
+\title{Methods to simulate from (dep-)mix models}
 
 \description{
 
-	Random draws from \code{depmix} objects.
+	Random draws from \code{(dep-)mix} objects.
 
 }
 
 \usage{
 
   \S4method{simulate}{depmix}(object, nsim=1, seed=NULL, ...)
-    
-	\S4method{simulate}{response}(object, nsim=1, seed=NULL, times, ...)
-	
-	\S4method{simulate}{GLMresponse}(object, nsim=1, seed=NULL, times, ...)
-	
-	\S4method{simulate}{transInit}(object, nsim=1, seed=NULL, times, is.prior=FALSE, ...)
+  
+  \S4method{simulate}{mix}(object, nsim=1, seed=NULL, ...)
+
+  \S4method{simulate}{response}(object, nsim=1, seed=NULL, times, ...)
+  
+  \S4method{simulate}{GLMresponse}(object, nsim=1, seed=NULL, times, ...)
+  
+  \S4method{simulate}{transInit}(object, nsim=1, seed=NULL, times, is.prior=FALSE, ...)
 }
 
 \arguments{
 	
 	\item{object}{Object to generate random draws.  An object of class
-	\code{depmix}, \code{response}, \code{transInit}}
+	\code{mix}, \code{depmix}, \code{response} or \code{transInit}}
 
 	\item{nsim}{The number of draws (one draw simulates a data set of the
 	size that is defined by ntimes); defaults to 1.}
@@ -49,7 +52,7 @@
 	complete series to generate the data.  For internal use.}
 	
 	\item{is.prior}{For \code{transInit} objects, indicates whether it is a prior 
-  (init) model, or not (i.e., it is a transition model)}
+	(init) model, or not (i.e., it is a transition model)}
 	
 	\item{...}{Not used currently.}
 }
@@ -61,6 +64,10 @@
 	\code{depmix} model (i.e., \code{sum(ntimes(object))}.  The state
 	sequences are then used to generate \code{nsim} observation sequences
 	of thee same length.
+
+	For a \code{mix} model, simulate generates \code{nsim} random class 
+	assignments for each case. Those assigments are then used to generate
+	observation/response values from the appropriate distributions. 
 
 	Setting the \code{times} option selects the time points in the total
 	state/observation sequence (i.e., counting is continued over ntimes).
@@ -91,7 +98,6 @@ mod <- depmix(y~1,data=df,respst=respst,trst=trst,inst=c(0.5,0.5),nti=1000,nst=2
 mod <- simulate(mod)
 
 }
-
 \author{Maarten Speekenbrink}
 
 \keyword{methods}

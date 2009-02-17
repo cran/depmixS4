@@ -6,6 +6,7 @@ mlogit <-
 function(base=1) {
 	# 	matrix formulation is possibly very inefficient?!?!?
 	# 	moreover it does not admit of bases being different from 1??!?!?
+	# 	is it ever used anywhere???????
 	linkfun <- function(p,base) {
 		lfun <- function(p,base) {
 			p <- p/sum(p)
