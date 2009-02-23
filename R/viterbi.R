@@ -27,26 +27,27 @@ function(object) {
 		psi[bt[case],] <- 0
 		# recursion
 		if(object@ntimes[case]>1) {
-			for(i in ((bt[case]+1):et[case])) {
+			for(tt in ((bt[case]+1):et[case])) {
 				for(j in 1:ns) {
 					if(!object@stationary) {
-						delta[i,j] <- max(delta[i-1,]*(A[i,,j]))*B[i,j]
-						k <- which.max(delta[i-1,]*A[i,,j])
+						delta[tt,j] <- max(delta[tt-1,]*(A[tt,j,]))*B[tt,j]
+						k <- which.max(delta[tt-1,]*A[tt,j,])
 					} else {
-						delta[i,j] <- max(delta[i-1,]*A[,,j])*B[i,j]
-						k <- which.max(delta[i-1,]*A[,,j])
+						delta[tt,j] <- max(delta[tt-1,]*(A[1,j,]))*B[tt,j]
+						k <- which.max(delta[tt-1,]*A[1,j,])
 					}
-					if(length(k) == 0) k <- 0
-					psi[i,j] <- k
+					if(length(k) == 0) k <- 0 # what's this doing here??? can this ever occur? FIX ME
+					psi[tt,j] <- k
 				}
-				delta[i,] <- delta[i,]/(sum(delta[i,]))
+				delta[tt,] <- delta[tt,]/(sum(delta[tt,]))
+
 			}
 		}
 		
 		# trace maximum likely state
 		state[et[case]] <- which.max(delta[et[case],])
 		
-		# this doesn't need a for loop does it???? FIX ME	  
+		# this doesn't need a for loop does it???? FIX ME
 		if(object@ntimes[case]>1) {
 			for(i in (et[case]-1):bt[case]) {
 				state[i] <- psi[i+1,state[i+1]]

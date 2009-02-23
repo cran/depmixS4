@@ -20,6 +20,7 @@ exportClasses(
 	depmix,
 	depmix.sim,
 	mix,
+	mix.sim,
 	depmix.fitted,
 	mix.fitted,
 	response,

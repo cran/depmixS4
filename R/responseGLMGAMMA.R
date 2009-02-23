@@ -9,13 +9,13 @@ setClass("GAMMAresponse",contains="GLMresponse")
 # returns: matrix with log(p(y|x,parameters))
 setMethod("logDens","GAMMAresponse",
 	function(object) {
-		dpois(x=object@y,shape=predict(object),log=TRUE)
+		dgamma(x=object@y,shape=predict(object),log=TRUE)
 	}
 )
 
 setMethod("dens","GAMMAresponse",
 	function(object,log=FALSE) {
-		dpois(x=object@y,shape=predict(object),log=log)
+		dgamma(x=object@y,shape=predict(object),log=log)
 	}
 )
 

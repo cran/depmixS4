@@ -1,5 +1,26 @@
 
+Changes in depmixS4 version 0.2-1
 
+  o fixed a bug in the Viterbi algorithm used to compute posterior states
+  
+  o restructured test files somewhat
+
+  o fixed a bug in the use of the conrows argument in the fit function (a missing
+    drop=FALSE statement)
+
+  o updated help files for mix classes
+
+  o fixed a bug in setting the starting values of regression coefficients in 
+    prior and transInit models with covariates (thanks to Verena Schmittmann 
+    for reporting this)
+
+  o added newx argument to predict function of transInit objects, to be used
+    for predicting probabilities depending on covariates (useful in eg plotting
+    transition probabilities as function of a covariate)
+
+  o added example of the use of conrows argument in fitting functions and other 
+    minor updates in documentation
+  
 Changes in depmixS4 version 0.2-0
 
   o restructured R and Rd (help) files; added depmixS4 help with a short
@@ -27,8 +48,6 @@ Changes in depmixS4 version 0.2-0
   
   o minor changes to make depmixS4 compatible with R 2.7.1
   
-  o 
-
 
 Changes in depmixS4 version 0.1-1
 

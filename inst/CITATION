@@ -6,9 +6,9 @@ citEntry(entry="Article",
 	author = personList(person(first="Ingmar", last="Visser"), 
 		person(first="Maarten", last="Speekenbrink")),
 	journal = "R-package manual",
-	year = "2007",
+	year = "2009",
 	url = "http://cran.r-project.org",
-	textVersion = paste("Ingmar Visser & Maarten Speekenbrink (2007).  DepmixS4: 
+	textVersion = paste("Ingmar Visser & Maarten Speekenbrink (2009).  DepmixS4: 
 	An R-package for fitting mixture models on mixed multivariate data with Markov
 	dependencies. R-package manual and introduction into Dependent 
 	Mixture models") 

@@ -38,8 +38,8 @@ formulae and family objects.
 	\item{formula}{A model \code{\link{formula}}.}
 	\item{data}{An optional data.frame to interpret the variables from the 
 		formula argument in.}	
-	\item{family}{A family object; currently only multinomial() and
-		gaussian() are allowed options.}
+	\item{family}{A family object; see the \code{\link{responses}} help page 
+		a list of currently available options.}
 	\item{pstart}{Starting values for the coefficients and other
 		parameters, ie the standard deviation for the gaussian() family.}
 	\item{fixed}{Logical vector indicating which paramters are to be fixed.}
