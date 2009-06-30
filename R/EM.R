@@ -3,49 +3,49 @@
 # 
 
 em <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
-  if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
-  call <- match.call()
-  if(is(object,"depmix")) {
-    call[[1]] <- as.name("em.depmix")
-  } else {
-    call[[1]] <- as.name("em.mix")
-  }
-  object <- eval(call, parent.frame())
-  object
+	if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
+	call <- match.call()
+	if(is(object,"depmix")) {
+		call[[1]] <- as.name("em.depmix")
+	} else {
+		call[[1]] <- as.name("em.mix")
+	}
+	object <- eval(call, parent.frame())
+	object
 }
 
-
+# em for lca and mixture models
 em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
-  if(!is(object,"mix")) stop("object is not of class 'mix'")
-
-  ns <- object@nstates
-
+	if(!is(object,"mix")) stop("object is not of class 'mix'")
+	
+	ns <- object@nstates
+	
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
 	et <- cumsum(ntimes)
 	bt <- c(1,et[-lt]+1)
-
+	
 	converge <- FALSE
 	j <- 0
 	
 	# compute responsibilities
-  B <- apply(object@dens,c(1,3),prod)
-  gamma <- object@init*B
-  LL <- sum(log(rowSums(gamma)))
-  # normalize
-  gamma <- gamma/rowSums(gamma)
-
+	B <- apply(object@dens,c(1,3),prod)
+	gamma <- object@init*B
+	LL <- sum(log(rowSums(gamma)))
+	# normalize
+	gamma <- gamma/rowSums(gamma)
+	
 	LL.old <- LL + 1
-
+	
 	while(j <= maxit & !converge) {
-
+		
 		# maximization
-
+		
 		# should become object@prior <- fit(object@prior)
 		object@prior@y <- gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
 		object@init <- dens(object@prior)
-
+		
 		for(i in 1:ns) {
 			for(k in 1:nresp(object)) {
 				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
@@ -62,7 +62,9 @@ em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 		gamma <- gamma/rowSums(gamma)
 		
 		# print stuff
-		if(verbose&((j%%5)==0)) cat("iteration",j,"logLik:",LL,"\n")
+		if(verbose&((j%%5)==0)) {
+			cat("iteration",j,"logLik:",LL,"\n")
+		}
 		
 		if( (LL >= LL.old) & (LL - LL.old < tol))  {
 			cat("iteration",j,"logLik:",LL,"\n")
@@ -88,6 +90,7 @@ em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 	
 }
 
+# em for hidden markov models
 em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class '(dep)mix'")
@@ -112,7 +115,7 @@ em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 	LL.old <- LL + 1
 	
 	while(j <= maxit & !converge) {
-				
+		
 		# maximization
 				
 		# should become object@prior <- fit(object@prior)
