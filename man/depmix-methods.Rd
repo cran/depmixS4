@@ -74,8 +74,7 @@ Various methods for \code{depmix} and \code{mix} objects.
   through the \code{\link{forwardbackward}} function.} 
 
   \item{which}{The default "pars" returns a vector of all parameters of a
-	  
-  \code{depmix} object; the alternative value "fixed" return a logical
+  \code{depmix} object; the alternative value "fixed" returns a logical
   vector of the same length indicating which parameters are fixed.  The
   setpars functions sets parameters (or the logical fixed vector) to new
   values; \code{setpars} also recomputes the dens, trans and init slots of
@@ -95,7 +94,7 @@ Various methods for \code{depmix} and \code{mix} objects.
 
 	\item{npar}{returns the number of paramters of a model.}
 
-	\item{freepars}{returns the number of non-fixed parameters.}
+	\item{freepars}{returns the number of non-redundant parameters.}
 
 	\item{setpars}{returns a \code{(dep-)mix} object with new parameter values.}
 

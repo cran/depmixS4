@@ -20,7 +20,8 @@ depmixS4 provides classes for specifying and fitting hidden Markov models
 	to be incorporated.  Models can be fitted on (multiple) sets of
 	observations.  The response densities for each state may be chosen from
 	the GLM family, or a multinomial.  User defined response densities are
-	easy to add.
+	easy to add; for the latter an example is given for the ex-gauss distribution
+	as well as the multivariate normal distribution. 
 	
 	Mixture or latent class (regression) models can also be fitted; these
 	are the limit case in which the length of observed time series is 1 for
@@ -33,8 +34,8 @@ depmixS4 provides classes for specifying and fitting hidden Markov models
 	\tabular{ll}{
 		Package: \tab depmixS4\cr
 		Type: \tab Package\cr
-		Version: \tab 0.2-2\cr
-		Date: \tab 2009-13-05\cr
+		Version: \tab 0.3-0\cr
+		Date: \tab 2010-01-30\cr
 		License: \tab GPL\cr
 	}
 
@@ -46,6 +47,9 @@ depmixS4 provides classes for specifying and fitting hidden Markov models
 	\code{\link{fit}} function; imposing constraints is done through the
 	fit function.  Standard output includes the optimized parameters and
 	the posterior densities for the states and the optimal state sequence.
+	
+	For full control and the possibility to add new response distributions,
+	check the \code{\link{makeDepmix}} help page. 
 
 }
 
@@ -77,5 +81,9 @@ Maintainer: i.visser@uva.nl
 }
 
 \examples{
-	# These should be added at some point ...
+	# create a 2 state model with one continuous and one binary response
+	data(speed)
+	mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,family=list(gaussian(),multinomial()))
+	# print the model, formulae and parameter values (ie the starting values)
+	mod
 }

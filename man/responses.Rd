@@ -148,7 +148,6 @@ brief description of these here.}
 	fm <- fit(mod)
 	cat("Test gaussian fit: ", all.equal(getpars(fm),c(mean(y),sd(y)),check=FALSE))
 	
-	
 	# poisson response model
 	x <- abs(rnorm(1000,2))
 	res <- rpois(1000,x)

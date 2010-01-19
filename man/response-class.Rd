@@ -8,7 +8,7 @@
 
 \description{
 
-A generic \code{\link{response}} model for \code{\link{depmix}} models.
+A generic \code{response} model for \code{\link{depmix}} models.
 
 }
 
