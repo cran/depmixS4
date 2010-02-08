@@ -1,6 +1,6 @@
 import(methods)
 
-importFrom(stats, predict, simulate)
+importFrom(stats, predict, simulate, AIC, logLik)
 
 export(	
 	makeDepmix,
@@ -45,6 +45,7 @@ exportMethods(
 	mix,
 	posterior,
 	GLMresponse,
+	MVNresponse,
 	transInit,
 	setpars,
 	getpars,

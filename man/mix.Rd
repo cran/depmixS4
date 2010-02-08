@@ -65,17 +65,27 @@
 	which needs to be fitted using \code{\link{fit}} to optimize the
 	parameters.
 	
-	The response model(s) are created by call(s) to \code{\link{response}}
-	providing the response formula and the family specifying the error
-	distribution.  If response is a list of formulae, the \code{response}'s
-	are assumed to be independent conditional on the latent class.
+	The response model(s) are by default created by call(s) to
+	\code{GLMresponse} using the \code{formula} and the \code{family}
+	arguments, the latter specifying the error distribution.  See
+	\code{\link{GLMresponse}} for possible values of the \code{family}
+	argument for \code{glm}-type responses (ie a subset of the \code{glm}
+	family options, and the multinomial).  Alternative response
+	distributions are specified by using the \code{\link{makeDepmix}}
+	function.  Its help page has examples of specifying a model with a
+	multivariate normal response, as well as an example of adding a
+	user-defined response model, in this case for the ex-gauss
+	distribution.
+	
+	If \code{response} is a list of formulae, the \code{response}'s are
+	assumed to be independent conditional on the latent state.
 	
 	The prior density is modeled as a multinomial logistic.  This model is
 	created by a call to \code{\link{transInit}}.
 	
 	Starting values may be provided by the respective arguments.  The order
 	in which parameters must be provided can be easily studied by using the
-	\code{\link{setpars}} function.
+	\code{\link{setpars}} and \code{\link{getpars}} functions.
 	
 	Linear constraints on parameters can be provided as argument to the
 	\code{\link{fit}} function.
@@ -118,7 +128,7 @@ following slots:
 
 \seealso{
 
-	\code{\link{fit}}, \code{\link{transInit}}, \code{\link{response}},
+	\code{\link{fit}}, \code{\link{transInit}}, \code{\link{GLMresponse}},
 	\code{\link{depmix-methods}} for accessor functions to \code{depmix}
 	objects.
 

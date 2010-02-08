@@ -24,8 +24,8 @@ models.}
 		\item{\code{formula}:}{A formula that specifies the model.}
 
 		\item{\code{family}:}{A family object specifying the link 
-		function. Currently, the only options are \code{gaussian()} from 
-		the \code{\link{stats}}-package and \code{multinomial}.}
+		function. See the \code{\link{GLMresponse}} help page for 
+		possible options.}
 	}
 	
 }

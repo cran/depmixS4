@@ -1,1 +1,0 @@
-# # Ingmar Visser# # lystig filter set up# init <- matrix(1:2,1)A <- array(1:20,c(2,2,5))B <- matrix(1:10,5)rbind(A[1,,1]*B[1,],A[2,,1]*B[1,])rbind(A[1,,2]*B[2,],A[2,,2]*B[2,])rbind(A[1,,3]*B[2,],A[2,,3]*B[2,])ct <- array(apply(B,1,"*",A),c(5,2,2))ct[1,,]ct[,1,]ct[,,1]ct <- numeric(0)for(i in 1:5){ct <- c(ct,A[1,,i]*B[1,],A[2,,i]*B[1,])}

@@ -20,11 +20,11 @@ function(link="mlogit",base=1) {
 	if (linktemp %in% okLinks) {
 		if(linktemp == "mlogit") stats <- mlogit() else stats <- make.link(linktemp)
 	} else {
-		if (is.character(link)) {
+		if(is.character(link)) {
 			stats <- make.link(link)
 			linktemp <- link
 		} else {
-			if (inherits(link, "link-glm")) {
+			if(inherits(link, "link-glm")) {
 				stats <- link
 				if (!is.null(stats$name))
 				linktemp <- stats$name
@@ -42,13 +42,13 @@ function(link="mlogit",base=1) {
 	validmu <- function(mu) {
 		all(mu > 0) && all(mu < 1)
 	}
-	dev.resids <- function(y,mu,wt) {
-		
+	
+	dev.resids <- function(y,mu,wt) {	
 	}
 	initialize <- expression()
 	structure(list(family = "multinomial", link = linktemp, linkfun = stats$linkfun,
 			linkinv = stats$linkinv, variance = variance, dev.resids = dev.resids,
 			mu.eta = stats$mu.eta, initialize = initialize, validmu = validmu, valideta = stats$valideta, base=base),
-			class = "family")
+		class = "family")
 }
 

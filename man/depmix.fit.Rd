@@ -21,7 +21,9 @@
 
 	\code{fit} optimizes parameters of \code{\link{depmix}} or
 	\code{\link{mix}} models, optionally subject to general linear
-	(in)equality constraints.}
+	(in)equality constraints.
+
+}
 
 \usage{
 	

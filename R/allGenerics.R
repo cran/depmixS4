@@ -4,7 +4,11 @@
 # 
 
 .First.lib <- function(lib, pkg) { 
+	require(stats)
+	require(methods)
+	require(MASS)
  	require(nnet)
+	require(MCMCpack)
 }
 
 .Last.lib <- function(libpath) {}
@@ -16,6 +20,8 @@ setGeneric("depmix", function(response,data=NULL,nstates,transition=~1,family=ga
 
 setGeneric("GLMresponse", function(formula, data = NULL, family = gaussian(), pstart =
                  NULL, fixed = NULL, prob=TRUE, ...) standardGeneric("GLMresponse"))
+                 
+setGeneric("MVNresponse", function(formula, data = NULL,pstart=NULL,fixed=NULL,...) standardGeneric("MVNresponse"))
 
 setGeneric("transInit", function(formula, nstates, data = NULL, family = multinomial(),
                  pstart = NULL, fixed = NULL, prob=TRUE, ...) standardGeneric("transInit"))
@@ -34,7 +40,7 @@ setGeneric("freepars", function(object, ...) standardGeneric("freepars"))
 
 setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
-setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
+# setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))
 
@@ -46,7 +52,7 @@ setGeneric("simulate", function(object,nsim=1,seed=NULL, ...) standardGeneric("s
 
 setGeneric("predict", function(object, ...) standardGeneric("predict"))
 
-setGeneric("AIC", function(object, ..., k=2) standardGeneric("AIC"))
+# setGeneric("AIC", function(object, ..., k=2) standardGeneric("AIC"))
 
 setGeneric("BIC", function(object, ...) standardGeneric("BIC"))
 
