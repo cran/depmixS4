@@ -2,7 +2,7 @@
 # Maarten Speekenbrink 23-3-2008
 # 
 
-em <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
+em <- function(object,...) {
 	if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
 	call <- match.call()
 	if(is(object,"depmix")) {
@@ -15,11 +15,13 @@ em <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 }
 
 # em for lca and mixture models
-em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
+em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
+	
 	if(!is(object,"mix")) stop("object is not of class 'mix'")
 	
-	ns <- object@nstates
+	crit <- match.arg(crit)
 	
+	ns <- nstates(object)
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
 	et <- cumsum(ntimes)
@@ -34,6 +36,12 @@ em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 	LL <- sum(log(rowSums(gamma)))
 	# normalize
 	gamma <- gamma/rowSums(gamma)
+	
+	if(random.start) {
+		nr <- sum(ntimes(object))
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- gamma/rowSums(gamma)
+	} 
 	
 	LL.old <- LL + 1
 	
@@ -66,9 +74,14 @@ em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 			cat("iteration",j,"logLik:",LL,"\n")
 		}
 		
-		if( (LL >= LL.old) & (LL - LL.old < tol))  {
-			cat("iteration",j,"logLik:",LL,"\n")
-			converge <- TRUE
+		if(LL >= LL.old) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL.old - LL)/LL.old  < tol)) {
+			  cat("iteration",j,"logLik:",LL,"\n")
+			  converge <- TRUE
+			}
+		} else {
+		  # this should not really happen...
+		  if(j > 0) warning("likelihood decreased on iteration",j)
 		}
 
 		LL.old <- LL
@@ -78,24 +91,31 @@ em.mix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 
 	class(object) <- "mix.fitted"
 
-	if(converge) object@message <- "Log likelihood converged to within tol."
-	else object@message <- "'maxit' iterations reached in EM without convergence."
+	if(converge) {
+		object@message <- switch(crit,
+			relative = "Log likelihood converged to within tol. (relative change crit.)",
+			absolute = "Log likelihood converged to within tol. (absolute change crit.)"
+		)
+	} else object@message <- "'maxit' iterations reached in EM without convergence."
 
-	# no constraints in EM
-	object@conMat <- matrix()
-	object@lin.lower <- numeric()
-	object@lin.upper <- numeric()
+	# no constraints in EM, except for the standard constraints ...
+	# which are produced by the following (only necessary for getting df right in logLik and such)
+	constraints <- getConstraints(object)
+	object@conMat <- constraints$lincon
+	object@lin.lower <- constraints$lin.l
+	object@lin.upper <- constraints$lin.u
 	
 	object
 	
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class '(dep)mix'")
+	crit <- match.arg(crit)
 	
-	ns <- object@nstates
+	ns <- nstates(object)
 	
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
@@ -114,6 +134,12 @@ em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 	LL <- fbo$logLike
 	LL.old <- LL + 1
 	
+	if(random.start) {
+		nr <- sum(ntimes(object))
+		fbo$gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		fbo$gamma <- fbo$gamma/rowSums(fbo$gamma)
+	}
+	
 	while(j <= maxit & !converge) {
 		
 		# maximization
@@ -125,24 +151,25 @@ em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 				
 		trm <- matrix(0,ns,ns)
 		for(i in 1:ns) {
-			if(max(ntimes(object)>1)) { # skip transition parameters update in case of latent class model
-				if(!object@stationary) {
-					object@transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
-					object@transition[[i]] <- fit(object@transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
-				} else {
-					for(k in 1:ns) {
-						trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
-					}
-					# FIX THIS; it will only work with a specific trinModel
-					object@transition[[i]]@parameters$coefficients <- object@transition[[i]]@family$linkfun(trm[i,],base=object@transition[[i]]@family$base)
+			if(!object@stationary) {
+				object@transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
+				object@transition[[i]] <- fit(object@transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
+			} else {
+				for(k in 1:ns) {
+					trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
 				}
-				# update trDens slot of the model
-				object@trDens[,,i] <- dens(object@transition[[i]])
+				# FIX THIS; it will only work with specific trinModels??
+				object@transition[[i]]@parameters$coefficients <- switch(object@transition[[i]]@family$link,
+					identity = object@transition[[i]]@family$linkfun(trm[i,]),
+					mlogit = object@transition[[i]]@family$linkfun(trm[i,],base=object@transition[[i]]@family$base),
+					object@transition[[i]]@family$linkfun(trm[i,])
+				)
 			}
+			# update trDens slot of the model
+			object@trDens[,,i] <- dens(object@transition[[i]])
 		}
 		
 		for(i in 1:ns) {
-			
 			for(k in 1:nresp(object)) {
 				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=fbo$gamma[,i])
 				# update dens slot of the model
@@ -155,28 +182,37 @@ em.depmix <- function(object,maxit=100,tol=1e-6,verbose=FALSE,...) {
 		LL <- fbo$logLike
 				
 		if(verbose&((j%%5)==0)) cat("iteration",j,"logLik:",LL,"\n")
-		if( (LL >= LL.old) & (LL - LL.old < tol))  {
-			cat("iteration",j,"logLik:",LL,"\n")
-			converge <- TRUE
+		
+		if( (LL >= LL.old)) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL.old - LL)/LL.old  < tol)) {
+			  cat("iteration",j,"logLik:",LL,"\n")
+			  converge <- TRUE
+			}
+		} else {
+		  # this should not really happen...
+		  if(j > 0) warning("likelihood decreased on iteration",j)
 		}
 		
 		LL.old <- LL
 		j <- j+1
 		
 	}
-	
-	#if(class(object)=="depmix") class(object) <- "depmix.fitted"
-	#if(class(object)=="mix") class(object) <- "mix.fitted"
-	
+		
 	class(object) <- "depmix.fitted"
 	
-	if(converge) object@message <- "Log likelihood converged to within tol."
-	else object@message <- "'maxit' iterations reached in EM without convergence."
+	if(converge) {
+		object@message <- switch(crit,
+			relative = "Log likelihood converged to within tol. (relative change crit.)",
+			absolute = "Log likelihood converged to within tol. (absolute change crit.)"
+		)
+	} else object@message <- "'maxit' iterations reached in EM without convergence."
 	
-	# no constraints in EM
-	object@conMat <- matrix()
-	object@lin.lower <- numeric()
-	object@lin.upper <- numeric()
+	# no constraints in EM, except for the standard constraints ...
+	# which are produced by the following (only necessary for getting df right in logLik and such)
+	constraints <- getConstraints(object)
+	object@conMat <- constraints$lincon
+	object@lin.lower <- constraints$lin.l
+	object@lin.upper <- constraints$lin.u
 	
 	object
 }

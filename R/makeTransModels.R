@@ -19,10 +19,10 @@ function(nstates,formula=~1,data=NULL,stationary,values=NULL, ...) {
 	for(i in 1:nstates) {
 		if(tst) {
 			# in the case of stationary models we do not need data?!?!?!?!?!
-			if(stationary) models[[i]] <- transInit(formula,multinomial(base=base),data=data.frame(1),nstates=nstates,pstart=values[i,],prob=prob)
+			if(stationary) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,pstart=values[i,],prob=prob)
 			else models[[i]] <- transInit(formula,multinomial(base=base),data=data,nstates=nstates,pstart=values[i,],prob=prob)
 		} else {
-			if(stationary) models[[i]] <- transInit(formula,multinomial(base=base),data=data.frame(1),nstates=nstates,prob=FALSE)
+			if(stationary) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,prob=FALSE)
 			else models[[i]] <- transInit(formula,multinomial(base=base),data=data,nstates=nstates,prob=FALSE)
 		}
 	}

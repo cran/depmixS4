@@ -101,10 +101,13 @@
 	logistic.  Both of these models are created by calls to
 	\code{\link{transInit}}.
 	
-	Starting values the initial, transition, and response models may be
-	provided by their respective arguments.  The order in which parameters
-	must be provided can be easily studied by using the
-	\code{\link{setpars}} and \code{\link{getpars}} functions. 
+	Starting values for the initial, transition, and response models may be
+	provided by their respective arguments.  NB: note that the starting
+	values for the initial and transition models as well as of the
+	multinomial logit response models are interpreted as probabilities, and
+	internally converted to multinomial logit parameters.  The order in
+	which parameters must be provided can be easily studied by using the
+	\code{\link{setpars}} and \code{\link{getpars}} functions.
 	
 	Linear constraints on parameters can be provided as argument to the
 	\code{\link{fit}} function.

@@ -17,7 +17,7 @@
 
 setClass("mix",
 	representation(response="list", # response models
-		prior="ANY", # the prior model (multinomial logistic)
+		prior="ANY", # the prior model (multinomial)
 		dens="array", # response densities (B)
 		init="array", # usually called pi 
 		nstates="numeric",
@@ -65,26 +65,11 @@ setMethod("simulate",signature(object="mix"),
 		# simulate state sequences first, then observations
 		
 		# random generation is slow when done separately for each t, so first draw
-		#   variates for all t, and then determine state sequences iteratively
+		# variates for all t, and then determine state sequences iteratively
 		states <- array(,dim=c(nt,nsim))
 		states[bt,] <- simulate(object@prior,n=nsim,is.prior=T)
 		sims <- array(,dim=c(nt,ns,nsim))
-		
-# 		for(i in 1:ns) {
-# 			if(is.stationary(object)) {
-# 				# TODO: this is a temporary fix!!! 
-# 				sims[,i,] <- simulate(object@transition[[i]],nsim=nsim,times=rep(1,nt))
-# 			} else {
-# 				sims[,i,] <- simulate(object@transition[[i]],nsim=nsim)
-# 			}
-# 		}
-# 		# track states
-# 		for(case in 1:lt) {
-# 			for(i in (bt[case]+1):et[case]) {
-# 				states[i,] <- sims[cbind(i,states[i-1,],1:nsim)]
-# 			}
-# 		}
-		
+				
 		states <- as.vector(states)
 		responses <- list(length=nr)
 		#responses <- array(,dim=c(nt,nr,nsim))
@@ -102,7 +87,6 @@ setMethod("simulate",signature(object="mix"),
 		
 		object@prior@x <- as.matrix(apply(object@prior@x,2,rep,nsim))
 		for(j in 1:ns) {
-# 			if(!is.stationary(object)) object@transition[[j]]@x <- as.matrix(apply(object@transition[[j]]@x,2,rep,nsim))
 			for(i in 1:nr) {
 				object@response[[j]][[i]]@y <- as.matrix(responses[[i]])
 				object@response[[j]][[i]]@x <- as.matrix(apply(object@response[[j]][[i]]@x,2,rep,nsim))
@@ -131,7 +115,14 @@ setMethod("simulate",signature(object="mix"),
 	}
 )
 
-
+# setMethod("getModel",signature(object="mix"),
+# 	function(object,which="response",...) {
+# 		res <- switch(which,
+# 			"prior"=object@prior,
+# 			"response"=object@response)
+# 		res
+# 	}
+# )
 
 # 
 # PRINT method
@@ -297,7 +288,15 @@ setMethod("simulate",signature(object="depmix"),
 	}
 )
 
-
+# setMethod("getModel",signature(object="depmix"),
+# 	function(object,which="response",...) {
+# 		res <- switch(which,
+# 			"prior"=object@prior,
+# 			"response"=object@response,
+# 			"transition"=object@transition)
+# 		res
+# 	}
+# )
 
 # 
 # SUMMARY method: to do

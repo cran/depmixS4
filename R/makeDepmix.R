@@ -78,6 +78,9 @@ function(response, transition, prior, ntimes=NULL, stationary=TRUE, ...) {
 	# compute initial state probabilties
 	init <- dens(prior)
 	
+	# check if dim(init) agrees ntimes
+	if(!(dim(init)[1]==length(ntimes))) stop("Argument 'ntimes' does not agree with dimension of prior model.")
+	
 	new("depmix",response=response,transition=transition,prior=prior,
 		dens=dens,trDens=trDens,init=init,stationary=stationary,
 		ntimes=ntimes,nstates=nstates,nresp=nresp,npars=npars)
