@@ -30,6 +30,8 @@ A generic \code{response} model for \code{\link{depmix}} models.
 		\item{\code{x}:}{A design matrix; possibly only an intercept term.}
 
 		\item{\code{npar}:}{The number of parameters.}
+		
+		\item{\code{constr}:}{Information on constraints.}
 	}
 	
 }
@@ -41,6 +43,21 @@ A generic \code{response} model for \code{\link{depmix}} models.
 	extensibility, objects with class \code{response} should have at least
 	methods: \code{dens} to return the \code{dens}'ity of responses, and
 	\code{getpars} and \code{setpars} methods to get and set parameters.
+	
+	The \code{constr} slot is used for information on constraints that are
+	inherently part of a model; the only such constraints which are currently 
+	used are 1) the sum constraint in multinomial models with identity link, 
+	and 2) a lower bound of zero of sd parameters in gaussian distributions. 
+	Such constraints are only used in fitting models with general optimization
+	routines such as \code{Rsolnp}; the EM algorithm automagically respects the
+	sum constraint. 
+	\describe{
+		\item{\code{lin}:}{Derivative of linear constraint.}
+		\item{\code{linup}:}{Upper bounds for linear constraints.}
+		\item{\code{linlow}:}{Lower bounds for linear constraints.}
+		\item{\code{parup}:}{Upper bounds on parameters.}
+		\item{\code{parlow}:}{Lower bounds on parameters.}
+	}
 	
 }
 

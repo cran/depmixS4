@@ -1,15 +1,12 @@
-citHeader("To cite package depmix in publications, use the following:")
+citHeader("To cite package depmixS4 in publications, use the following:")
 
 citEntry(entry="Article",
-	title = "{depmixS4}: An R-package for fitting mixture models on mixed
-	multivariate data with Markov dependencies",
+	title = "{depmixS4}: An R-package for hidden Markov models",
 	author = personList(person(first="Ingmar", last="Visser"), 
 		person(first="Maarten", last="Speekenbrink")),
 	journal = "R-package manual",
-	year = "2009",
+	year = "2010",
 	url = "http://cran.r-project.org",
-	textVersion = paste("Ingmar Visser & Maarten Speekenbrink (2009).  DepmixS4: 
-	An R-package for fitting mixture models on mixed multivariate data with Markov
-	dependencies. R-package manual and introduction into Dependent 
-	Mixture models") 
+	textVersion = paste("Ingmar Visser & Maarten Speekenbrink (2010). 
+	depmixS4: An R-package for hidden Markov models") 
 )

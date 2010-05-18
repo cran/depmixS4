@@ -7,6 +7,7 @@
 
 \alias{getdf}
 \alias{getdf,response-method}
+\alias{getdf,MULTINOMresponse-method}
 
 \alias{show,GLMresponse-method}
 
@@ -24,7 +25,7 @@
 	GLMresponse(formula, data=NULL, family=gaussian(), pstart=NULL, 
 		fixed=NULL, prob=TRUE, ...)
 	
-	\S4method{getdf}{response}(object)
+		\S4method{getdf}{response}(object)
 }
 
 \arguments{
@@ -59,9 +60,7 @@
 	default, and then uses functionality from the \code{nnet} package to
 	fit multinomial logistic models; it also takes \code{identity} as a
 	link function.  The latter is typically faster and is hence preferred
-	when no covariates are present.  Note that the sum constraint inherent
-	in such a model is automatically respected in the EM algorithm, but
-	must be supplied by the user in case of using Rdonlp optimization.
+	when no covariates are present.  
 	
 	See the \code{\link{responses}} help page for examples. 
 	

@@ -33,6 +33,7 @@ exportMethods(
 	AIC,
 	BIC,
 	fit,
+	getConstraints,
 	npar,
 	freepars,
 	nlin,

@@ -8,7 +8,6 @@
 	require(methods)
 	require(MASS)
  	require(nnet)
-	require(MCMCpack)
 }
 
 .Last.lib <- function(libpath) {}
@@ -40,9 +39,13 @@ setGeneric("freepars", function(object, ...) standardGeneric("freepars"))
 
 setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
+# setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
+
 # setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))
+
+setGeneric("getConstraints", function(object, ...) standardGeneric("getConstraints"))
 
 setGeneric("posterior", function(object, ...) standardGeneric("posterior"))
 

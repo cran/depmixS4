@@ -1,4 +1,37 @@
 
+Changes in depmixS4 version 0.9-0
+
+  o added optimization using Rsolnp, which can be invoked by using 
+    method="rsolnp" in calling fit on (dep-)mix objects. Note that 
+    this is meant for fitting models with additional constraints. 
+    Method="rsolnp" is now the default when fitting constrained 
+    models, method="donlp" is still supported. 
+
+  o added documentation for control arguments that can be passed to 
+    em algorithm, particularly for controlling the tolerance in 
+    optimization.
+
+  o added multinomial models with identity link for transition and prior 
+    probabilities. These are now the default when no covariates are 
+    present. 
+
+  o added bounds and constraints for multinomial identity models such
+	that these constraints are satisfied when fitting models with
+	method="rsolnp" or "donlp".  Also, variance and sd parameters in
+	gaussian and multivariate normal models are given bounds to prevent
+	warnings and errors in optimization of such models using rsolnp or
+	donlp.
+
+  o added option to generate starting values as part of the EM 
+    algorithm. 
+
+  o fixed a bug in multinomial response models with n>1; the response for
+	these models can be specified as a k-column matrix with the number of
+	observed responses for each category; the loglikelihood for these
+	models in which there was more than 1 observation per row was
+	incorrect; note that such models may lead to some numerical
+	instabilities when n is large.
+
 Changes in depmixS4 version 0.3-0
   
   o added multinomial response function with identity link (no covariates
