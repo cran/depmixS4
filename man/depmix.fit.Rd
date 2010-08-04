@@ -39,7 +39,6 @@
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
 
-	
 }
 
 \arguments{
@@ -83,9 +82,11 @@
 	
 	Three types of constraints can be specified on the parameters: fixed,
 	equality, and general linear (in-)equality constraints.  Constraint
-	vectors should be of length npar(object).  See help on
+	vectors should be of length \code{npar(object)}; note that this hence
+	includes redundant parameters such as the base category parameter in
+	multinomial logistic models which is always fixed at zero.  See help on
 	\code{\link{getpars}} and \code{\link{setpars}} about the ordering of
-	parameters. 
+	parameters.
 	
 	The \code{equal} argument is used to specify equality constraints:
 	parameters that get the same integer number in this vector are
@@ -179,9 +180,14 @@
 
 \references{
 	
-	Lawrence R. Rabiner (1989).  A tutorial on hidden Markov models and
-	selected applications in speech recognition.  \emph{Proceedings of
-	IEEE}, 77-2, p.  267-295.
+	Some of the below models for the \code{speed} data are reported in:
+	
+	Ingmar Visser, Maartje E. J. Raijmakers and Han L. J. van der Maas
+	(2009).  Hidden Markov Models for Invdividual Time Series.  In: Jaan
+	Valsiner, Peter C. M. Molenaar, M. C. D. P. Lyra, and N. Chaudhary
+	(editors).  \emph{Dynamic Process Methodology in the Social and
+	Developmental Sciences}, chapter 13, pages 269--289.  New York:
+	Springer.
 	
 }
 

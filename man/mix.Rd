@@ -136,8 +136,8 @@ following slots:
 
 \references{
 	
-	On latent class models: A. L. McCutcheon (1987).  \emph{Latent class
-	analysis}.  Sage Publications.
+	A. L. McCutcheon (1987).  \emph{Latent class analysis}.  Sage
+	Publications.
 	
 }
 

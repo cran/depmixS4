@@ -1,4 +1,17 @@
 
+Changes in depmixS4 version 1.0-0
+
+  o added a vignette to the package and upped the version number 1.0-0 to 
+    celebrate publication in the Journal of Statistical Software. 
+
+Changes in depmixS4 version 0.9-1
+
+  o fixed a bug in setting the lower and upper bounds for GLMresponse
+    models (the number of bounds was wrong for models with covariates/
+    predictors; these bounds are only used in constrained optimization in
+    which case they produced an error immediately; in EM optimization these
+    bounds are not used).
+
 Changes in depmixS4 version 0.9-0
 
   o added optimization using Rsolnp, which can be invoked by using 

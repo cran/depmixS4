@@ -1,0 +1,1030 @@
+\documentclass[article,nojss]{jss}
+\usepackage{amsmath,thumbpdf}
+\graphicspath{{Figures/}}
+
+\newcommand{\vc}{\mathbf}
+\newcommand{\mat}{\mathbf}
+\newcommand{\greekv}[1]{\mbox{\boldmath$\mathrm{#1}$}}
+\newcommand{\greekm}[1]{\mbox{\boldmath$#1$}}
+
+%% \usepackage{Sweave}
+\SweaveOpts{engine = R, echo = TRUE, keep.source = TRUE, eps = FALSE}
+
+%\VignetteIndexEntry{depmixS4: An R Package for Hidden Markov Models}
+%\VignetteDepends{depmixS4,gamlss,gamlss.dist}
+%\VignetteKeywords{hidden Markov model, dependent mixture model, mixture model, constraints}
+%\VignettePackage{depmixS4}
+
+\author{Ingmar Visser\\University of Amsterdam \And 
+        Maarten Speekenbrink\\University College London}
+\Plainauthor{Ingmar Visser, Maarten Speekenbrink}
+        
+\title{\pkg{depmixS4}: An \proglang{R} Package for Hidden Markov Models}
+\Plaintitle{depmixS4: An R Package for Hidden Markov Models}
+
+\Abstract{	
+  This introduction to the \proglang{R} package \pkg{depmixS4} is a (slightly)
+  modified version of \cite{Visser+Speekenbrink:2010}, published in the
+  \emph{Journal of Statistical Software}.
+
+  \pkg{depmixS4} implements a general framework for defining and
+  estimating dependent mixture models in the \proglang{R}
+  programming language.  This includes standard Markov
+  models, latent/hidden Markov models, and latent class and finite
+  mixture distribution models.  The models can be fitted on mixed
+  multivariate data with distributions from the \code{glm} family,
+  the (logistic) multinomial, or the multivariate normal
+  distribution.  Other distributions can be added easily, and an
+  example is provided with the {\em exgaus} distribution.
+  Parameters are estimated by the expectation-maximization (EM) algorithm or, when (linear)
+  constraints are imposed on the parameters, by direct numerical
+  optimization with the \pkg{Rsolnp} or \pkg{Rdonlp2} routines.   
+}
+
+\Keywords{hidden Markov model, dependent mixture model, mixture model, constraints}
+
+\Volume{36}
+\Issue{7}
+\Month{August}
+\Year{2010}
+\Submitdate{2009-08-19}
+\Acceptdate{2010-06-21}
+
+\Address{
+  Ingmar Visser\\
+  Department of Psychology\\
+  University of Amsterdam\\
+  Roetersstraat 15\\
+  1018 WB, Amsterdam, The Netherlands\\
+  E-mail: \email{i.visser@uva.nl} \\
+  URL: \url{http://www.ingmar.org/}
+}
+
+\begin{document}
+
+<<echo=FALSE,results=hide>>=	
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE, digits = 4)
+library("depmixS4")
+@
+
+\section{Introduction}
+
+Markov and latent Markov models are frequently used in the social
+sciences, in different areas and applications.  In psychology, they
+are used for modelling learning processes; see \citet{Wickens1982},
+for an overview, and e.g., \citet{Schmittmann2006}, for a recent
+application.  In economics, latent Markov models are so-called regime
+switching models (see e.g., \citealp{Kim1994} and
+\citealp{Ghysels1994}).  Further applications include speech
+recognition \citep{Rabiner1989}, EEG analysis \citep{Rainer2000}, and
+genetics \citep{Krogh1998}.  In these latter areas of application,
+latent Markov models are usually referred to as hidden Markov models.
+See for example \citet{Fruhwirth2006} for an overview of hidden Markov
+models with extensions.  Further examples of applications can be found
+in e.g., \citet[][Chapter~1]{Cappe2005}.  A more gentle introduction
+into hidden Markov models with applications is the book by
+\citet{Zucchini2009}.
+
+The \pkg{depmixS4} package was motivated by the fact that while Markov
+models are used commonly in the social sciences, no comprehensive
+package was available for fitting such models.  Existing software for
+estimating Markovian models include \pkg{Panmark} \citep{Pol1996}, and for
+latent class models \pkg{Latent Gold} \citep{Vermunt2003}.  These programs
+lack a number of important features, besides not being freely
+available.  There are currently some packages in \proglang{R} that
+handle hidden Markov models but they lack a number of features that we
+needed in our research.  In particular, \pkg{depmixS4} was designed to
+meet the following goals:
+
+\begin{enumerate}	
+	\item to be able to estimate parameters subject to general
+	linear (in)equality constraints;
+	
+	\item to be able to fit transition models with covariates, i.e.,
+	to have time-dependent transition matrices;
+	
+	\item to be able to include covariates in the prior or initial
+	state probabilities;
+	
+	\item to be easily extensible, in particular, to allow users to
+	easily add new uni- or multivariate response distributions and
+	new transition models, e.g., continuous time observation models.
+	
+\end{enumerate}
+
+Although \pkg{depmixS4} was designed to deal with longitudinal or time
+series data, for say $T>100$, it can also handle the limit case when
+$T=1$.  In this case, there are no time dependencies between observed
+data and the model reduces to a finite mixture or latent class model.
+While there are specialized packages to deal with mixture data, as far
+as we know these don't allow the inclusion of covariates on the prior
+probabilities of class membership.  The possibility to estimate the
+effects of covariates on prior and transition probabilities is a
+distinguishing feature of \pkg{depmixS4}.
+In Section~\ref{sec:2}, we provide an outline of the model and likelihood equations.
+
+The \pkg{depmixS4} package is implemented using the \proglang{R} system
+for statistical computing \citep{R2010} and is available from the
+Comprehensive \proglang{R} Archive Network at \url{http://CRAN.R-project.org/package=depmixS4}.
+
+
+\section{The dependent mixture model} \label{sec:2}
+
+The data considered here have the general form $\vc{O}_{1:T}=
+(O_{1}^{1}, \ldots, O_{1}^{m}$, $O_{2}^{1}, \ldots, O_{2}^{m}$,
+\ldots, $O_{T}^{1}, \ldots, O_{T}^{m})$ for an $m$-variate time series
+of length $T$.  In the following, we use $\vc{O}_{t}$ as shorthand for
+$O_{t}^{1}, \ldots, O_{t}^{m}$.  As an example, consider a time series
+of responses generated by a single participant in a psychological
+response time experiment.  The data consists of three variables:
+response time, response accuracy, and a covariate which is a pay-off
+variable reflecting the relative reward for speeded and/or accurate
+responding.  These variables are measured on 168, 134 and 137
+occasions respectively (the first series of 168 trials is plotted in
+Figure~\ref{fig:speed}).  These data are more fully described in
+\citet{Dutilh2010}, and in the next section a number of example models
+for these data is described.
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[t!]
+\begin{center}
+<<fig=TRUE,echo=FALSE,height=5,width=7,eps=FALSE>>=	
+data("speed")
+plot(as.ts(speed[1:168,]), main = "Speed-accuracy trade-off")
+@
+	\caption{Response times (rt), accuracy (corr) and pay-off 
+	values (Pacc) for the first series of responses in dataset 
+	\code{speed}.}
+	\label{fig:speed}
+\end{center}
+\end{figure}
+
+The latent Markov model is usually associated with data of this type,
+in particular for multinomially distributed responses.  However,
+commonly employed estimation procedures \citep[e.g.,][]{Pol1996}, are
+not suitable for long time series due to underflow problems.  In
+contrast, the hidden Markov model is typically only used for `long'
+univariate time series \citep[][Chapter~1]{Cappe2005}.  We use the
+term ``dependent mixture model" because one of the authors (Ingmar
+Visser) thought it was time for a new name to relate these
+models\footnote{Only later he found out that \citet{Leroux1992}
+already coined the term dependent mixture models in an application
+with hidden Markov mixtures of Poisson count data.}.
+
+The fundamental assumption of a dependent mixture model is that at any
+time point, the observations are distributed as a mixture with $n$
+components (or states), and that time-dependencies between the
+observations are due to time-dependencies between the mixture
+components (i.e., transition probabilities between the components).
+These latter dependencies are assumed to follow a first-order Markov
+process.  In the models we are considering here, the mixture
+distributions, the initial mixture probabilities and transition
+probabilities can all depend on covariates $\vc{z}_t$.
+
+In a dependent mixture model, the joint likelihood of observations
+$\vc{O}_{1:T}$ and latent states $\vc{S}_{1:T} = (S_1,\ldots,S_T)$,
+given model parameters $\greekv{\theta}$ and covariates $\vc{z}_{1:T}
+= (\vc{z}_1,\ldots,\vc{z}_T)$, can be written as:
+\begin{equation}
+	\Prob(\vc{O}_{1:T},\vc{S}_{1:T}|\greekv{\theta},\vc{z}_{1:T}) =  
+	\pi_{i}(\vc{z}_1) \vc{b}_{S_t}(\vc{O}_1|\vc{z}_{1})
+	\prod_{t=1}^{T-1} a_{ij}(\vc{z}_{t}) \vc{b}_{S_t}(\vc{O}_{t+1}|\vc{z}_{t+1}),
+\end{equation}
+where we have the following elements:
+\begin{enumerate}
+	
+	\item $S_{t}$ is an element of $\mathcal{S}=\{1\ldots n\}$, a set
+	of $n$ latent classes or states.
+	
+	\item $\pi_{i}(\vc{z}_1) = \Prob(S_1 = i|\vc{z}_1)$, giving the
+	probability of class/state $i$ at time $t=1$ with covariate
+	$\vc{z}_1$.
+	
+	\item $a_{ij}(\vc{z}_t) = \Prob(S_{t+1}=j|S_{t}=i,\vc{z}_t)$,
+	provides the probability of a transition from state $i$ to state
+	$j$ with covariate $\vc{z}_t$.
+	
+	\item $\vc{b}_{S_t}$ is a vector of observation densities
+	$b_{j}^k(\vc{z}_t) = \Prob(O_{t}^k|S_t = j, \vc{z}_t)$ that
+	provide the conditional densities of observations $O_{t}^k$
+	associated with latent class/state $j$ and covariate $\vc{z}_t$,
+	$j=1, \ldots, n$, $k=1, \ldots, m$.
+	
+\end{enumerate}
+
+For the example data above, $b_j^k$ could be a Gaussian distribution
+function for the response time variable, and a Bernoulli distribution
+for the accuracy variable.  In the models considered here,
+both the transition probability functions $a_{ij}$ and the initial
+state probability functions $\greekv{\pi}$ may depend on covariates as
+well as the response distributions $b_{j}^{k}$.
+
+
+\subsection{Likelihood}
+
+To obtain maximum likelihood estimates of the model parameters, we
+need the marginal likelihood of the observations.  For hidden Markov
+models, this marginal (log-)likelihood is usually computed by the
+so-called forward-backward algorithm \citep{Baum1966,Rabiner1989}, or
+rather by the forward part of this algorithm.  \cite{Lystig2002}
+changed the forward algorithm in such a way as to allow computing the
+gradients of the log-likelihood at the same time.  They start by
+rewriting the likelihood as follows (for ease of exposition the
+dependence on the model parameters and covariates is dropped here):
+\begin{equation}
+	L_{T} = \Prob(\vc{O}_{1:T}) = \prod_{t=1}^{T} 
+	\Prob(\vc{O}_{t}|\vc{O}_{1:(t-1)}), 
+	\label{condLike}
+\end{equation}
+where $\Prob(\vc{O}_{1}|\vc{O}_{0}):=\Prob(\vc{O}_{1})$. Note that for a 
+simple, i.e., observed, Markov chain these probabilities reduce to 
+$\Prob(\vc{O}_{t}|\vc{O}_{1},\ldots, 
+\vc{O}_{t-1})=\Prob(\vc{O}_{t}|\vc{O}_{t-1})$.
+The log-likelihood can now be expressed as:
+\begin{equation}
+	l_{T} = \sum_{t=1}^{T} \log[\Prob(\vc{O}_{t}|\vc{O}_{1:(t-1)}].
+	\label{eq:condLogl}
+\end{equation}
+
+To compute the log-likelihood, \cite{Lystig2002} define the following 
+(forward) recursion:
+\begin{align}
+	\phi_{1}(j) &:= \Prob(\vc{O}_{1}, S_{1}=j) = \pi_{j} \vc{b}_{j}(\vc{O}_{1}) 
+	\label{eq:fwd1} \\
+	\phi_{t}(j) &:= \Prob(\vc{O}_{t}, S_{t}=j|\vc{O}_{1:(t-1)}) %\\
+	= \sum_{i=1}^{N} [\phi_{t-1}(i)a_{ij} \vc{b}_{j}(\vc{O}_{t})] \times 
+(\Phi_{t-1})^{-1},
+	\label{eq:fwdt} 
+\end{align}
+where $\Phi_{t}=\sum_{i=1}^{N} \phi_{t}(i)$. Combining 
+$\Phi_{t}=\Prob(\vc{O}_{t}|\vc{O}_{1:(t-1)})$, and 
+equation~(\ref{eq:condLogl}) gives the following expression for the 
+log-likelihood:
+\begin{equation}
+	l_{T} = \sum_{t=1}^{T} \log \Phi_{t}.
+	\label{eq:logl}
+\end{equation}
+
+
+\subsection{Parameter estimation}
+
+Parameters are estimated in \pkg{depmixS4} using the expectation-maximization (EM) algorithm or
+through the use of a general Newton-Raphson optimizer.  In the EM
+algorithm, parameters are estimated by iteratively maximizing the
+expected joint log-likelihood of the parameters given the observations and
+states.  Let $\greekv{\theta} = (\greekv{\theta}_1,
+\greekv{\theta}_2,\greekv{\theta}_3)$ be the general parameter vector
+consisting of three subvectors with parameters for the prior model,
+transition model, and response models respectively.  The joint
+log-likelihood can be written as:
+\begin{multline}
+\log \Prob(\vc{O}_{1:T}, \vc{S}_{1:T}|\vc{z}_{1:T},\greekv{\theta}) = \log 
+\Prob(S_1|\vc{z}_{1},\greekv{\theta}_1) 
++ \sum_{t=2}^{T} \log \Prob(S_t|S_{t-1},\vc{z}_{t-1},\greekv{\theta}_2) \\
++ \sum_{t=1}^{T} \log \Prob(\vc{O}_t|S_t,\vc{z}_t,\greekv{\theta}_3)
+\end{multline}
+This likelihood depends on the unobserved states $\vc{S}_{1:T}$. In the 
+Expectation step, we replace these with their expected values given a set of 
+(initial) parameters $\greekv{\theta}' = (\greekv{\theta}'_1, 
+\greekv{\theta}'_2,\greekv{\theta}'_3)$ and observations $\vc{O}_{1:T}$. 
+The expected log-likelihood:
+\begin{equation}
+Q(\greekv{\theta},\greekv{\theta}') = E_{\greekv{\theta}'} 
+(\log \Prob(\vc{O}_{1:T},\vc{S}_{1:T}|\vc{O}_{1:T},\vc{z}_{1:T},\greekv{\theta})),
+\end{equation}
+can be written as:
+\begin{multline}
+\label{eq:Q}
+Q(\greekv{\theta},\greekv{\theta}') = 
+\sum_{j=1}^n \gamma_1(j) \log \Prob(S_1=j|\vc{z}_1,\greekv{\theta}_1) \\ 
++ \sum_{t=2}^T \sum_{j=1}^n \sum_{k=1}^n \xi_t(j,k) \log \Prob(S_t = k|S_{t-1} 
+= j,\vc{z}_{t-1},\greekv{\theta}_2)  \\
+ + \sum_{t=1}^T \sum_{j=1}^n \sum_{k=1}^m \gamma_t(j) 
+\log \Prob(O^k_t|S_t=j,\vc{z}_t,\greekv{\theta}_3),
+\end{multline}
+where the expected values $\xi_t(j,k) = P(S_t = k, S_{t-1} =
+j|\vc{O}_{1:T}, \vc{z}_{1:T},\greekv{\theta}')$ and $\gamma_t(j) =
+P(S_t = j|\vc{O}_{1:T}, \vc{z}_{1:T},\greekv{\theta}')$ can be
+computed effectively by the forward-backward algorithm \citep[see
+e.g.,][]{Rabiner1989}.  The Maximization step consists of the
+maximization of (\ref{eq:Q}) for $\greekv{\theta}$.  As the right hand
+side of (\ref{eq:Q}) consists of three separate parts, we can maximize
+separately for $\greekv{\theta}_1$, $\greekv{\theta}_2$ and
+$\greekv{\theta}_3$.  In common models, maximization for
+$\greekv{\theta}_1$ and $\greekv{\theta}_2$ is performed by the
+\code{nnet.default} routine in the \pkg{nnet} package
+\citep{Venables2002}, and maximization for $\greekv{\theta}_3$ by the
+standard \code{glm} routine.  Note that for the latter maximization,
+the expected values $\gamma_t(j)$ are used as prior weights of the
+observations $O^k_t$.
+
+The EM algorithm however has some drawbacks.  First, it can be slow to
+converge towards the end of optimization.  Second, applying
+constraints to parameters can be problematic; in particular, EM can
+lead to wrong parameter estimates when applying constraints.  Hence,
+in \pkg{depmixS4}, EM is used by default in unconstrained models, but
+otherwise, direct optimization is used.  Two options are available for
+direct optimization using package \pkg{Rsolnp}
+\citep{Ghalanos2010,Ye1987}, or \pkg{Rdonlp2}
+\citep{Tamura2009,Spellucci2002}.  Both packages can handle general
+linear (in)equality constraints (and optionally also non-linear
+constraints).
+
+
+\section[Using depmixS4]{Using \pkg{depmixS4}}
+
+Two steps are involved in using \pkg{depmixS4} which are illustrated
+below with examples:
+\begin{enumerate}
+	
+	\item model specification with function \code{depmix} (or with
+	\code{mix} for latent class and finite mixture models, see example
+	below on adding covariates to prior probabilities);
+	
+	\item  model fitting with function \code{fit}.
+\end{enumerate}
+We have separated the stages of model specification and model fitting
+because fitting large models can be fairly time-consuming and it is
+hence useful to be able to check the model specification before
+actually fitting the model.
+
+\subsection[Example data: speed]{Example data: \code{speed}}
+
+Throughout this article a data set called \code{speed} is used.  As
+already indicated in the introduction, it consists of three time
+series with three variables: response time \code{rt}, accuracy \code{corr}, and a covariate,
+\code{Pacc}, which defines the relative pay-off for speeded versus accurate
+responding.  Before describing some of the models that are fitted to
+these data, we provide a brief sketch of the reasons for gathering
+these data in the first place.
+
+Response times are a very common dependent variable in psychological
+experiments and hence form the basis for inference about many
+psychological processes.  A potential threat to such inference based
+on response times is formed by the speed-accuracy trade-off: different
+participants in an experiment may respond differently to typical
+instructions to `respond as fast and accurate as possible'.  A popular
+model which takes the speed-accuracy trade-off into account is the
+diffusion model \citep{Ratcliff1978}, which has proven to provide
+accurate descriptions of response times in many different settings.
+
+One potential problem with the diffusion model is that it predicts a
+continuous trade-off between speed and accuracy of responding, i.e.,
+when participants are pressed to respond faster and faster, the
+diffusion model predicts that this would lead to a gradual decrease in
+accuracy.  The \code{speed} data set that we analyze below was
+gathered to test this hypothesis versus the alternative hypothesis
+stating that there is a sudden transition from slow and accurate
+responding to fast responding at chance level.  At each trial of the
+experiment, the participant is shown the current setting of the
+relative reward for speed versus accuracy.  The bottom panel of
+Figure~\ref{fig:speed} shows the values of this variable.  The
+experiment was designed to investigate what would happen when this
+reward variable changes from reward for accuracy only to reward for
+speed only.  The \code{speed} data that we analyse here are from
+participant A in Experiment 1 in \citet{Dutilh2010}, who provide a
+complete description of the experiment and the relevant theoretical
+background.
+
+The central question regarding this data is whether it is indeed best
+described by two modes of responding rather than a single mode of
+responding with a continuous trade-off between speed and accuracy.
+The hallmark of a discontinuity between slow versus speeded responding
+is that switching between the two modes is asymmetric \citep[see
+e.g.][for a theoretical underpinning of this claim]{Maas1992}.  The
+\code{fit} help page of \pkg{depmixS4} provides a number of examples
+in which the asymmetry of the switching process is tested; those
+examples and other candidate models are discussed at length in
+\citet{Visser2009b}.
+
+
+\subsection{A simple model}
+
+A dependent mixture model is defined by the number of states and the
+initial state, state transition, and response distribution functions.
+A dependent mixture model can be created with the
+\code{depmix} function as follows:
+<<>>=
+library("depmixS4")
+data("speed")
+set.seed(1)
+mod <- depmix(response = rt ~ 1, data = speed, nstates = 2,
+  trstart = runif(4))
+@
+
+The first line of code loads the \pkg{depmixS4} package and
+\code{data(speed)} loads the \code{speed} data set.  The line
+\code{set.seed(1)} is necessary to get starting values that will
+result in the right model, see more on starting values below.
+
+The call to \code{depmix} specifies the model with a number of
+arguments.  The \code{response} argument is used to specify the
+response variable, possibly with covariates, in the familiar format
+using formulae such as in \code{lm} or \code{glm} models.  The second
+argument, \code{data = speed}, provides the \code{data.frame} in which
+the variables from \code{response} are interpreted.  Third, the number
+of states of the model is given by \code{nstates = 2}.
+
+
+\paragraph{Starting values.} Note also that start values for the
+transition parameters are provided in this call by the \code{trstart}
+argument.  Starting values for parameters can be provided using three
+arguments: \code{instart} for the parameters relating to the prior
+probabilities, \code{trstart}, relating the transition models, and
+\code{respstart} for the parameters of the response models.  Note that
+the starting values for the initial and transition models as well as
+multinomial logit response models are interpreted as {\em
+probabilities}, and internally converted to multinomial logit
+parameters (if a logit link function is used).  Start values can also
+be generated randomly within the EM algorithm by generating random
+uniform values for the values of $\gamma_{t}$ in (\ref{eq:Q}) at
+iteration 0.  Automatic generation of starting values is not available
+for constrained models (see below). 
+
+\paragraph{Fitting the model and printing results.} The \code{depmix}
+function returns an object of class `\code{depmix}' which contains the
+model specification, and not a fitted model.  Hence, the model needs
+to be fitted by calling \code{fit}:
+<<>>=
+fm <- fit(mod)
+@
+
+The \code{fit} function returns an object of class
+`\code{depmix.fitted}' which extends the `\code{depmix}' class, adding
+convergence information (and information about constraints if these
+were applied, see below).  The class has \code{print} and
+\code{summary} methods to see the results.  The \code{print} method
+provides information on convergence, the log-likelihood and
+the AIC and BIC values:
+<<>>=
+fm 
+@
+
+These statistics can also be extracted using \code{logLik}, \code{AIC}
+and \code{BIC}, respectively.  By comparison, a 1-state model for
+these data, i.e., assuming there is no mixture, has a log-likelihood of
+$-305.33$, and 614.66, and 622.83 for the AIC and BIC respectively.
+Hence, the 2-state model fits the data much better than the 1-state
+model.  Note that the 1-state model can be specified using
+\code{mod <- depmix(rt ~ 1, data = speed, nstates = 1)}, although this model is
+trivial as it will simply return the mean and standard deviation of
+the \code{rt} variable.
+
+The \code{summary} method of \code{fit}ted models provides the
+parameter estimates, first for the prior probabilities model, second
+for the transition models, and third for the response models.
+<<>>=
+summary(fm)
+@
+
+Since no further arguments were specified, the initial state, state
+transition and response distributions were set to their defaults
+(multinomial distributions for the first two, and a Gaussian
+distribution for the response).  The resulting model indicates two
+well-separated states, one with slow and the second with fast
+responses.  The transition probabilities indicate rather stable
+states, i.e., the probability of remaining in either of the states is
+around 0.9.  The initial state probability estimates indicate that
+state 1 is the starting state for the process, with a negligible
+probability of starting in state 2.
+
+\subsection{Covariates on transition parameters}
+
+By default, the transition probabilities and the initial state
+probabilities are parameterized using a multinomial model with an
+identity link function.  Using a multinomial logistic model allows one
+to include covariates on the initial state and transition
+probabilities.  In this case, each row of the transition matrix is
+parameterized by a baseline category logistic multinomial, meaning
+that the parameter for the base category is fixed at zero
+\citep[see][p.~267~ff., for multinomial logistic models and various
+parameterizations]{Agresti2002}.  The default baseline category is the
+first state.  Hence, for example, for a 3-state model, the initial
+state probability model would have three parameters of which the first
+is fixed at zero and the other two are freely estimated.
+\citet{Chung2007} discuss a related latent transition model for
+repeated measurement data ($T=2$) using logistic regression on the
+transition parameters; they rely on Bayesian methods of estimation.
+Covariates on the transition probabilities can be specified using a
+one-sided formula as in the following example:
+<<>>=
+set.seed(1)
+mod <- depmix(rt ~ 1, data = speed, nstates = 2, family = gaussian(),
+  transition = ~ scale(Pacc), instart = runif(2)) 
+fm <- fit(mod, verbose = FALSE) 
+@
+
+Note the use of \code{verbose = FALSE} to suppress printing of
+information on the iterations of the fitting process.  Applying
+\code{summary} to the \code{fit}ted object gives (only transition
+models printed here by using argument \code{which}): 
+<<>>= 
+summary(fm, which = "transition") 
+@
+
+The summary provides all parameters of the model, also the (redundant)
+zeroes for the base-line category in the multinomial model.  The
+summary also prints the transition probabilities at the zero value of
+the covariate.  Note that scaling of the covariate is useful in this
+regard as it makes interpretation of these intercept probabilities
+easier.
+
+\subsection{Multivariate data}
+
+Multivariate data can be modelled by providing a list of formulae as
+well as a list of family objects for the distributions of the various
+responses.  In above examples we have only used the response times
+which were modelled as a Gaussian distribution.  The accuracy
+variable in the \code{speed} data can be modelled with a multinomial
+by specifying the following:
+<<>>=
+set.seed(1)
+mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, nstates = 2, 
+  family = list(gaussian(), multinomial("identity")),
+  transition = ~ scale(Pacc), instart = runif(2))
+fm <- fit(mod,verbose = FALSE)
+@
+
+This provides the following fitted model parameters (only the 
+response parameters are given here): 
+<<>>=
+summary(fm, which = "response")
+@
+
+As can be seen, state 1 has fast response times and accuracy is
+approximately at chance level (.474), whereas state 2 corresponds with
+slower responding at higher accuracy levels (.904).
+
+Note that by specifying multivariate observations in terms of a list,
+the variables are considered conditionally independent (given the
+states).  Conditionally \emph{dependent} variables must be handled as
+a single element in the list.  Effectively, this means specifying a
+multivariate response model.  Currently, \pkg{depmixS4} has one 
+multivariate response model which is for multivariate normal
+variables.
+
+
+\subsection{Fixing and constraining parameters}
+
+Using package \pkg{Rsolnp} \citep{Ghalanos2010} or \pkg{Rdonlp2}
+\citep{Tamura2009}, parameters may be fitted subject to general linear
+(in-)equality constraints.  Constraining and fixing parameters is done
+using the \code{conpat} argument to the \code{fit} function, which
+specifies for each parameter in the model whether it's fixed (0) or
+free (1 or higher).  Equality constraints can be imposed by giving two
+parameters the same number in the \code{conpat} vector.  When only
+fixed values are required, the \code{fixed} argument can be used
+instead of \code{conpat}, with zeroes for fixed parameters and other
+values (e.g., ones) for non-fixed parameters.  Fitting the models
+subject to these constraints is handled by the optimization routine
+\code{solnp} or, optionally, by \code{donlp2}.  To be able to
+construct the \code{conpat} and/or \code{fixed} vectors one needs the
+correct ordering of parameters which is briefly discussed next before
+proceeding with an example.
+
+\paragraph{Parameter numbering.} When using the \code{conpat} and
+\code{fixed} arguments, complete parameter vectors should be supplied,
+i.e., these vectors should have length equal to the number of parameters of
+the model, which can be obtained by calling \code{npar(object)}.  Note
+that this is not the same as the degrees of freedom used e.g., in the
+\code{logLik} function because \code{npar} also counts the baseline
+category zeroes from the multinomial logistic models.  Parameters are
+numbered in the following order:
+\begin{enumerate}
+	\item  the prior model parameters;
+	\item  the parameters for the transition models;
+	\item  the response model parameters per state (and subsequently
+	per response in the case of multivariate time series).
+\end{enumerate}
+
+To see the ordering of parameters use the following:
+<<term=FALSE>>=
+setpars(mod, value = 1:npar(mod))
+@
+
+To see which parameters are fixed (by default only baseline parameters
+in the multinomial logistic models for the transition models and the
+initial state probabilities model):
+<<term=FALSE>>=
+setpars(mod, getpars(mod, which = "fixed"))
+@
+When fitting constraints it is useful to have good starting values 
+for the parameters and hence we first fit the following model without
+constraints:
+<<>>=
+trst <- c(0.9, 0.1, 0, 0, 0.1, 0.9, 0, 0)
+mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, transition = ~ Pacc,
+  nstates = 2, family = list(gaussian(), multinomial("identity")),
+  trstart = trst, instart = c(0.99, 0.01))
+fm1 <- fit(mod,verbose = FALSE)
+@
+
+After this, we use the fitted values from this model to constrain the
+regression coefficients on the transition matrix (parameters number~6
+and~10):
+<<term=FALSE, echo=TRUE,results=hide>>=
+pars <- c(unlist(getpars(fm1)))
+pars[6] <- pars[10] <- 11
+pars[1] <- 0
+pars[2] <- 1
+pars[13] <- pars[14] <- 0.5
+fm1 <- setpars(mod, pars)
+conpat <- c(0, 0, rep(c(0, 1), 4), 1, 1, 0, 0, 1, 1, 1, 1)
+conpat[6] <- conpat[10] <- 2
+fm2 <- fit(fm1, equal = conpat)
+@
+
+Using \code{summary} on the fitted model shows that the regression
+coefficients are now estimated at the same value of 12.66.  Setting
+elements 13 and 14 of \code{conpat} to zero resulted in fixing those
+parameters at their starting values of 0.5.  This means that state 1
+can now be interpreted as a 'guessing' state which is associated with
+comparatively fast responses.  Similarly for elements 1 and 2,
+resulting in fixed initial probabilities.  The function \code{llratio}
+computes the likelihood ratio $\chi^2$-statistic and the associated
+$p$-value with appropriate degrees of freedom for testing the
+tenability of constraints \citep{Dannemann2007}.  Note that these
+arguments (i.e., \code{conpat} and \code{conrows}) provide the
+possibility for arbitrary constraints, also between, e.g., a
+multinomial regression coefficient for the transition matrix and the
+mean of a Gaussian response model.  Whether such constraints make
+sense is hence the responsibility of the user.
+
+
+\subsection{Adding covariates on the prior probabilities}
+
+To illustrate the use of covariates on the prior probabilities we have
+included another data set with \pkg{depmixS4}.  The \code{balance}
+data consists of 4 binary items (correct-incorrect) on a balance scale
+task \citep{Siegler1981}.  The data form a subset of the data
+published in \citet{Jansen2002}.  Before specifying specifying a model
+for these data, we briefly describe them.
+
+The balance scale task is a famous task for testing cognitive
+strategies developed by Jean Piaget \citep[see][]{Siegler1981}.
+Figure~\ref{fig:balance} provides an example of a balance scale item.
+Participants' task is to say to which side the balance will tip when
+released, or alternatively, whether it will stay in balance.  The item
+shown in Figure~\ref{fig:balance} is a so-called distance item: the
+number of weights placed on each side is equal, and only the distance
+of the weights to the fulcrum differs between each side.
+
+\setkeys{Gin}{width=0.7\textwidth}
+\begin{figure}[t!]
+\begin{center}
+	\includegraphics{baldist.pdf}
+	\caption{Balance scale item; this is a distance item (see the text 
+	for details).}
+	\label{fig:balance}  
+\end{center}
+\end{figure}
+
+Children in the lower grades of primary school are known to ignore the
+distance dimension, and base their answer only on the number of
+weights on each side.  Hence, they would typically provide the wrong
+answer to these distance items.  Slightly older children do take
+distance into account when responding to balance scale items, but they
+only do so when the number of weights is equal on each side.  These
+two strategies that children employ are known as Rule~I and Rule~II.
+Other strategies can be teased apart by administering different items.
+The \code{balance} data set that we analyse here consists of 4
+distance items on a balance scale task administered to 779
+participants ranging from 5 to 19 years of age.  The full set of items
+consisted of 25 items; other items in the test are used to detect
+other strategies that children and young adults employ in solving
+balance scale items \citep[see][for details]{Jansen2002}. 
+
+
+In the following model, age is included as covariate on class
+membership to test whether, with age, children apply more complex
+rules in solving balance scale items.  Similarly to the transition
+matrix, covariates on the prior probabilities of the latent states (or
+classes in this case), are defined by using a one-sided formula
+\code{prior = ~ age}: 
+<<>>= 
+data("balance")
+set.seed(1)
+mod <- mix(list(d1 ~ 1, d2 ~ 1, d3 ~ 1, d4 ~ 1), data = balance,
+  nstates = 3, family = list(multinomial("identity"),
+  multinomial("identity"), multinomial("identity"),
+  multinomial("identity")), respstart = runif(24), prior = ~ age,
+  initdata = balance)
+fm <- fit(mod, verbose = FALSE) 
+fm
+@
+Note here that we define a \code{mix} model instead of a \code{depmix}
+model as these data form independent observations.  More formally,
+\code{depmix} models extend the class of `\code{mix}' models by adding
+transition models.  As for fitting \code{mix} models: as can be
+seen in Equation~\ref{eq:Q}, the EM algorithm can be applied by simply
+dropping the second summand containing the transition parameters, and 
+this is implemented as such in the EM algorithms in \pkg{depmixS4}.
+
+As can be seen from the print of the fitted model above, the BIC for 
+this model equals 1941.6. The similarly defined 2-class model for 
+these data has a BIC of 1969.2, and the 4-class model has BIC equal to
+1950.4. Hence, the 3-class seems to be adequate for describing these 
+data. 
+
+The summary of the \code{fit}ted model gives the following (only the
+prior model is shown here):
+<<>>=
+summary(fm, which = "prior")
+@
+
+The intercept values of the multinomial logistic parameters provide
+the prior probabilities of each class when the covariate has value
+zero (note that in this case the value zero does not have much
+significance, scaling and/or centering of covariates may be useful in
+such cases).  The summary function prints these values.  As can be
+seen from those values, at age zero, the prior probability is
+overwhelmingly at the second class.  Inspection of the response
+parameters reveals that class~2 is associated with incorrect
+responding, whereas class~1 is associated with correct responding;
+class~3 is an intermediate class with guessing behavior.
+Figure~\ref{fig:balprior} depicts the prior class probabilities as
+function of age based on the fitted parameters.
+
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE,echo=FALSE,height=5,width=7,eps=FALSE>>=
+x <- mlogit(base=1)
+coeff <- coefficients(fm@prior@parameters)
+
+pr1 <- function(y) {sapply(y, function(z) {x$linkinv(c(t(coeff)%*%c(1,z)), base=1)[1]})}
+pr2 <- function(y) {sapply(y, function(z) {x$linkinv(c(t(coeff)%*%c(1,z)), base=1)[2]})}
+pr3 <- function(y) {sapply(y, function(z) {x$linkinv(c(t(coeff)%*%c(1,z)), base=1)[3]})}
+
+plot(pr1,min(balance$age),max(balance$age),lty=1,ylim=c(0,1),
+main="Prior probabilities by age, balance scale data", xlab="age", ylab="Pr")
+plot(pr2,min(balance$age),max(balance$age),add=T,lty=2)
+plot(pr3,min(balance$age),max(balance$age),add=T,lty=3)
+
+legend("right",legend=c("Class 1 (correct)","Class 2 (incorrect)","Class 3 (guess)"),lty=1:3,inset=c(0.1,0))
+@
+	\caption{Class probabilities as a function of age.}
+	\label{fig:balprior}  
+\end{center}
+\end{figure}
+
+As can be seen from Figure~\ref{fig:balprior}, at younger ages 
+children predominantly apply Rule I, the wrong strategy for these 
+items. According to the model, approximately 90 \% of children at age
+5 apply Rule I. The remaining 10 \% are evenly split among the 2 
+other classes. At age 19, almost all participants belong to class~1. 
+Interestingly, prior probability of the 'guess' class 2, first 
+increases with age, and then decreases again. This suggests that 
+children pass through a phase in which they are uncertain or possibly 
+switch between applying different strategies. 
+
+
+\section[Extending depmixS4]{Extending \pkg{depmixS4}}
+
+The \pkg{depmixS4} package was designed with the aim of making it
+relatively easy to add new response distributions (as well as possibly
+new prior and transition models).  To make this possible, the EM
+routine simply calls the \code{fit} methods of the separate response
+models without needing access to the internal workings of these
+routines.  Referring to equation~\ref{eq:Q}, the EM algorithm calls
+separate fit functions for each part of the model, the prior
+probability model, the transition models, and the response models.  As
+a consequence, adding user-specified response models is
+straightforward.
+
+User-defined distributions should extend the `\code{response}' class and
+have the following slots:
+\begin{enumerate}
+	\item \code{y}: The response variable.
+	\item \code{x}: The design matrix, possibly only an intercept.
+	\item \code{parameters}: A named list with the coefficients and possibly 
+	other parameters (e.g., the standard deviation in the normal 
+	response model).
+	\item \code{fixed}: A vector of logicals indicating whether parameters are 
+	fixed.
+	\item \code{npar}: Numerical indicating the number of parameters of the model.
+\end{enumerate}
+
+In the \code{speed} data example, it may be more appropriate to model
+the response times with an exgaus rather than a Gaussian distribution.
+To do so, we first define an `\code{exgaus}' class extending the
+`\code{response}' class:
+<<>>=
+setClass("exgaus", contains="response")
+@
+
+The so-defined class now needs a number of methods: 
+\begin{enumerate}
+	\item constructor: Function to create instances of the class 
+	with starting values.
+	\item \code{show}: To print the model to the terminal.
+	\item \code{dens}: The function that computes the density of the responses.
+	\item \code{getpars} and \code{setpars}: To get and set parameters .
+	\item \code{predict}: To generate predicted values.
+	\item \code{fit}: Function to fit the model using posterior weights (used 
+	by the EM algorithm).
+\end{enumerate}
+
+Only the constructor and the \code{fit} methods are provided here; the
+complete code can be found in the help file of the \code{makeDepmix}
+function.  The example with the exgaus distribution uses the
+\pkg{gamlss} and \pkg{gamlss.dist} packages \citep{Rigby2005,
+Stasinopoulos2007,Stasinopoulos2009a,Stasinopoulos2009b} for computing
+the \code{dens}ity and for \code{fit}ting the parameters.
+
+The constructor method return an object of class `\code{exgaus}', and is
+defined as follows:
+<<results=hide, term=FALSE>>=
+library("gamlss")
+library("gamlss.dist")
+setGeneric("exgaus", function(y, pstart = NULL, fixed = NULL, ...) 
+  standardGeneric("exgaus"))
+
+setMethod("exgaus", 
+  signature(y = "ANY"), 
+  function(y, pstart = NULL, fixed = NULL, ...) {
+    y <- matrix(y, length(y))
+    x <- matrix(1) 
+    parameters <- list()
+    npar <- 3
+    if(is.null(fixed)) fixed <- as.logical(rep(0, npar))
+    if(!is.null(pstart)) {
+      if(length(pstart) != npar) stop("length of 'pstart' must be ", npar)
+      parameters$mu <- pstart[1]
+      parameters$sigma <- log(pstart[2])
+      parameters$nu <- log(pstart[3])
+    }
+    mod <- new("exgaus", parameters = parameters, fixed = fixed,
+      x = x, y = y, npar = npar)
+    mod
+  }
+)
+@
+
+<<echo=FALSE, term=FALSE>>=
+setMethod("dens","exgaus",
+    function(object,log=FALSE) {
+    	dexGAUS(object@y, mu = predict(object), 
+	sigma = exp(object@parameters$sigma), 
+	nu = exp(object@parameters$nu), 
+	log = log)
+    }
+)
+
+setMethod("getpars","response",
+    function(object,which="pars",...) {
+        switch(which,
+            "pars" = {
+                parameters <- numeric()
+                parameters <- unlist(object@parameters)
+                pars <- parameters
+            },
+            "fixed" = {
+                pars <- object@fixed
+            }
+        )
+        return(pars)
+    }
+)
+
+setMethod("setpars","exgaus",
+    function(object, values, which="pars", ...) {
+        npar <- npar(object)
+        if(length(values)!=npar) stop("length of 'values' must be",npar)
+        # determine whether parameters or fixed constraints are being set
+		nms <- names(object@parameters)
+		switch(which,
+		  "pars"= {
+		      object@parameters$mu <- values[1]
+		      object@parameters$sigma <- values[2]
+		      object@parameters$nu <- values[3]
+		      },
+		  "fixed" = {
+		      object@fixed <- as.logical(values)
+		  }
+	    )
+        names(object@parameters) <- nms
+        return(object)
+    }
+)
+
+setMethod("predict","exgaus", 
+    function(object) {
+        ret <- object@parameters$mu
+        return(ret)
+    }
+)
+@
+
+
+The \code{fit} method is defined as follows: 
+<<>>=
+setMethod("fit", "exgaus",
+  function(object, w) {
+    if(missing(w)) w <- NULL
+    y <- object@y
+    fit <- gamlss(y ~ 1, weights = w, family = exGAUS(),
+      control = gamlss.control(n.cyc = 100, trace = FALSE),
+      mu.start = object@parameters$mu,
+      sigma.start = exp(object@parameters$sigma),
+      nu.start = exp(object@parameters$nu))    
+    pars <- c(fit$mu.coefficients, fit$sigma.coefficients, 
+      fit$nu.coefficients)
+    object <- setpars(object,pars)
+    object
+  }
+)
+@
+
+The \code{fit} method defines a \code{gamlss} model with 
+only an intercept to be estimated and then sets the fitted parameters 
+back into their respective slots in the `exgaus' object. See the help 
+for \code{gamlss.distr} for interpretation of these parameters. 
+
+After defining all the necessary methods for the new response model, 
+we can  now define the dependent mixture model using this response model. 
+The function \code{makeDepmix} is included in \pkg{depmixS4} to have 
+full control over model specification, and we need it here. 
+
+We first create all the response models that we need as a double list: 
+<<>>=
+rModels <- list()
+rModels[[1]] <- list()
+rModels[[1]][[1]] <- exgaus(speed$rt, pstart = c(5, 0.1, 0.1))
+rModels[[1]][[2]] <- GLMresponse(formula = corr ~ 1, data = speed,
+  family = multinomial(), pstart = c(0.5, 0.5))
+
+rModels[[2]] <- list()
+rModels[[2]][[1]] <- exgaus(speed$rt, pstart = c(6, 0.1, 0.1))
+rModels[[2]][[2]] <- GLMresponse(formula = corr ~ 1, data = speed, 
+  family = multinomial(), pstart = c(0.1, 0.9))
+@
+
+Next, we define the transition and prior probability models using the 
+\code{transInit} function (which produces a transInit model, which also extends 
+the `\code{response}' class): 
+<<>>=
+trstart <- c(0.9, 0.1, 0.1, 0.9)
+transition <- list()
+transition[[1]] <- transInit(~ Pacc, nst = 2, data = speed, 
+  pstart = c(0.9, 0.1, 0, 0))
+transition[[2]] <- transInit(~ Pacc, nst = 2, data = speed, 
+  pstart = c(0.1, 0.9, 0, 0))
+inMod <- transInit(~ 1, ns = 2, pstart = c(0.1, 0.9),
+  data = data.frame(1))
+@
+
+Finally, we put everything together using \code{makeDepmix} and fit 
+the model: 
+<<>>=
+mod <- makeDepmix(response = rModels, transition = transition,
+  prior = inMod, stat = FALSE)
+fm <- fit(mod, verbose = FALSE)
+@
+
+Using \code{summary} will print the fitted parameters.  Note that the
+use of \code{makeDepmix} allows the possibility of, say, fitting a
+gaussian in one state and an exgaus distribution in another state.
+Note also that according to the AIC and BIC, the model with the exgaus
+describes the data much better than the same model in which the
+response times are modelled as gaussian.
+
+
+\section{Conclusions and future work}
+
+\pkg{depmixS4} provides a flexible framework for fitting dependent
+mixture models for a large variety of response distributions.  It can
+also fit latent class regression and finite mixture models, although
+it should be noted that more specialized packages are available for
+this such as \pkg{flexmix} \citep{Leisch2004,GruenLeisch2008}.  The package is
+intended for modelling (individual) time series data with the aim of
+characterizing the transition processes underlying the data.  The
+possibility to use covariates on the transition matrix greatly
+enhances the flexibility of the model.  The EM algorithm uses a very
+general interface that allows easy addition of new response models.
+
+We are currently working on implementing the gradients for response
+and transition models with two goals in mind.  First, to speed up
+(constrained) parameter optimization using \pkg{Rdonlp2} or
+\pkg{Rsolnp}.  Second, analytic gradients are useful in computing the
+Hessian of the estimated parameters so as to arrive at standard errors
+for those.  We are also planning to implement goodness-of-fit
+statistics \citep{Titman2008}.
+
+
+\section*{Acknowledgments} 
+
+Ingmar Visser was supported by an EC Framework 6 grant, project 516542
+(NEST).  Maarten Speekenbrink was supported by ESRC grant
+RES-062-23-1511 and the ESRC Centre for Economic Learning and Social
+Evolution (ELSE).  Han van der Maas provided the speed-accuracy data
+\citep{Dutilh2010} and thereby necessitated implementing models with
+time-dependent covariates.  Brenda Jansen provided the balance scale
+data set \citep{Jansen2002} which was the perfect opportunity to test
+the covariates on the prior model parameters.  The examples in the
+help files use both of these data sets.
+
+\bibliography{depmixS4}
+
+\end{document}
+
+

@@ -34,8 +34,8 @@ depmixS4 provides classes for specifying and fitting hidden Markov models
 	\tabular{ll}{
 		Package: \tab depmixS4\cr
 		Type: \tab Package\cr
-		Version: \tab 0.3-0\cr
-		Date: \tab 2010-01-30\cr
+		Version: \tab 1.0-0\cr
+		Date: \tab 2010-08-04\cr
 		License: \tab GPL\cr
 	}
 
@@ -62,6 +62,9 @@ Maintainer: i.visser@uva.nl
 }
 
 \references{
+	
+	Ingmar Visser and Maarten Speekenbrink (2010).  depmixS4: An R Package for
+	Hidden Markov Models. \emph{Journal of Statistical Software, 36(7)}, p. 1-21.
 
 	On hidden Markov models: Lawrence R. Rabiner (1989).  A tutorial on
 	hidden Markov models and selected applications in speech recognition.
