@@ -93,8 +93,8 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 
 	if(converge) {
 		object@message <- switch(crit,
-			relative = "Log likelihood converged to within tol. (relative change crit.)",
-			absolute = "Log likelihood converged to within tol. (absolute change crit.)"
+			relative = "Log likelihood converged to within tol. (relative change)",
+			absolute = "Log likelihood converged to within tol. (absolute change)"
 		)
 	} else object@message <- "'maxit' iterations reached in EM without convergence."
 
@@ -202,8 +202,8 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 	
 	if(converge) {
 		object@message <- switch(crit,
-			relative = "Log likelihood converged to within tol. (relative change crit.)",
-			absolute = "Log likelihood converged to within tol. (absolute change crit.)"
+			relative = "Log likelihood converged to within tol. (relative change)",
+			absolute = "Log likelihood converged to within tol. (absolute change)"
 		)
 	} else object@message <- "'maxit' iterations reached in EM without convergence."
 	

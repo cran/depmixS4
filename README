@@ -1,4 +1,6 @@
 
+FITTING HIDDEN MARKOV MODELS IN R
+
 depmixS4 provides a framework for specifying and fitting hidden Markov
 models.  The observation densities use an interface to the glm
 distributions, most of which are now implemented.  Besides these,
@@ -6,16 +8,18 @@ observations can be modelled using the multinomial distribution with
 identity or logistic link function.  The latter provides functionality for
 multinomial logistic responses with covariates.  The transition matrix and
 the initial state probabilities are also modeled as multinomial logistics
-(or multinomials with identity link) with the possibility of including
-covariates.  Optimization is by default done by the EM algorithm.  When
-linear constraints are included, package Rsolnp is used for optimization
-(there is also support for using Rdonlp2 as optimizer, see details below).
-New response distributions can be added by extending the response-class and
+(or multinomials with identity link, which is the default when no
+covariates are present) with the possibility of including covariates.
+
+Optimization is by default done using the EM algorithm.  When linear
+constraints are included, package Rsolnp is used for optimization (there is
+also support for using Rdonlp2 as optimizer, see details below).  New
+response distributions can be added by extending the response-class and
 writing appropriate methods for it (dens, and getpars and setpars); an
 example of this is provided on the ?makeDepmix help page.  depmixS4 also
-fits latent class and mixture models.
+fits latent class and mixture models, see ?mix for an example.
 
-The latest development version of depmix can be found at: 
+The latest development versions of depmixS4 (and depmix) can be found at: 
 https://r-forge.r-project.org/projects/depmix/
 
 
@@ -29,14 +33,15 @@ now modeled as multinomial logistics with a baseline.  Specification of
 linear constraints uses the same mechanism as was used in depmix, with the
 only difference that constraints are passed as arguments to the fit
 function rather than the model specification function.  See the help files
-for further details.
+for further details. NOTE: most of the functionality of depmix is now 
+also provided in depmixS4; in the future therefor I may stop updating 
+depmix. 
 
 
 USING RDONLP2
 
-Optimization of models with (general) linear (in-)equality constraints can
-be done using the Rdonlp2 package, written Ryuichi Tamura(ry.tamura @
-gmail.com), which is available from: http://arumat.net/Rdonlp2/
-
-Optimization with Rdonlp2 is automatically selected when constraints are
-specified in the fit function.
+Optimization of models with (general) linear (in-)equality constraint is
+done using Rsolnp (available from CRAN).  Optionally the Rdonlp2 package
+can be used; Rdonlp2 was written by Ryuichi Tamura(ry.tamura @ gmail.com),
+and used to be available from: http://arumat.net/Rdonlp2/ The present 
+status of Rdonlp2 is unclear. 

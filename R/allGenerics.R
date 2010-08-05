@@ -8,6 +8,7 @@
 	require(methods)
 	require(MASS)
  	require(nnet)
+	require(Rsolnp)
 }
 
 .Last.lib <- function(libpath) {}

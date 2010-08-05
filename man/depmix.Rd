@@ -175,12 +175,12 @@ following slots:
 
 \references{
 	
-	On hidden Markov models: Lawrence R. Rabiner (1989).  A tutorial on
-	hidden Markov models and selected applications in speech recognition.
-	\emph{Proceedings of IEEE}, 77-2, p.  267-295.
-	
-	On latent class models: A. L. McCutcheon (1987).  \emph{Latent class
-	analysis}.  Sage Publications.
+	Ingmar Visser and Maarten Speekenbrink (2010).  depmixS4: An R Package for
+	Hidden Markov Models. \emph{Journal of Statistical Software, 36(7)}, p. 1-21.
+
+	Lawrence R. Rabiner (1989).  A tutorial on hidden Markov models and
+	selected applications in speech recognition.  \emph{Proceedings of
+	IEEE}, 77-2, p.  267-295.
 	
 }
 
