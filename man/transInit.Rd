@@ -1,7 +1,5 @@
 \name{transInit}
 
-\docType{method}
-
 \alias{transInit}
 
 \alias{transInit,formula-method}

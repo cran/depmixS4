@@ -15,12 +15,10 @@ em <- function(object,...) {
 }
 
 # em for lca and mixture models
-em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
+em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,...) {
 	
 	if(!is(object,"mix")) stop("object is not of class 'mix'")
-	
-	crit <- match.arg(crit)
-	
+		
 	ns <- nstates(object)
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
@@ -30,17 +28,19 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 	converge <- FALSE
 	j <- 0
 	
-	# compute responsibilities
+	# compute response probabilities
 	B <- apply(object@dens,c(1,3),prod)
 	gamma <- object@init*B
 	LL <- sum(log(rowSums(gamma)))
 	# normalize
-	gamma <- gamma/rowSums(gamma)
+	gamma <- gamma/rowSums(gamma)	
 	
 	if(random.start) {
 		nr <- sum(ntimes(object))
 		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
 		gamma <- gamma/rowSums(gamma)
+		# add stuff to reestimate the model here and compute LL again
+		# based on these starting values
 	} 
 	
 	LL.old <- LL + 1
@@ -110,10 +110,9 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,...) {
 	
-	if(!is(object,"depmix")) stop("object is not of class '(dep)mix'")
-	crit <- match.arg(crit)
+	if(!is(object,"depmix")) stop("object is not of class 'depmix'")
 	
 	ns <- nstates(object)
 	
@@ -125,28 +124,43 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 	converge <- FALSE
 	j <- 0
 	
-	# A <- object@trDens
-	# B <- object@dens
-	# init <- object@init
-	
-	# initial expectation
-	fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
-	LL <- fbo$logLike
-	LL.old <- LL + 1
 	
 	if(random.start) {
+				
 		nr <- sum(ntimes(object))
-		fbo$gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
-		fbo$gamma <- fbo$gamma/rowSums(fbo$gamma)
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- gamma/rowSums(gamma)
+		LL <- -1e10
+		
+		for(i in 1:ns) {
+			for(k in 1:nresp(object)) {
+				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+				# update dens slot of the model
+				object@dens[,k,i] <- dens(object@response[[i]][[k]])
+			}
+		}
+		
+		# initial expectation
+		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		LL <- fbo$logLike
+		
+		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
+		
+	} else {
+		# initial expectation
+		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		LL <- fbo$logLike
 	}
+	
+	LL.old <- LL + 1
 	
 	while(j <= maxit & !converge) {
 		
 		# maximization
 				
-		# should become object@prior <- fit(object@prior)
+		# should become object@prior <- fit(object@prior, gamma)
 		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
-		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
+		object@prior <- fit(object@prior, w=NULL, ntimes=NULL)
 		object@init <- dens(object@prior)
 				
 		trm <- matrix(0,ns,ns)
@@ -158,7 +172,8 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 				for(k in 1:ns) {
 					trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
 				}
-				# FIX THIS; it will only work with specific trinModels??
+				# FIX THIS; it will only work with specific trinModels
+				# should become object@transition = fit(object@transition, xi, gamma)
 				object@transition[[i]]@parameters$coefficients <- switch(object@transition[[i]]@family$link,
 					identity = object@transition[[i]]@family$linkfun(trm[i,]),
 					mlogit = object@transition[[i]]@family$linkfun(trm[i,],base=object@transition[[i]]@family$base),
