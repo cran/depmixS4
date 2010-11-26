@@ -1,7 +1,8 @@
 
+
 setMethod("fit",
     signature(object="mix"),
-    function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conrows.lower=0,method=NULL,em.control=list(tol=1e-8,crit=c("relative","absolute"),random.start=FALSE),verbose=TRUE,...) {
+    function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conrows.lower=0,method=NULL,emcontrol=em.control(),verbose=TRUE,...) {
 	
 		fi <- !is.null(fixed)
 		cr <- !is.null(conrows)
@@ -20,23 +21,20 @@ setMethod("fit",
 		} else {
 			if(method=="EM") {
 				if(constr) {
-					warning("EM not applicable for constrained models; optimization method changed to 'donlp'")
-					method="donlp"
+					warning("EM not applicable for constrained models; optimization method changed to 'rsolnp'")
+					method="rsolnp"
 				}
 			}
 		}
 		
-		# check feasibility of starting values
-		if(is.nan(logLik(object))) stop("Initial model infeasible, log likelihood is NaN; please provide better starting values. ")
-		
 		if(method=="EM") {
-			if(is.null(em.control$tol)) em.control$tol <- 1e-8
-			if(is.null(em.control$crit)) em.control$crit <- "relative"
-			if(is.null(em.control$random.start)) em.control$random.start <- FALSE
-			object <- em(object,tol=em.control$tol,crit=em.control$crit,random.start=em.control$random.start,verbose=verbose,...)
+			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,verbose=verbose,...)
 		}
 		
 		if(method=="donlp"||method=="rsolnp") {
+			
+			# check feasibility of starting values
+			if(is.nan(logLik(object))) stop("Initial model infeasible, log likelihood is NaN; please provide better starting values. ")
 			
 			# determine which parameters are fixed
  			if(fi) {

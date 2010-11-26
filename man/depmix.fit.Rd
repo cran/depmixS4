@@ -1,7 +1,5 @@
 \name{fit}
 
-\docType{method}
-
 \alias{fit}
 \alias{depmix.fit}
 \alias{fit,depmix-method}
@@ -28,14 +26,12 @@
 \usage{
 	
 	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL,em.control=list(tol=1e-8,
-		crit=c("relative","absolute"),random.start=FALSE),verbose=TRUE,...)
+		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
 	
 	\S4method{summary}{depmix.fitted}(object,which="all")
 
 	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL,em.control=list(tol=1e-8,
-		crit=c("relative","absolute"),random.start=FALSE),verbose=TRUE,...)
+		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
 
@@ -58,8 +54,8 @@
 	\item{method}{The optimization method; mostly determined by
 		constraints.}
 		
-	\item{em.control}{Named list with control parameters for the EM
-		algorithm (see Control parameters below).}
+	\item{emcontrol}{Named list with control parameters for the EM
+		algorithm (see \code{\link{em.control}}).}
   
 	\item{verbose}{Should optimization information be displayed on screen?}
 	
@@ -74,7 +70,7 @@
 
 	Models are fitted by the EM algorithm if there are no constraints on
 	the parameters. Aspects of the EM algorithm can be controlled through
-	the \code{control.em} argument (see below). 
+	the \code{emcontrol} argument; see details in \code{\link{em.control}}. 
 	Otherwise the general optimizers \code{solnp}, the
 	default (from package \code{Rsolnp}) or \code{donlp2} (from package
 	\code{Rdonlp2}) are used which handle general linear (in-)equality
@@ -93,7 +89,7 @@
 	estimated to be equal. Any integers can be used in this way except 0
 	and 1, which indicate fixed and free parameters, respectively. 
 
-	Using \code{solnp} or \code{donlp2} , a Newton-Raphson scheme is employed
+	Using \code{solnp} (or \code{donlp2}), a Newton-Raphson scheme is employed
 	to estimate parameters subject to linear constraints by imposing:
 	
 			bl <= A*x <= bu,
@@ -103,7 +99,7 @@
 
 	The \code{conrows} argument is used to specify rows of A directly, and
 	the conrows.lower and conrows.upper arguments to specify the bounds on
-	the constraints.  \code{conrows} is a matrix of npar(object) columns
+	the constraints.  \code{conrows} must be a matrix of npar(object) columns
 	and one row for each constraint (a vector in the case of a single
 	constraint).  Examples of these three ways of constraining parameters
 	are provided below.
@@ -119,35 +115,6 @@
 	
 }
 
-\section{Control parameters for the EM algorithm}{
-	
-	Aspects of EM algorithm can be controlled by the \code{em.control}
-	argument.  This named list currently observes the following parameters:
-	
-	\describe{
-		\item{\code{tol}:}{sets the the tolerance level for convergence.}
-	
-		\item{\code{criterion}:}{sets the convergence criterion to either
-		the relative change in the log-likelihood or the absolute change in
-		the log-likelihood.  The relative likelihood criterion (the
-		default) assumes convergence on iteration \eqn{i}{i} when
-		\eqn{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} <
-		tol}{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} <
-		tol}.  The absolute likelihood criterion assumes convergence
-		on iteration \eqn{i}{i} when \eqn{\log L(i) - \log L(i-1) <
-		tol}{(logLik(i) - logLik(i-1)) < tol}.}
-  
-		\item{\code{random.start}:}{is used for a (limited) random
-		initialization of the parameters.  In particular, if
-		\code{random.start=TRUE}, the (posterior) state probabilities are
-		randomized at iteration 0 (using a uniform distribution).  Random
-		initialization is useful when no initial parameters can be given to
-		distinguish between the states.  It is also useful for repeated
-		estimation from different starting values.
-		} 
-	} 
-}
-
 \value{
 	
 	\code{fit} returns an object of class
@@ -157,7 +124,7 @@
 	\describe{
 		\item{\code{message}:}{Convergence information.}
 	
-		\item{\code{conMa}t:}{The constraint matrix A, see Details.}
+		\item{\code{conMat}:}{The constraint matrix A, see Details.}
 	
 		\item{\code{posterior}:}{The posterior state sequence (computed
 		with the viterbi algorithm), and the posterior probabilities (delta
@@ -197,14 +164,10 @@ data(speed)
 
 # 2-state model on rt and corr from speed data set 
 # with Pacc as covariate on the transition matrix
-# starting values for the transition pars (without 
-# those EM does not get off the ground)
-set.seed(1)
-tr=runif(6)
-trst=c(tr[1:2],0,tr[3:5],0,tr[6])
 mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
-	family=list(gaussian(),multinomial("identity")),trstart=trst)
+	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
 # fit the model
+set.seed(3)
 fmod1 <- fit(mod1)
 fmod1 # to see the logLik and optimization information
 # to see the parameters
@@ -270,25 +233,18 @@ fmod3b <- fit(mod3,conrows=conr,fixed=!free) # using free defined above
 
 data(balance)
 # four binary items on the balance scale task
-
-instart=c(0.5,0.5)
-set.seed(1)
-respstart=runif(16)
-# note that ntimes argument is used to make this a mixture model
 mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial(),multinomial(),multinomial(),multinomial()),
-	respstart=respstart,instart=instart)
+	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")))
 
+set.seed(1)
 fmod4 <- fit(mod4)
 
 # add age as covariate on class membership by using the prior argument
-instart=c(0.5,0.5,0,0) # we need the initial probs and the coefficients of age 
-set.seed(2)
-respstart=runif(16)
 mod5 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial(),multinomial(),multinomial(),multinomial()),
-	instart=instart, respstart=respstart, prior=~age, initdata=balance)
+	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")),
+	prior=~age, initdata=balance)
 
+set.seed(1)
 fmod5 <- fit(mod5)
 
 # check the likelihood ratio; adding age significantly improves the goodness-of-fit

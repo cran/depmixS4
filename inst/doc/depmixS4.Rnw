@@ -25,7 +25,8 @@
 \Abstract{	
   This introduction to the \proglang{R} package \pkg{depmixS4} is a (slightly)
   modified version of \cite{Visser+Speekenbrink:2010}, published in the
-  \emph{Journal of Statistical Software}.
+  \emph{Journal of Statistical Software}. Please refer to that 
+  article when using \pkg{depmixS4}. The current version is 1.0-1. 
 
   \pkg{depmixS4} implements a general framework for defining and
   estimating dependent mixture models in the \proglang{R}
@@ -439,14 +440,18 @@ parameters (if a logit link function is used).  Start values can also
 be generated randomly within the EM algorithm by generating random
 uniform values for the values of $\gamma_{t}$ in (\ref{eq:Q}) at
 iteration 0.  Automatic generation of starting values is not available
-for constrained models (see below). 
+for constrained models (see below). In the call to \code{fit} below, 
+the argument \code{emc=em.control(rand=FALSE)} controls the EM 
+algorithm and specifies that random start values should not be 
+generated\footnote{As of version 1.0-1, the default is have random 
+parameter initialization when using the EM algorithm.}. 
 
 \paragraph{Fitting the model and printing results.} The \code{depmix}
 function returns an object of class `\code{depmix}' which contains the
 model specification, and not a fitted model.  Hence, the model needs
 to be fitted by calling \code{fit}:
 <<>>=
-fm <- fit(mod)
+fm <- fit(mod, emc=em.control(rand=FALSE))
 @
 
 The \code{fit} function returns an object of class
@@ -511,7 +516,7 @@ one-sided formula as in the following example:
 set.seed(1)
 mod <- depmix(rt ~ 1, data = speed, nstates = 2, family = gaussian(),
   transition = ~ scale(Pacc), instart = runif(2)) 
-fm <- fit(mod, verbose = FALSE) 
+fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE)) 
 @
 
 Note the use of \code{verbose = FALSE} to suppress printing of
@@ -542,7 +547,7 @@ set.seed(1)
 mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, nstates = 2, 
   family = list(gaussian(), multinomial("identity")),
   transition = ~ scale(Pacc), instart = runif(2))
-fm <- fit(mod,verbose = FALSE)
+fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
 @
 
 This provides the following fitted model parameters (only the 
@@ -616,7 +621,7 @@ trst <- c(0.9, 0.1, 0, 0, 0.1, 0.9, 0, 0)
 mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, transition = ~ Pacc,
   nstates = 2, family = list(gaussian(), multinomial("identity")),
   trstart = trst, instart = c(0.99, 0.01))
-fm1 <- fit(mod,verbose = FALSE)
+fm1 <- fit(mod,verbose = FALSE, emc=em.control(rand=FALSE))
 @
 
 After this, we use the fitted values from this model to constrain the
@@ -709,7 +714,7 @@ mod <- mix(list(d1 ~ 1, d2 ~ 1, d3 ~ 1, d4 ~ 1), data = balance,
   multinomial("identity"), multinomial("identity"),
   multinomial("identity")), respstart = runif(24), prior = ~ age,
   initdata = balance)
-fm <- fit(mod, verbose = FALSE) 
+fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE)) 
 fm
 @
 Note here that we define a \code{mix} model instead of a \code{depmix}
@@ -978,7 +983,7 @@ the model:
 <<>>=
 mod <- makeDepmix(response = rModels, transition = transition,
   prior = inMod, stat = FALSE)
-fm <- fit(mod, verbose = FALSE)
+fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
 @
 
 Using \code{summary} will print the fitted parameters.  Note that the
@@ -1009,7 +1014,6 @@ and transition models with two goals in mind.  First, to speed up
 Hessian of the estimated parameters so as to arrive at standard errors
 for those.  We are also planning to implement goodness-of-fit
 statistics \citep{Titman2008}.
-
 
 \section*{Acknowledgments} 
 

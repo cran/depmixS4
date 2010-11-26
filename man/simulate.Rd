@@ -1,7 +1,5 @@
 \name{simulate}
 
-\docType{method}
-
 \alias{simulate}
 
 \alias{simulate,response-method}

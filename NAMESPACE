@@ -12,6 +12,7 @@ export(
 	llratio,
 	multinomial,
 	em,
+	em.control,
 	viterbi,
 	mlogit
 )

@@ -89,42 +89,46 @@ See the \code{\link{depmix}} help page for the return value, a
 
 \examples{
 
-# below example recreates the model from the depmix help page albeit in a
-# roundabout way
+# below example recreates the same model as on the fit help page in a roundabout way
+# there we had:
+# mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+#	 family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
 
 data(speed)   
 
 rModels <- list(
 	list(
-		GLMresponse(formula=rt~1,data=speed,family=gaussian(),pstart=c(5.52,.202)),
-		GLMresponse(formula=corr~1,data=speed,family=multinomial(),pstart=c(0.5,0.5))
+		GLMresponse(formula=rt~1,data=speed,family=gaussian()),
+		GLMresponse(formula=corr~1,data=speed,family=multinomial("identity"))
 	),
 	list(
-		GLMresponse(formula=rt~1,data=speed,family=gaussian(),pstart=c(6.39,.24)),
-		GLMresponse(formula=corr~1,data=speed,family=multinomial(),pstart=c(.1,.9))
+		GLMresponse(formula=rt~1,data=speed,family=gaussian()),
+		GLMresponse(formula=corr~1,data=speed,family=multinomial("identity"))
 	)
 )
 
-trstart=c(0.9,0.1,0.1,0.9)
 transition <- list()
-transition[[1]] <- transInit(~1,nstates=2,data=data.frame(1),pstart=c(trstart[1:2]))
-transition[[2]] <- transInit(~1,nstates=2,data=data.frame(1),pstart=c(trstart[3:4]))
+transition[[1]] <- transInit(~Pacc,nstates=2,data=speed)
+transition[[2]] <- transInit(~Pacc,nstates=2,data=speed)
 
-instart=c(0,1)
-inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=attr(speed,"ntimes"))
+inMod <- transInit(~1,ns=2,data=data.frame(rep(1,3)),family=multinomial("identity"))
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),stationary=FALSE)
 
+set.seed(3)
 fm1 <- fit(mod)
 fm1
 summary(fm1)
+
 
 # generate data from two different multivariate normal distributions
 m1 <- c(0,1)
 sd1 <- matrix(c(1,0.7,.7,1),2,2)
 m2 <- c(1,0)
 sd2 <- matrix(c(2,.1,.1,1),2,2)
+set.seed(2)
 y1 <- mvrnorm(50,m1,sd1)
 y2 <- mvrnorm(50,m2,sd2)
+# this creates data with a single change point
 y <- rbind(y1,y2)
 
 # now use makeDepmix to create a depmix model for this bivariate normal timeseries
@@ -143,9 +147,10 @@ inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(1))
 
 mod <- makeDepmix(response=rModels,transition=transition,prior=inMod)
 
-fm2 <- fit(mod)
+fm2 <- fit(mod,emc=em.control(random=FALSE))
+
 # where is the switch point?
-plot(as.ts(posterior(fm2)[,1]))
+plot(as.ts(posterior(fm2)[,2]))
 
 
 # in below example we add the exgaus distribution as a response model and fit
@@ -284,7 +289,7 @@ inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 
 mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=attr(speed,"ntimes"),stat=FALSE)
 
-fm3 <- fit(mod)
+fm3 <- fit(mod,emc=em.control(rand=FALSE))
 summary(fm3)
 
 }

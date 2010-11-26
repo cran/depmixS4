@@ -64,7 +64,9 @@ brief description of these here.}
 
 \section{MVNresponse}{
 
-	\code{MVNresponse} is a model for a multivariate normal distributed response.
+	\code{MVNresponse} is a model for a multivariate normal distributed
+	response.  See code{\link{makeDepmix}} for an example of how to use
+	this and other non-glm like distributions.
 
   \describe{
     \item{y:}{The dependent variable. This is a matrix.}
@@ -79,30 +81,28 @@ brief description of these here.}
 \section{NORMresponse}{
 
 	\code{NORMresponse} is a model for a normal (Gaussian) distributed response.
-  It extends the basic \code{\link{GLMresponse}} class directly.
+	It extends the basic \code{\link{GLMresponse}} class directly.
 
-  \describe{
-    \item{y:}{The dependent variable.}
-    \item{x:}{The design matrix.}
-    \item{Parameters:}{A named list with elements ``coefficients'',
-    which contains the GLM coefficients, and ``sd'', which contains the
-    standard deviation.}
-  }
-
+	\describe{
+		\item{y:}{The dependent variable.}
+		\item{x:}{The design matrix.}
+		\item{Parameters:}{A named list with elements ``coefficients'',
+		which contains the GLM coefficients, and ``sd'', which contains the
+		standard deviation.}
+	}
 }
 
 \section{POISSONresponse}{
 
 	\code{POISSONresponse} is a model for a Poisson distributed response.
-  It extends the basic \code{\link{GLMresponse}} class directly.
-
-  \describe{
-    \item{y:}{The dependent variable.}
-    \item{x:}{The design matrix.}
-    \item{Parameters:}{A named list with a single element ``coefficients'',
-    which contains the GLM coefficients.}
-  }
-
+	It extends the basic \code{\link{GLMresponse}} class directly.
+	
+	\describe{
+    	\item{y:}{The dependent variable.}
+		\item{x:}{The design matrix.}
+		\item{Parameters:}{A named list with a single element ``coefficients'',
+		which contains the GLM coefficients.}
+	}
 }
 
 \examples{

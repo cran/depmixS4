@@ -6,8 +6,9 @@ require(depmixS4)
 
 # binomial response model
 x <- rnorm(1000)
-library(boot)
-p <- inv.logit(x)
+# library(boot)
+invlogit <- function(lp) {exp(lp)/(1+exp(lp))}
+p <- invlogit(x)
 ss <- rbinom(1000,1,p)
 mod <- GLMresponse(cbind(ss,1-ss)~x,family=binomial())
 fit(mod)

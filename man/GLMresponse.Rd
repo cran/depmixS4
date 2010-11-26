@@ -1,7 +1,5 @@
 \name{GLMresponse}
 
-\docType{method}
-
 \alias{GLMresponse}
 \alias{GLMresponse,formula-method}
 
@@ -58,9 +56,11 @@
 	
 	The \code{multinomial} model takes as link functions \code{mlogit}, the
 	default, and then uses functionality from the \code{nnet} package to
-	fit multinomial logistic models; it also takes \code{identity} as a
-	link function.  The latter is typically faster and is hence preferred
-	when no covariates are present.  
+	fit multinomial logistic models; using \code{mlogit} as link allows
+	only n=1 models to be specified, i.e. a single observation for each
+	occasion; it also takes \code{identity} as a link function.  The latter
+	is typically faster and is hence preferred when no covariates are
+	present.
 	
 	See the \code{\link{responses}} help page for examples. 
 	

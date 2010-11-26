@@ -1,4 +1,28 @@
 
+Changes in depmixS4 version 1.0-1
+
+  o minor changes in documentation to conform to R 2.12.0 standards. 
+
+  o fixed a bug concerning random start values (the argument to specify
+    this was not passed to the EM algorithm and hence was completely 
+    ineffective ...). 
+
+  o changed the emcontrol argument to the fit function; it now calls 
+    a function em.control which returns the list of control parameters, which
+    now also includes maxit, the max number of iterations of the EM algorithm. 
+    This makes future additions to EM control parameters easier. 
+
+  o random parameter initialization is now the default when using EM 
+    to fit models. 
+  
+  o fixed a bug in multinomial models with n>1; the parameters are now 
+    normalized such that they sum to unity (this was introduced in version
+    0.9-0 in multinomial models with identity link). 
+
+  o added an error message for multinomial response models with n>1 and 
+    link='mlogit' as this case is not handled; n>1 multinomial can use the
+    'identity' link function. 
+
 Changes in depmixS4 version 1.0-0
 
   o added a vignette to the package and upped the version number 1.0-0 to 
@@ -29,21 +53,21 @@ Changes in depmixS4 version 0.9-0
     present. 
 
   o added bounds and constraints for multinomial identity models such
-	that these constraints are satisfied when fitting models with
-	method="rsolnp" or "donlp".  Also, variance and sd parameters in
-	gaussian and multivariate normal models are given bounds to prevent
-	warnings and errors in optimization of such models using rsolnp or
-	donlp.
+    that these constraints are satisfied when fitting models with
+    method="rsolnp" or "donlp".  Also, variance and sd parameters in
+    gaussian and multivariate normal models are given bounds to prevent
+    warnings and errors in optimization of such models using rsolnp or 
+    donlp.
 
   o added option to generate starting values as part of the EM 
     algorithm. 
 
   o fixed a bug in multinomial response models with n>1; the response for
-	these models can be specified as a k-column matrix with the number of
-	observed responses for each category; the loglikelihood for these
-	models in which there was more than 1 observation per row was
-	incorrect; note that such models may lead to some numerical
-	instabilities when n is large.
+    these models can be specified as a k-column matrix with the number of
+    observed responses for each category; the loglikelihood for these
+    models in which there was more than 1 observation per row was
+    incorrect; note that such models may lead to some numerical
+    instabilities when n is large.
 
 Changes in depmixS4 version 0.3-0
   
