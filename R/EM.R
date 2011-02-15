@@ -28,20 +28,36 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	converge <- FALSE
 	j <- 0
 	
-	# compute response probabilities
-	B <- apply(object@dens,c(1,3),prod)
-	gamma <- object@init*B
-	LL <- sum(log(rowSums(gamma)))
-	# normalize
-	gamma <- gamma/rowSums(gamma)	
-	
 	if(random.start) {
+				
 		nr <- sum(ntimes(object))
 		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
 		gamma <- gamma/rowSums(gamma)
-		# add stuff to reestimate the model here and compute LL again
-		# based on these starting values
-	} 
+		LL <- -1e10
+		
+		for(i in 1:ns) {
+			for(k in 1:nresp(object)) {
+				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+				# update dens slot of the model
+				object@dens[,k,i] <- dens(object@response[[i]][[k]])
+			}
+		}
+		
+		# initial expectation
+		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		LL <- fbo$logLike
+		
+		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
+		
+	} else {
+		# initial expectation
+# 		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		B <- apply(object@dens,c(1,3),prod)
+		gamma <- object@init*B
+		LL <- sum(log(rowSums(gamma)))
+		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
+		gamma <- gamma/rowSums(gamma)
+	}
 	
 	LL.old <- LL + 1
 	
@@ -66,6 +82,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		B <- apply(object@dens,c(1,3),prod)
 		gamma <- object@init*B
 		LL <- sum(log(rowSums(gamma)))
+
 		# normalize
 		gamma <- gamma/rowSums(gamma)
 		
@@ -124,7 +141,6 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	converge <- FALSE
 	j <- 0
 	
-	
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
@@ -150,6 +166,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		# initial expectation
 		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
 		LL <- fbo$logLike
+		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
 	}
 	
 	LL.old <- LL + 1

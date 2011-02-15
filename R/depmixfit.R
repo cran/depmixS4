@@ -109,7 +109,7 @@ setMethod("fit",
 				allpars[!fixed] <- pars
 				object <- setpars(object,allpars)
 				ans = -as.numeric(logLik(object))
-				if(is.na(ans)) ans = 100000
+				if(is.na(ans)) ans = 100000 # remove magic number here
 				ans
 			}
 			
