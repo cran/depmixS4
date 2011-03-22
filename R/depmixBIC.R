@@ -1,1 +1,0 @@
-# depends on logLik, freepars and nobssetMethod("BIC", signature(object="depmix"),	function(object, ...){		c(-2 * logLik(object) + freepars(object) * log(nobs(object)))	})setMethod("BIC", signature(object="mix"),	function(object, ...){		c(-2 * logLik(object) + freepars(object) * log(nobs(object)))	})

@@ -1,3 +1,10 @@
+
+Changes in depmixS4 version 1.0-3
+
+  o Using AIC/BIC/logLik/nobs generics from stats/stats4 rather than 
+    defining them anew (which gave clashes with other packages that did 
+    the same).
+
 Changes in depmixS4 version 1.0-2
 
   o fixed a bug in simulation of binomial response model data (the response

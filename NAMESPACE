@@ -1,6 +1,8 @@
 import(methods)
 
-importFrom(stats, predict, simulate, AIC, logLik)
+importFrom(stats, predict, simulate)
+
+importFrom(stats4, AIC, BIC, logLik)
 
 export(	
 	makeDepmix,
@@ -14,7 +16,8 @@ export(
 	em,
 	em.control,
 	viterbi,
-	mlogit
+	mlogit,
+	logLik
 )
 
 exportClasses(
@@ -31,8 +34,6 @@ exportClasses(
 )
 
 exportMethods(
-	AIC,
-	BIC,
 	fit,
 	getConstraints,
 	npar,
@@ -51,10 +52,10 @@ exportMethods(
 	transInit,
 	setpars,
 	getpars,
-	logLik,
 	predict,
 	dens,
 	show,
 	simulate,
-	summary
+	summary,
+	logLik
 )
