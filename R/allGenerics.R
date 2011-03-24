@@ -9,6 +9,7 @@
 	require(MASS)
  	require(nnet)
 	require(Rsolnp)
+	require(stats4)	
 }
 
 .Last.lib <- function(libpath) {}
@@ -26,9 +27,9 @@ setGeneric("MVNresponse", function(formula, data = NULL,pstart=NULL,fixed=NULL,.
 setGeneric("transInit", function(formula, nstates, data = NULL, family = multinomial(),
                  pstart = NULL, fixed = NULL, prob=TRUE, ...) standardGeneric("transInit"))
 
-setGeneric("npar", function(object, ...) standardGeneric("npar"))
+# extractors/set functions
 
-setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
+setGeneric("npar", function(object, ...) standardGeneric("npar"))
 
 setGeneric("ntimes", function(object, ...) standardGeneric("ntimes"))
 
@@ -38,15 +39,23 @@ setGeneric("nresp", function(object, ...) standardGeneric("nresp"))
 
 setGeneric("freepars", function(object, ...) standardGeneric("freepars"))
 
+setGeneric("getdf",function(object) standardGeneric("getdf"))
+
 setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
-# setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
-
-# setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
-
-setGeneric("fit", function(object, ...) standardGeneric("fit"))
+setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
 
 setGeneric("getConstraints", function(object, ...) standardGeneric("getConstraints"))
+
+setGeneric("is.stationary", function(object,...) standardGeneric("is.stationary"))
+
+setGeneric("setpars", function(object,values,which="pars",...) standardGeneric("setpars"))
+
+setGeneric("getpars", function(object,which="pars",...) standardGeneric("getpars"))
+
+
+# functions 
+setGeneric("fit", function(object, ...) standardGeneric("fit"))
 
 setGeneric("posterior", function(object, ...) standardGeneric("posterior"))
 
@@ -54,27 +63,18 @@ setGeneric("forwardbackward", function(object, ...) standardGeneric("forwardback
 
 setGeneric("simulate", function(object,nsim=1,seed=NULL, ...) standardGeneric("simulate"))
 
-setGeneric("predict", function(object, ...) standardGeneric("predict"))
-
-# setGeneric("AIC", function(object, ..., k=2) standardGeneric("AIC"))
-
-setGeneric("BIC", function(object, ...) standardGeneric("BIC"))
-
-setGeneric("getdf",function(object) standardGeneric("getdf"))
-
-setGeneric("setpars", function(object,values,which="pars",...) standardGeneric("setpars"))
-
-setGeneric("getpars", function(object,which="pars",...) standardGeneric("getpars"))
-
 setGeneric("logDens",function(object,...) standardGeneric("logDens"))
 
 setGeneric("dens",function(object,...) standardGeneric("dens"))
 
-setGeneric("summary")
+setGeneric("predict", function(object, ...) standardGeneric("predict"))
 
-setGeneric("ntimes", function(object, ...) standardGeneric("ntimes"))
 
-setGeneric("nresp", function(object, ...) standardGeneric("nresp"))
+# redundant??
 
-setGeneric("is.stationary", function(object,...) standardGeneric("is.stationary"))
+# setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
 
+# these are imported from stats4
+# setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
+# setGeneric("AIC", function(object, ..., k=2) standardGeneric("AIC"))
+# setGeneric("BIC", function(object, ...) standardGeneric("BIC"))
