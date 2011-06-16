@@ -33,10 +33,10 @@
 \arguments{
 	
 	\item{response}{The response to be modeled; either a formula or a list 
-		of formulae in the multivariate case; this interfaces to the glm
-		distributions. See 'Details'.}
+		of formulae (in the multivariate case); this interfaces to the glm
+		and other distributions. See 'Details'.}
 	
-	\item{data}{An optional data.frame to interpret the variables in
+	\item{data}{An optional \code{data.frame} to interpret the variables in
 		the response and transition arguments.}
 	
 	\item{nstates}{The number of states of the model.}
@@ -67,8 +67,8 @@
 	\item{ntimes}{A vector specifying the lengths of individual, i.e.
 		independent, time series. If not specified, the responses are
 		assumed to form a single time series, i.e. \code{ntimes=nrow(data)}.
-		If the \code{data} argument has an attribute ntimes, then this 
-		is used.}
+		If the \code{data} argument has an attribute \code{ntimes}, then this 
+		is used. The first example in \code{\link{fit}} uses this argument.}
 		
 	\item{...}{Not used currently.}
 		
@@ -139,8 +139,7 @@ following slots:
 		time-dependent or not; for internal use.}
 	
 	\item{ntimes}{A vector containing the lengths of independent time
-		series; if data is provided, sum(ntimes) must be equal to
-		nrow(data).}
+		series.}
 	
 	\item{nstates}{The number of states of the model.}
 	
@@ -187,8 +186,10 @@ following slots:
 \examples{
 
 # create a 2 state model with one continuous and one binary response
-data(speed)
-mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,family=list(gaussian(),multinomial()))
+# ntimes is used to specify the lengths of 3 separate series
+data(speed)	
+mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,
+    family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
 # print the model, formulae and parameter values
 mod
 

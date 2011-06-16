@@ -2,7 +2,7 @@ import(methods)
 
 importFrom(stats, predict, simulate)
 
-importFrom(stats4, AIC, BIC, logLik)
+importFrom(stats4, AIC, BIC, logLik, nobs)
 
 export(	
 	makeDepmix,

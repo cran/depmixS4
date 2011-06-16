@@ -1,6 +1,6 @@
 Package: depmixS4
-Version: 1.0-3
-Date: 2011-03-22
+Version: 1.0-4
+Date: 2011-06-16
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and
         Other Distributions in S4
 Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink
@@ -15,6 +15,6 @@ License: GPL (>= 2)
 URL: http://depmix.r-forge.r-project.org/
 Repository: CRAN
 Repository/R-Forge/Project: depmix
-Repository/R-Forge/Revision: 457
-Date/Publication: 2011-03-24 16:55:57
-Packaged: 2011-03-23 21:54:13 UTC; rforge
+Repository/R-Forge/Revision: 462
+Date/Publication: 2011-06-17 18:22:41
+Packaged: 2011-06-16 20:58:03 UTC; rforge

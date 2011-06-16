@@ -109,8 +109,7 @@ brief description of these here.}
 	
 	# binomial response model
 	x <- rnorm(1000)
-	library(boot)
-	p <- inv.logit(x)
+	p <- plogis(x)
 	ss <- rbinom(1000,1,p)
 	mod <- GLMresponse(cbind(ss,1-ss)~x,family=binomial())
 	fit(mod)
