@@ -1,7 +1,21 @@
 
+Changes in depmixS4 version 1.0-4
+
+  o Added examples of the use of ntimes argument on ?depmix and ?fit 
+    help pages using the ?speed data (which now has the full reference
+    to the accompanying publication). 
+
+  o Using nobs generic from stats/stats4 rather than defining them 
+    anew (which gave clashes with other packages that did the same).
+
+  o Fixed a bug in simulation of gaussian response model, which was 
+    returning NaNs due to an error in assignment of the sd parameter
+   (introduced in version x). Thanks to Jeffrey Arnold for reporting
+   this (bug #1365). 
+
 Changes in depmixS4 version 1.0-3
 
-  o Using AIC/BIC/logLik/nobs generics from stats/stats4 rather than 
+  o Using AIC/BIC/logLik generics from stats/stats4 rather than 
     defining them anew (which gave clashes with other packages that did 
     the same).
 

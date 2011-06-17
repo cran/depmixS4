@@ -28,7 +28,7 @@ transition[[2]] <- transInit(~1,nstates=2,data=data.frame(1),pstart=c(trstart[3:
 instart=c(0,1)
 inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=attr(speed,"ntimes"))
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137))
 
 ll <- logLik(mod)
 ll.fb <- logLik(mod,method="fb")
@@ -47,7 +47,7 @@ library(depmixS4)
 resp <- c(5.52,0.202,0.472,0.528,6.39,0.24,0.098,0.902)
 trstart=c(0.899,0.101,0.084,0.916)
 instart=c(0,1)
-mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,family=list(gaussian(),multinomial()),respstart=resp,trstart=trstart,instart=instart,prob=T)
+mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,family=list(gaussian(),multinomial()),respstart=resp,trstart=trstart,instart=instart,prob=T,ntimes=c(168,134,137))
 
 ll2 <- logLik(mod)
 
@@ -68,7 +68,7 @@ acc <- glm(corr~1,data=speed,family=binomial)
 p1 <- invlogit(coef(acc)[1])
 p0 <- 1-p1
 
-mod <- depmix(corr~1,data=speed,nst=1,family=multinomial(),trstart=1,instart=c(1),respstart=c(p0,p1))
+mod <- depmix(corr~1,data=speed,nst=1,family=multinomial(),trstart=1,instart=c(1),respstart=c(p0,p1),ntimes=c(168,134,137))
 
 ll <- logLik(mod)
 
@@ -90,7 +90,7 @@ p0 <- 1-p1
 
 pstart=c(p0,p1,0,coef(acc)[2])
 
-mod <- depmix(corr~Pacc,data=speed,family=multinomial(),trstart=1,instart=1,respst=pstart,nstate=1)
+mod <- depmix(corr~Pacc,data=speed,family=multinomial(),trstart=1,instart=1,respst=pstart,nstate=1,ntimes=c(168,134,137))
 
 ll <- logLik(mod)
 dev <- -2*ll
@@ -106,7 +106,7 @@ trstart=c(trstart[1:2],0,0.01,trstart[3:4],0,0.01)
 instart=c(0,1)
 resp <- c(5.52,0.202,0.472,0.528,6.39,0.24,0.098,0.902)
 
-mod <- depmix(list(rt~1,corr~1),data=speed,family=list(gaussian(),multinomial()),transition=~Pacc,trstart=trstart,instart=instart,respst=resp,nst=2)
+mod <- depmix(list(rt~1,corr~1),data=speed,family=list(gaussian(),multinomial()),transition=~Pacc,trstart=trstart,instart=instart,respst=resp,nst=2,ntimes=c(168,134,137))
 ll <- logLik(mod)
 
 cat("Test 4: ll is now larger than speedll, ie ll is better due to introduction of a covariate \n")

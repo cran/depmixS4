@@ -43,8 +43,6 @@ setGeneric("getdf",function(object) standardGeneric("getdf"))
 
 setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
-setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
-
 setGeneric("getConstraints", function(object, ...) standardGeneric("getConstraints"))
 
 setGeneric("is.stationary", function(object,...) standardGeneric("is.stationary"))
@@ -75,6 +73,7 @@ setGeneric("predict", function(object, ...) standardGeneric("predict"))
 # setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
 
 # these are imported from stats4
+# setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
 # setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 # setGeneric("AIC", function(object, ..., k=2) standardGeneric("AIC"))
 # setGeneric("BIC", function(object, ...) standardGeneric("BIC"))

@@ -287,7 +287,7 @@ transition[[2]] <- transInit(~Pacc,nstates=2,data=speed,pstart=c(trstart[3:4],0,
 instart=c(0.5,0.5)
 inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=attr(speed,"ntimes"),stat=FALSE)
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),stat=FALSE)
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
 summary(fm3)

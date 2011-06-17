@@ -51,7 +51,6 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 	} else {
 		# initial expectation
-# 		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
 		B <- apply(object@dens,c(1,3),prod)
 		gamma <- object@init*B
 		LL <- sum(log(rowSums(gamma)))
