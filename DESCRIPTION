@@ -1,13 +1,13 @@
 Package: depmixS4
-Version: 1.0-4
-Date: 2011-06-16
+Version: 1.1-0
+Date: 2011-11-01
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and
         Other Distributions in S4
 Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink
         <m.speekenbrink@ucl.ac.uk>
 Maintainer: Ingmar Visser <i.visser@uva.nl>
-Depends: R (>= 2.12.2), stats, nnet, methods, MASS, Rsolnp, stats4
-Suggests: Rdonlp2, gamlss, gamlss.dist
+Depends: R (>= 2.13.1), stats, nnet, methods, MASS, Rsolnp, stats4
+Suggests: Rdonlp2, gamlss, gamlss.dist, TTR
 Description: Fit latent (hidden) Markov models on mixed categorical and
         continuous (timeseries) data, otherwise known as dependent
         mixture models
@@ -15,6 +15,6 @@ License: GPL (>= 2)
 URL: http://depmix.r-forge.r-project.org/
 Repository: CRAN
 Repository/R-Forge/Project: depmix
-Repository/R-Forge/Revision: 462
-Date/Publication: 2011-06-17 18:22:41
-Packaged: 2011-06-16 20:58:03 UTC; rforge
+Repository/R-Forge/Revision: 502
+Date/Publication: 2011-11-03 12:32:17
+Packaged: 2011-11-02 22:10:46 UTC; rforge

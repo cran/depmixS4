@@ -44,7 +44,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		# initial expectation
-		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
 		LL <- fbo$logLike
 		
 		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
@@ -91,13 +91,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		if(LL >= LL.old) {
-		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL.old - LL)/LL.old  < tol)) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL - LL.old)/abs(LL.old)  < tol)) {
 			  cat("iteration",j,"logLik:",LL,"\n")
 			  converge <- TRUE
 			}
 		} else {
-		  # this should not really happen...
-		  if(j > 0) warning("likelihood decreased on iteration",j)
+			# this should not really happen...
+			if(j > 0 && (LL.old - LL) > tol) warning("likelihood decreased on iteration ",j)
 		}
 
 		LL.old <- LL
@@ -215,13 +215,13 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		if(verbose&((j%%5)==0)) cat("iteration",j,"logLik:",LL,"\n")
 		
 		if( (LL >= LL.old)) {
-		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL.old - LL)/LL.old  < tol)) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL - LL.old)/abs(LL.old)  < tol)) {
 			  cat("iteration",j,"logLik:",LL,"\n")
 			  converge <- TRUE
 			}
 		} else {
 		  # this should not really happen...
-		  if(j > 0) warning("likelihood decreased on iteration",j)
+			if(j > 0 && (LL.old - LL) > tol) warning("likelihood decreased on iteration ",j)
 		}
 		
 		LL.old <- LL

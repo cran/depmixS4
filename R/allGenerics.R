@@ -3,16 +3,16 @@
 # Ingmar Visser, 23-3-2008
 # 
 
-.First.lib <- function(lib, pkg) { 
-	require(stats)
-	require(methods)
-	require(MASS)
- 	require(nnet)
-	require(Rsolnp)
-	require(stats4)	
+# 17-6-2011: added dynamic lib statement to include the C code 
+# version of forward backward routine
+
+.onLoad <- function(lib, pkg) { 
+	library.dynam("depmixS4", pkg, lib)
 }
 
-.Last.lib <- function(libpath) {}
+.onUnLoad <- function(libpath) {
+	library.dynam.unload("depmixS4",libpath)
+}
 
 # Guess what: all generics
 

@@ -10,7 +10,7 @@ setMethod("transInit",
 	signature(formula="formula"),
 	function(formula,nstates,data=NULL,family=multinomial(),pstart=NULL,fixed=NULL,prob=TRUE, ...) {
 		call <- match.call()
-		if(formula==formula(~1) & is.null(data)) {
+		if(formula==formula(~1)&is.null(data)) {
 			x <- matrix(1,ncol=1)
 		} else {
 			mf <- match.call(expand.dots = FALSE)
