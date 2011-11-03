@@ -188,7 +188,7 @@ given model parameters $\greekv{\theta}$ and covariates $\vc{z}_{1:T}
 = (\vc{z}_1,\ldots,\vc{z}_T)$, can be written as:
 \begin{equation}
 	\Prob(\vc{O}_{1:T},\vc{S}_{1:T}|\greekv{\theta},\vc{z}_{1:T}) =  
-	\pi_{i}(\vc{z}_1) \vc{b}_{S_t}(\vc{O}_1|\vc{z}_{1})
+	\pi_{i}(\vc{z}_1) \vc{b}_{S_1}(\vc{O}_1|\vc{z}_{1})
 	\prod_{t=1}^{T-1} a_{ij}(\vc{z}_{t}) \vc{b}_{S_t}(\vc{O}_{t+1}|\vc{z}_{t+1}),
 \end{equation}
 where we have the following elements:

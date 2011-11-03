@@ -1,4 +1,41 @@
 
+Changes in depmixS4 version 1.1-0
+  
+  Major changes
+  
+  o The main loop computing the forward and backward variables for use in 
+    the EM algorithm is now implemented in C. Depending on model specifics 
+    this results in a 2-4 fold speed increase when fitting models.
+
+  o The Changes for each release (in the NEWS file) is now split into two 
+    sections: Major and Minor changes.
+
+  o Added several examples on the ?responses page (Poisson change point
+    model, similar model with a single multinomial response) and the 
+    ?depmix page (model for S&P 500 returns; thanks to Chen Haibo for
+    sending this). 
+
+  Minor changes
+  
+  o Corrected a typo in the vignette in Equation 1; the first occurrence 
+    of S read S_t instead of S_1 (thanks to Peng Yu for reporting this).
+
+  o Added a sensible error message when the data contains missings (depmixS4 
+    can not handle missing data yet). 
+
+  o Fixed a bug in the relative stopping criterion for EM (which resulted 
+    in immediate indication of convergence for positive log likelihoods; 
+    thanks to Chen Haibo for sending the S&P 500 example which brought out
+    this problem).
+
+  o Function forwardbackward now has a useC argument to determine whether 
+    C code is used, the default, or not (the R code is mostly left in place
+    for easy debugging). 
+   
+  o Added a fix for models without covariates/intercepts. In responseGLM 
+    and responseMVN the function setpars now exits when length(value) == 0. 
+    In setpars.depmix, a check is added whether npar > 0.
+
 Changes in depmixS4 version 1.0-4
 
   o Added examples of the use of ntimes argument on ?depmix and ?fit 

@@ -2,6 +2,8 @@
 
 \alias{forwardbackward}
 
+\alias{forwardbackward,mix-method}
+
 \alias{forwardbackward,depmix-method}
 
 \title{ Forward and backward variables }
@@ -14,7 +16,7 @@
 
 \usage{
 
-	\S4method{forwardbackward}{depmix}(object, return.all=TRUE, ...)
+	\S4method{forwardbackward}{mix}(object, return.all=TRUE, useC=TRUE, ...)
 
 }
 
@@ -25,6 +27,10 @@
 	\item{return.all}{If FALSE, only gamma and xi and the log likelihood
 	are returned (which are the only variables needed in using EM).}
   	
+	\item{useC}{Flag used to set whether the C-code is used to compute the
+	forward, backward, gamma and xi variables or not; the R-code is basically
+	obsolete (but retained for now for debugging purposes).}
+	
 	\item{\dots}{Not currently used.}
 
 }

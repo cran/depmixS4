@@ -182,6 +182,7 @@ setMethod("setpars","MVNresponse",
 		if(length(values)!=npar) stop("length of 'values' must be",npar)
 		# determine whether parameters or fixed constraints are being set
 		nms <- names(object@parameters$coefficients)
+		if(length(values) == 0) return(object) # nothing to set;
 		switch(which,
 			"pars" = {
 				object@parameters$coefficients <- matrix(values[1:length(object@parameters$coefficients)],ncol(object@x))
