@@ -55,8 +55,8 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE) 
 			xi=as.double(xi),
  			PACKAGE="depmixS4")[c("alpha","beta","sca","xi")]
 		
-		alpha <- matrix(res$alpha,nc=ns,byrow=TRUE)
-		beta <- matrix(res$beta,nc=ns,byrow=TRUE)
+		alpha <- matrix(res$alpha,ncol=ns,byrow=TRUE)
+		beta <- matrix(res$beta,ncol=ns,byrow=TRUE)
 		xi <- array(res$xi,dim=c(nt,ns,ns))
 		xi[et,,] <- NA
 		sca <- res$sca

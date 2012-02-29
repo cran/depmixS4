@@ -31,7 +31,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
-		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
 		gamma <- gamma/rowSums(gamma)
 		LL <- -1e10
 		
@@ -143,7 +143,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
-		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
 		gamma <- gamma/rowSums(gamma)
 		LL <- -1e10
 		
