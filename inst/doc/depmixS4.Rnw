@@ -1,5 +1,5 @@
 \documentclass[article,nojss]{jss}
-\usepackage{amsmath,thumbpdf}
+\usepackage{amsmath}
 \graphicspath{{Figures/}}
 
 \newcommand{\vc}{\mathbf}
