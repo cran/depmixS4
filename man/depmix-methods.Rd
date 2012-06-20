@@ -40,8 +40,8 @@ Various methods for \code{depmix} and \code{mix} objects.
 
 \usage{
 	
-	\S4method{logLik}{depmix}(object,method="lystig")
-	\S4method{logLik}{mix}(object,method="lystig")
+	\S4method{logLik}{depmix}(object,method="fb")
+	\S4method{logLik}{mix}(object,method="fb")
 	
 	\S4method{nobs}{depmix}(object, ...)
 	\S4method{nobs}{mix}(object, ...)
@@ -73,14 +73,14 @@ Various methods for \code{depmix} and \code{mix} objects.
   smoothed variables, and the forward and backward variables are accessible
   through the \code{\link{forwardbackward}} function.} 
 
-  \item{which}{The default "pars" returns a vector of all parameters of a
-  \code{depmix} object; the alternative value "fixed" returns a logical
-  vector of the same length indicating which parameters are fixed.  The
-  setpars functions sets parameters (or the logical fixed vector) to new
-  values; \code{setpars} also recomputes the dens, trans and init slots of
-  \code{depmix} objects.  Note that the \code{getpars} and \code{setpars}
-  functions for \code{depmix} objects simply call the functions of the same
-  name for the response and transition models.}
+	\item{which}{The default "pars" returns a vector of all parameters of a
+	\code{depmix} object; the alternative value "fixed" returns a logical
+	vector of the same length indicating which parameters are fixed.  The
+	setpars functions sets parameters to new values; \code{setpars} also
+	recomputes the dens, trans and init slots of \code{depmix} objects.  Note
+	that the \code{getpars} and \code{setpars} functions for \code{depmix}
+	objects simply call the functions of the same name for the response and
+	transition models.}
 	  
   \item{...}{Not used currently.}
 

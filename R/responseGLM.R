@@ -16,15 +16,17 @@ setClass("GLMresponse",
 
 setMethod("GLMresponse",
 	signature(formula="formula"),
-	function(formula,data=NULL,family=gaussian(),pstart=NULL,fixed=NULL,prob=TRUE, ...) {
+	function(formula,data=NULL,family=gaussian(),pstart=NULL,fixed=NULL,prob=TRUE,na.action="na.pass", ...) {
 		call <- match.call()
 		mf <- match.call(expand.dots = FALSE)
 		m <- match(c("formula", "data"), names(mf), 0)
 		mf <- mf[c(1, m)]
 		mf$drop.unused.levels <- TRUE
+		mf$na.action <- na.action
 		mf[[1]] <- as.name("model.frame")
 		mf <- eval(mf, parent.frame())
 		x <- model.matrix(attr(mf, "terms"),mf)
+		if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		y <- model.response(mf)
 		if(!is.matrix(y)) y <- matrix(y,ncol=1)
 		parameters <- list()
@@ -56,10 +58,14 @@ setMethod("GLMresponse",
 			y <- model.response(mf)
 			if(NCOL(y) == 1) {
 				if(is.factor(y)) {
-					y <- model.matrix(~y-1) 
+				    mf <- model.frame(~y-1,na.action=na.action)
+				    y <- model.matrix(attr(mf, "terms"),mf)
+					#y <- model.matrix(~y-1,na.action=na.action) 
 				} else {
 					if(!is.numeric(y)) stop("model response not valid for multinomial model")
-					y <- model.matrix(~factor(y)-1)
+					mf <- model.frame(~factor(y)-1,na.action=na.action)
+				    y <- model.matrix(attr(mf, "terms"),mf)
+					#y <- model.matrix(~factor(y)-1,na.action=na.action)
 				}
 			}
 			if(family$link=="mlogit") {

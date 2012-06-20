@@ -10,7 +10,8 @@ setMethod("transInit",
 	signature(formula="formula"),
 	function(formula,nstates,data=NULL,family=multinomial(),pstart=NULL,fixed=NULL,prob=TRUE, ...) {
 		call <- match.call()
-		if(formula==formula(~1)&is.null(data)) {
+		if(formula==formula(~1) &is.null(data)) { # &is.null(data) removed this in the condition as it 
+			# creates the wrong dimension for the dens function when data is used (but not needed)
 			x <- matrix(1,ncol=1)
 		} else {
 			mf <- match.call(expand.dots = FALSE)
@@ -20,6 +21,7 @@ setMethod("transInit",
 			mf[[1]] <- as.name("model.frame")
 			mf <- eval(mf, parent.frame())
 			x <- model.matrix(attr(mf, "terms"),mf)
+			if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		}
 		y <- matrix(1,ncol=1) # y is not needed in the transition and init models
 		parameters <- list()

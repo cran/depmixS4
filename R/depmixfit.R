@@ -123,7 +123,7 @@ setMethod("fit",
 				if(!reqdon) stop("Rdonlp2 not available.")
 				
 				# set donlp2 control parameters
-				cntrl <- donlp2.control(hessian=FALSE,difftype=2,report=TRUE)	
+				cntrl <- donlp2.control(hessian=FALSE,difftype=2,report=TRUE,epsx=1e-6)	
 				
 				mycontrol <- function(info) {
 					return(TRUE)

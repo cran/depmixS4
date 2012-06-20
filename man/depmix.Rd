@@ -18,7 +18,8 @@
 	
 	\code{depmix} creates an object of class \code{depmix}, a dependent
 	mixture model, otherwise known as hidden Markov model.  For a short
-	description of the package see \code{\link{depmixS4}}.
+	description of the package see \code{\link{depmixS4}}. See the vignette 
+	for an introduction to hidden Markov models and the package. 
 	
 }
 
@@ -90,7 +91,7 @@
 	function.  Its help page has examples of specifying a model with a
 	multivariate normal response, as well as an example of adding a
 	user-defined response model, in this case for the ex-gauss
-	distribution.
+	distribution. 
 	
 	If \code{response} is a list of formulae, the \code{response}'s are
 	assumed to be independent conditional on the latent state.
@@ -114,6 +115,9 @@
 	
 	The print function prints the formulae for the response, transition and
 	prior models along with their parameter values.
+	
+	Missing values are allowed in the data, but missing values in the 
+	covariates lead to errors. 
 	
 }
 

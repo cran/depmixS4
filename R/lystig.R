@@ -4,7 +4,7 @@
 # LYSTIG algoritme voor de loglikelihood, 23-3-2008
 # 
 
-lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE) {
+lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE,na.allow=TRUE) {
 
 	# Log likelihood computation according to Lystig & Hughes (2002).  This
 	# is very similar to the Forward part of the Forward-Backward algorithm
@@ -16,7 +16,8 @@ lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE) {
 	# IN COMPUTING ALPHA AND BETA BUT IS NOW NECCESSARY IN COMPUTING XI
 	# A = K*K matrix with transition probabilities, from column to row !!!!!!!
 	# change to T*K*K
-		
+    
+	if(na.allow) B <- replace(B,is.na(B),1)
 	B <- apply(B,c(1,3),prod)
 
 	# B = T*K*nresp matrix with elements ab_{tij} = P(y_t_i|s_j)

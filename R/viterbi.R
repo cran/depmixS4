@@ -3,7 +3,7 @@
 # 
 
 viterbi <-
-function(object) {
+function(object,na.allow=TRUE) {
 	# returns the most likely state sequence
 	nt <- sum(object@ntimes)
 	lt <- length(object@ntimes)
@@ -18,7 +18,9 @@ function(object) {
 	prior <- object@init
 	
 	if(max(ntimes(object)>1)) A <- object@trDens
-	B <- apply((object@dens),c(1,3),prod)
+	B <- object@dens
+	if(na.allow) B <- replace(B,is.na(B),1)
+	B <- apply(B,c(1,3),prod)
 	
 	for(case in 1:lt) {
 		# initialization

@@ -18,28 +18,33 @@
 \author{Ingmar Visser\\University of Amsterdam \And 
         Maarten Speekenbrink\\University College London}
 \Plainauthor{Ingmar Visser, Maarten Speekenbrink}
-        
+
 \title{\pkg{depmixS4}: An \proglang{R} Package for Hidden Markov Models}
 \Plaintitle{depmixS4: An R Package for Hidden Markov Models}
 
 \Abstract{	
-  This introduction to the \proglang{R} package \pkg{depmixS4} is a (slightly)
-  modified version of \cite{Visser+Speekenbrink:2010}, published in the
-  \emph{Journal of Statistical Software}. Please refer to that 
-  article when using \pkg{depmixS4}. The current version is 1.0-1. 
 
-  \pkg{depmixS4} implements a general framework for defining and
-  estimating dependent mixture models in the \proglang{R}
-  programming language.  This includes standard Markov
-  models, latent/hidden Markov models, and latent class and finite
-  mixture distribution models.  The models can be fitted on mixed
-  multivariate data with distributions from the \code{glm} family,
-  the (logistic) multinomial, or the multivariate normal
-  distribution.  Other distributions can be added easily, and an
-  example is provided with the {\em exgaus} distribution.
-  Parameters are estimated by the expectation-maximization (EM) algorithm or, when (linear)
-  constraints are imposed on the parameters, by direct numerical
-  optimization with the \pkg{Rsolnp} or \pkg{Rdonlp2} routines.   
+	This introduction to the \proglang{R} package \pkg{depmixS4} is a
+	(slightly) modified version of \cite{Visser+Speekenbrink:2010},
+	published in the \emph{Journal of Statistical Software}.  Please
+	refer to that article when using \pkg{depmixS4}.  The current
+	version is 1.2-0; the version history and changes can be found in
+	the NEWS file of the package. Below, the major versions are listed 
+	along with the most noteworthy changes. 
+
+	\pkg{depmixS4} implements a general framework for defining and
+	estimating dependent mixture models in the \proglang{R} programming
+	language.  This includes standard Markov models, latent/hidden
+	Markov models, and latent class and finite mixture distribution
+	models.  The models can be fitted on mixed multivariate data with
+	distributions from the \code{glm} family, the (logistic)
+	multinomial, or the multivariate normal distribution.  Other
+	distributions can be added easily, and an example is provided with
+	the {\em exgaus} distribution.  Parameters are estimated by the
+	expectation-maximization (EM) algorithm or, when (linear)
+	constraints are imposed on the parameters, by direct numerical
+	optimization with the \pkg{Rsolnp} or \pkg{Rdonlp2} routines.  
+	
 }
 
 \Keywords{hidden Markov model, dependent mixture model, mixture model, constraints}
@@ -67,6 +72,18 @@
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE, digits = 4)
 library("depmixS4")
 @
+
+\section*{Version history}
+
+\begin{description}
+		\item[1.2-0] Added support for missing data, see 
+		section~\ref{sec:missingdata}.
+		\item[1.1-0] Speed improvements due to writing the main loop in C code.
+		\item[1.0-0] First release with this vignette, a modified version 
+		of the paper in the Journal of Statistical Software. 
+		\item[0.1-0] First version on CRAN. 
+\end{description}
+
 
 \section{Introduction}
 
@@ -118,18 +135,20 @@ series data, for say $T>100$, it can also handle the limit case when
 $T=1$.  In this case, there are no time dependencies between observed
 data and the model reduces to a finite mixture or latent class model.
 While there are specialized packages to deal with mixture data, as far
-as we know these don't allow the inclusion of covariates on the prior
+as we know these do not allow the inclusion of covariates on the prior
 probabilities of class membership.  The possibility to estimate the
 effects of covariates on prior and transition probabilities is a
-distinguishing feature of \pkg{depmixS4}.
-In Section~\ref{sec:2}, we provide an outline of the model and likelihood equations.
+distinguishing feature of \pkg{depmixS4}.  In
+Section~\ref{sec:outline}, we provide an outline of the model and
+likelihood equations.
 
-The \pkg{depmixS4} package is implemented using the \proglang{R} system
-for statistical computing \citep{R2010} and is available from the
-Comprehensive \proglang{R} Archive Network at \url{http://CRAN.R-project.org/package=depmixS4}.
+The \pkg{depmixS4} package is implemented using the \proglang{R}
+system for statistical computing \citep{R2010} and is available from
+the Comprehensive \proglang{R} Archive Network at
+\url{http://CRAN.R-project.org/package=depmixS4}.
 
 
-\section{The dependent mixture model} \label{sec:2}
+\section{The dependent mixture model} \label{sec:outline}
 
 The data considered here have the general form $\vc{O}_{1:T}=
 (O_{1}^{1}, \ldots, O_{1}^{m}$, $O_{2}^{1}, \ldots, O_{2}^{m}$,
@@ -143,7 +162,7 @@ variable reflecting the relative reward for speeded and/or accurate
 responding.  These variables are measured on 168, 134 and 137
 occasions respectively (the first series of 168 trials is plotted in
 Figure~\ref{fig:speed}).  These data are more fully described in
-\citet{Dutilh2010}, and in the next section a number of example models
+\citet{Dutilh2011}, and in the next section a number of example models
 for these data is described.
 
 \setkeys{Gin}{width=0.8\textwidth}
@@ -331,6 +350,29 @@ direct optimization using package \pkg{Rsolnp}
 linear (in)equality constraints (and optionally also non-linear
 constraints).
 
+\subsection[Missing data]{Missing data}\label{sec:missingdata}
+
+Missing data can be dealt with straightforwardly in computing the
+likelihood using the forward recursion in
+Equations~(\ref{eq:fwd1}--\ref{eq:fwdt}).  Assume we have observed
+$\vc{O}_{1:(t-1)}$ but that observation $\vc{O}_{t}$ is missing.  The
+key idea that, in this case, the filtering distribution, the
+probabilities $\phi_{t}$, should be identical to the state prediction
+distribution, as there is no additional information to estimate
+the current state.  Thus, the forward variables $\phi_{t}$ are now 
+computed as:
+%
+\begin{align}
+	\phi_t(i) &= \Prob(S_{t} = i|\vc{O}_{1:(t-1)}) 
+	\\ &=  \sum_{j=1}^N \phi_{t-1}(j) \Prob(S_t = i|S_{t-1}=j).
+\end{align}
+%
+For later observations, we can then use this latter equation again,
+realizing that the filtering distribution is technically e.g.
+$\Prob(S_{t+1}|\vc{O}_{1:(t-1),t+1})$.  Computationally, the easiest
+way to implement this is to simply set $\vc{b}(\vc{O}_t|S_t) = 1$ if
+$\vc{O}_t$ is missing.
+
 
 \section[Using depmixS4]{Using \pkg{depmixS4}}
 
@@ -353,11 +395,11 @@ actually fitting the model.
 
 Throughout this article a data set called \code{speed} is used.  As
 already indicated in the introduction, it consists of three time
-series with three variables: response time \code{rt}, accuracy \code{corr}, and a covariate,
-\code{Pacc}, which defines the relative pay-off for speeded versus accurate
-responding.  Before describing some of the models that are fitted to
-these data, we provide a brief sketch of the reasons for gathering
-these data in the first place.
+series with three variables: response time \code{rt}, accuracy
+\code{corr}, and a covariate, \code{Pacc}, which defines the relative
+pay-off for speeded versus accurate responding.  Before describing
+some of the models that are fitted to these data, we provide a brief
+sketch of the reasons for gathering these data in the first place.
 
 Response times are a very common dependent variable in psychological
 experiments and hence form the basis for inference about many
@@ -383,7 +425,7 @@ Figure~\ref{fig:speed} shows the values of this variable.  The
 experiment was designed to investigate what would happen when this
 reward variable changes from reward for accuracy only to reward for
 speed only.  The \code{speed} data that we analyse here are from
-participant A in Experiment 1 in \citet{Dutilh2010}, who provide a
+participant A in Experiment 1 in \citet{Dutilh2011}, who provide a
 complete description of the experiment and the relevant theoretical
 background.
 
@@ -794,7 +836,32 @@ routines.  Referring to equation~\ref{eq:Q}, the EM algorithm calls
 separate fit functions for each part of the model, the prior
 probability model, the transition models, and the response models.  As
 a consequence, adding user-specified response models is
-straightforward.
+straightforward.  The currently implemented distributions are listed
+in Table~\ref{tbl:responses}.
+
+\begin{table}
+		\begin{center}
+		\begin{tabular}{lll}
+				\hline
+				package & family & link \\
+				\hline
+				\hline
+				\pkg{stats} & binomial & logit, probit, cauchit, log, cloglog \\
+				\pkg{stats} & gaussian & identity, log, inverse \\
+				\pkg{stats} & Gamma & inverse, identity, log \\
+				\pkg{stats} & poisson & log, identity, sqrt \\
+				\pkg{depmixS4} & multinomial & logit, identity (no covariates allowed) \\
+				\pkg{depmixS4} & multivariate normal & identity (only 
+				available through makeDepmix) \\
+				\pkg{depmixS4} & ex-gauss & identity (only 
+				available through makeDepmix as example) \\
+				\hline
+		\end{tabular}
+		\end{center}
+		\caption{Response distribution available in \pkg{depmixS4}.}
+		\label{tbl:responses}
+\end{table}
+
 
 User-defined distributions should extend the `\code{response}' class and
 have the following slots:
@@ -1021,7 +1088,7 @@ Ingmar Visser was supported by an EC Framework 6 grant, project 516542
 (NEST).  Maarten Speekenbrink was supported by ESRC grant
 RES-062-23-1511 and the ESRC Centre for Economic Learning and Social
 Evolution (ELSE).  Han van der Maas provided the speed-accuracy data
-\citep{Dutilh2010} and thereby necessitated implementing models with
+\citep{Dutilh2011} and thereby necessitated implementing models with
 time-dependent covariates.  Brenda Jansen provided the balance scale
 data set \citep{Jansen2002} which was the perfect opportunity to test
 the covariates on the prior model parameters.  The examples in the
