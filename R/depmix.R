@@ -20,7 +20,7 @@ setMethod("mix", signature(response = "ANY"), function(response,
     data = NULL, nstates, family = gaussian(), prior = ~1, initdata = NULL, 
     respstart = NULL, instart = NULL, ...) {
     
-	if(!is.null(data) & any(is.na(data))) stop("'depmixS4' does not currently handle missing data.")
+	#if(!is.null(data) & any(is.na(data))) stop("'depmixS4' does not currently handle missing data.")
 	
     # make response models
     response <- makeResponseModels(response = response, data = data, 
@@ -61,7 +61,7 @@ setMethod("depmix", signature(response = "ANY"), function(response,
 	if(is.null(data)) {
 		if(is.null(ntimes)) stop("'ntimes' must be provided if not in the data")
 	} else {
-		if(any(is.na(data))) stop("'depmixS4' does not currently handle missing data.")
+		#if(any(is.na(data))) stop("'depmixS4' does not currently handle missing data.")
 		if(is.null(attr(data, "ntimes"))) {
 			if (is.null(ntimes)) ntimes <- nrow(data)
 		} else {

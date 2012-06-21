@@ -129,15 +129,17 @@ setMethod("simulate",signature(object="MVNresponse"),
 
 setMethod("MVNresponse",
 	signature(formula="formula"),
-	function(formula,data,pstart=NULL,fixed=NULL,...) {
+	function(formula,data,pstart=NULL,fixed=NULL,na.action="na.pass",...) {
 		call <- match.call()
 		mf <- match.call(expand.dots = FALSE)
 		m <- match(c("formula", "data"), names(mf), 0)
 		mf <- mf[c(1, m)]
 		mf$drop.unused.levels <- TRUE
+		mf$na.action <- na.action
 		mf[[1]] <- as.name("model.frame")
 		mf <- eval(mf, parent.frame())
 		x <- model.matrix(attr(mf, "terms"),mf)
+		if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		y <- model.response(mf)
 		if(!is.matrix(y)) y <- matrix(y,ncol=1)
 		parameters <- list()

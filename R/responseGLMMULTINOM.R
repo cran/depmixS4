@@ -4,11 +4,12 @@ setClass("MULTINOMresponse",contains="GLMresponse")
 setMethod("fit","MULTINOMresponse",
 	function(object,w) {
 		if(missing(w)) w <- NULL
+		nas <- is.na(rowSums(object@y))
 		if(object@family$link=="mlogit") {
 			pars <- object@parameters
 			base <- object@family$base # delete me
-			y <- object@y
-			x <- object@x
+			y <- as.matrix(object@y[!nas,])
+			x <- as.matrix(object@x[!nas,])
 			#if(is.null(w)) w <- rep(1,nrow(y))
 			# mask is an nx*ny matrix (x are inputs, y are output levels)
 			mask <- matrix(1,nrow=nrow(pars$coefficients),ncol=ncol(pars$coefficients))
@@ -18,9 +19,9 @@ setMethod("fit","MULTINOMresponse",
 			Wts[-1,] <- pars$coefficients # set starting weights
 			if(!is.null(w)) {
 				if(NCOL(y) < 3) {
-					fit <- nnet.default(x,y,weights=w,size=0,entropy=TRUE,skip=TRUE,mask=mask,Wts=Wts,trace=FALSE)
+					fit <- nnet.default(x,y,weights=w[!nas],size=0,entropy=TRUE,skip=TRUE,mask=mask,Wts=Wts,trace=FALSE)
 				} else {
-					fit <- nnet.default(x,y,weights=w,size=0,softmax=TRUE,skip=TRUE,mask=mask,Wts=Wts,trace=FALSE)
+					fit <- nnet.default(x,y,weights=w[!nas],size=0,softmax=TRUE,skip=TRUE,mask=mask,Wts=Wts,trace=FALSE)
 				}
 			} else {
 				if(NCOL(y) < 3) {
@@ -36,8 +37,8 @@ setMethod("fit","MULTINOMresponse",
 		}
 		if(object@family$link=="identity") {
 			if(is.null(w)) w <- rep(1,nrow(object@y))
-			sw <- sum(w)
-			pars <- c(apply(object@y,2,function(x){sum(x*w)/sw}))
+			sw <- sum(w[!nas])
+			pars <- c(apply(as.matrix(object@y[!nas,]),2,function(x){sum(x*w[!nas])/sw}))
 			pars <- pars/sum(pars)
 			object <- setpars(object,pars)
 		}
@@ -47,7 +48,8 @@ setMethod("fit","MULTINOMresponse",
 
 setMethod("logDens","MULTINOMresponse",
 	function(object) {
-		if(all(rowSums(object@y)==1)) {
+	    rsums <- rowSums(object@y)
+		if(all(rsums[!is.na(rsums)]==1)) {
 			return(log(rowSums(object@y*predict(object))))
 		} else {
 			nr <- nrow(object@y)
@@ -65,7 +67,8 @@ setMethod("logDens","MULTINOMresponse",
 
 setMethod("dens","MULTINOMresponse",
 	function(object,log=FALSE) {
-		if(all(rowSums(object@y)==1)) {
+	    rsums <- rowSums(object@y)
+		if(all(rsums[!is.na(rsums)]==1)) {
 			if(log) return(log(rowSums(object@y*predict(object))))
 			else return(rowSums(object@y*predict(object)))
 		} else {

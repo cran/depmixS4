@@ -1,4 +1,10 @@
+Changes in depmixS4 version 1.1-2
 
+Major changes
+  
+  o Missing values for responses are now allowed. Note that missing values 
+	in covariates will cause errors. 
+    
 Changes in depmixS4 version 1.1-0
   
   Major changes

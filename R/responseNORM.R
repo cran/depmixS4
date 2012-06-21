@@ -8,15 +8,16 @@ setClass("NORMresponse",contains="GLMresponse")
 setMethod("fit","NORMresponse",
 	function(object,w) {
 		if(missing(w)) w <- NULL
+	    nas <- is.na(rowSums(object@y))
 		pars <- object@parameters
 		if(!is.null(w)) {
-			fit <- lm.wfit(x=object@x,y=object@y,w=w)
+			fit <- lm.wfit(x=as.matrix(object@x[!nas,]),y=as.matrix(object@y[!nas,]),w=w[!nas])
 		} else {
-			fit <- lm.fit(x=object@x,y=object@y)
+			fit <- lm.fit(x=as.matrix(object@x[!nas,]),y=as.matrix(object@y[!nas,]))
 		}
 		pars$coefficients <- fit$coefficients
 		if(!is.null(w)) {
-			pars$sd <- sqrt(sum(w*fit$residuals^2/sum(w)))
+			pars$sd <- sqrt(sum(w[!nas]*fit$residuals^2/sum(w[!nas])))
 		} else {
 			pars$sd <- sd(fit$residuals)
 		}

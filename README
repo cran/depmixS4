@@ -3,21 +3,23 @@ FITTING HIDDEN MARKOV MODELS IN R
 
 depmixS4 provides a framework for specifying and fitting hidden Markov
 models.  The observation densities use an interface to the glm
-distributions, most of which are now implemented.  Besides these,
-observations can be modelled using the multinomial distribution with
-identity or logistic link function.  The latter provides functionality for
-multinomial logistic responses with covariates.  The transition matrix and
-the initial state probabilities are also modeled as multinomial logistics
-(or multinomials with identity link, which is the default when no
-covariates are present) with the possibility of including covariates.
+distributions, most of which are now implemented.  The vignette that
+accompanies the package has a table with available response distributions
+Besides these, observations can be modelled using the multinomial
+distribution with identity or logistic link function.  The latter provides
+functionality for multinomial logistic responses with covariates.  The
+transition matrix and the initial state probabilities are also modeled as
+multinomial logistics (or multinomials with identity link, which is the
+default when no covariates are present) with the possibility of including
+covariates.
 
 Optimization is by default done using the EM algorithm.  When linear
 constraints are included, package Rsolnp is used for optimization (there is
-also support for using Rdonlp2 as optimizer, see details below).  New
+also support for using Rdonlp2 as optimizer, see USING RDONLP2 below).  New
 response distributions can be added by extending the response-class and
 writing appropriate methods for it (dens, and getpars and setpars); an
 example of this is provided on the ?makeDepmix help page.  depmixS4 also
-fits latent class and mixture models, see ?mix for an example.
+fits latent class and mixture models, see ?mix for an example. 
 
 The latest development versions of depmixS4 (and depmix) can be found at: 
 https://r-forge.r-project.org/projects/depmix/

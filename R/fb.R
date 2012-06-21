@@ -4,24 +4,32 @@
 # FORWARD-BACKWARD algoritme, 23-3-2008
 # 
 
-fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE) {
+fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,na.allow=TRUE) {
 
 	# Forward-Backward algorithm (used in Baum-Welch)
 	# Returns alpha, beta, and full data likelihood
 	
 	# NOTE THE CHANGE IN FROM ROW TO COLUMN SUCH THAT TRANSPOSING A IS NOT NECCESSARY ANYMORE
 	# IN COMPUTING ALPHA AND BETA BUT IS NOW NECCESSARY IN COMPUTING XI
-	# A = T*K*K matrix with transition probabilities, from row to column!!!!!!!
-	# B = T*K matrix with elements ab_{ij} = P(y_i|s_j)
-	# init = K vector with initial probabilities
+	# A = T*K*K array with transition probabilities, from row to column!!!!!!!
+	# B = T*D*K matrix with elements ab_{ij} = P(y_i|s_j)
+	# init = N*K vector with initial probabilities
 
+    # T = total number of time points
+    # K = number of states
+    # D = dimension of observations (D>1 is multivariate)
+    # N = number of participants
+     
 	# NOTE: to prevent underflow, alpha and beta are scaled, using sca
 	
 	# NOTE: xi[t,i,j] = P(S[t] = j & S[t+1] = i) !!!NOTE the order of i and j!!!
 	
-	nt <- nrow(B)	
+	#nt <- nrow(B)
+	nt <- dim(B)[1]
 	ns <- ncol(init)
 	
+	if(na.allow) B <- replace(B,is.na(B) & !is.na(B),1)
+
 	B <- apply(B,c(1,3),prod)
 	
 	if(is.null(ntimes)) ntimes <- nt

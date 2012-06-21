@@ -48,9 +48,9 @@
 	
 	\item{xi}{The smoothed state probabilities.}
 	
-	\item{sca}{The scale factors (called lambda in Rabiner).}
+	\item{sca}{The scale factors (called lambda in Rabiner, 1989).}
 	
-	\item{logLike}{The log likelihood (which is \code{sum(log(sca))}.}
+	\item{logLike}{The log likelihood (computed as \code{sum(log(sca))}.}
 	
 	If return.all=FALSE, only gamma, xi and the log likelihood are returned.
 }
