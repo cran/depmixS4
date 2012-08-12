@@ -1,7 +1,7 @@
-009188f6594f3434a1cb885c7898303e *DESCRIPTION
+a876024f60ef7a99274133de62cec7f8 *DESCRIPTION
 ea353db4f9216511161e2b43197118ad *NAMESPACE
-f73ec53a04f8d2a84fe7c7330f156570 *NEWS
-42e6940bc2881d00d57fd187994e02ad *R/EM.R
+ae022cea844d7f3accec7ce1c7b1169f *NEWS
+df1529fb3ff32e732bbb2b439faea04f *R/EM.R
 37b170aa063da7592e367cc012960075 *R/allGenerics.R
 3271e9e3be7a6dd041f476b2b7e51652 *R/depmix-class.R
 cda87a5d336ed30f053631137a4d9e13 *R/depmix.R
@@ -9,7 +9,7 @@ cda87a5d336ed30f053631137a4d9e13 *R/depmix.R
 8d16633f2866185e5dc99ec949afc3b0 *R/depmixfit.R
 48c07027effd101c43ca4f64dcc88d5c *R/depmixsim-class.R
 8fb0429657d8eed31a65fbd91a057e07 *R/em.control.R
-924b52a74d6b154fe3fe6b0093b6a50c *R/fb.R
+7e53624a371e244add6adb526b570852 *R/fb.R
 9a47582f41ad2b937dd914854b916e33 *R/forwardbackward.R
 2bdbab63593d32d15146e1f2f7a06932 *R/freepars.R
 fac4623b3117ebff3e2f00c05b800948 *R/getpars.R
@@ -43,7 +43,7 @@ cf783bb00e78e646ece3cc58af47785f *inst/CITATION
 aa9a76dcc11642de63eeba9bdb02f482 *inst/doc/baldist.pdf
 be62afb0f79ac84b945c8e6274fe34da *inst/doc/depmixS4.Rnw
 5a0f9a0f76df238fe6a55bcd8e55a36e *inst/doc/depmixS4.bib
-1debabdacaf64efed8693d4f51ec5138 *inst/doc/depmixS4.pdf
+ee75d1180828506ba5bf951617e777a2 *inst/doc/depmixS4.pdf
 55a7e584b631689a190bc4c8e5c96e87 *man/GLMresponse.Rd
 a19f6d5540f45662788e30223e50bf3a *man/balance.Rd
 32b798cb2bb31502be3508681faebf63 *man/depmix-class.Rd
@@ -53,7 +53,7 @@ fc189940de1e559557544fea950333c0 *man/depmix.Rd
 2f83856d2e7c7c854792fd37a916b828 *man/depmix.fit.Rd
 7de570324d6f0fbcd63e4b704f6feb2c *man/depmix.fitted-class.Rd
 012647cfb54867467d3710c117700ffd *man/depmix.sim-class.Rd
-377a37f669a7ccd79303edf50f6af7ea *man/depmixS4-package.Rd
+452bf52a0fe6920db68827040c10f523 *man/depmixS4-package.Rd
 735d8a4ed64d3fe7e67bf27b00512dbf *man/em.control.Rd
 16b3bf19254361c282dff4f8e0b2a3b3 *man/forwardbackward.Rd
 66b5e3bcb90393bec625fea59e791d69 *man/llratio.Rd
