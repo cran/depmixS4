@@ -1,4 +1,8 @@
-Changes in depmixS4 version 1.1-2
+Changes in depmixS4 version 1.2-1
+
+  o Fixed a bug in handling of missing values for mix models
+
+Changes in depmixS4 version 1.2-0
 
 Major changes
   

@@ -28,7 +28,7 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,n
 	nt <- dim(B)[1]
 	ns <- ncol(init)
 	
-	if(na.allow) B <- replace(B,is.na(B) & !is.na(B),1)
+	if(na.allow) B <- replace(B,is.na(B) & !is.nan(B),1)
 
 	B <- apply(B,c(1,3),prod)
 	

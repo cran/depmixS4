@@ -78,11 +78,15 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 	} else {
 		# initial expectation
-		B <- apply(object@dens,c(1,3),prod)
-		gamma <- object@init*B
-		LL <- sum(log(rowSums(gamma)))
+		fbo <- fb(init=object@init,A=matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+		LL <- fbo$logLike
 		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
-		gamma <- gamma/rowSums(gamma)
+		
+		#B <- apply(object@dens,c(1,3),prod)
+		#gamma <- object@init*B
+		#LL <- sum(log(rowSums(gamma)))
+		#if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
+		#gamma <- gamma/rowSums(gamma)
 	}
 	
 	LL.old <- LL + 1
@@ -94,27 +98,30 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		# should become object@prior <- fit(object@prior)
 		
 		if(clsf == "hard") {
-		    gamma <- t(apply(gamma,1,ind.max))
+		    fbo$gamma <- t(apply(gamma,1,ind.max))
 		}
-		object@prior@y <- gamma[bt,,drop=FALSE]
+		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
 		object@init <- dens(object@prior)
 		
 		for(i in 1:ns) {
 			for(k in 1:nresp(object)) {
-				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=fbo$gamma[,i])
 				# update dens slot of the model
 				object@dens[,k,i] <- dens(object@response[[i]][[k]])
 			}
 		}
 		
 		# expectation
-		B <- apply(object@dens,c(1,3),prod)
-		gamma <- object@init*B
-		LL <- sum(log(rowSums(gamma)))
+		fbo <- fb(init=object@init,A=matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+		LL <- fbo$logLike
+		
+		#B <- apply(object@dens,c(1,3),prod)
+		#gamma <- object@init*B
+		#LL <- sum(log(rowSums(gamma)))
 
 		# normalize
-		gamma <- gamma/rowSums(gamma)
+		#gamma <- gamma/rowSums(gamma)
 		
 		# print stuff
 		if(verbose&((j%%5)==0)) {

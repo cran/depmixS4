@@ -1,6 +1,6 @@
 Package: depmixS4
-Version: 1.2-0
-Date: 2012-06-20
+Version: 1.2-1
+Date: 2012-08-12
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and
         Other Distributions in S4
 Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink
@@ -13,6 +13,6 @@ Description: Fit latent (hidden) Markov models on mixed categorical and
         mixture models
 License: GPL (>= 2)
 URL: http://depmix.r-forge.r-project.org/
-Packaged: 2012-06-21 07:56:30 UTC; ivisser1
+Packaged: 2012-08-13 09:57:27 UTC; ingmar
 Repository: CRAN
-Date/Publication: 2012-06-21 09:36:03
+Date/Publication: 2012-08-13 10:30:08
