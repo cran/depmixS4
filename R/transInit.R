@@ -36,7 +36,7 @@ setMethod("transInit",
 					fixed <- c(as.logical(fixed))
 				}
 				constr <- list(
-					lin = matrix(1,nr=1,nc=nstates),
+					lin = matrix(1,nrow=1,ncol=nstates),
 					linup = 1,
 					linlow = 1,
 					parup = rep(1,nstates),

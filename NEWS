@@ -1,3 +1,11 @@
+Changes in depmixS4 version 1.2-2
+
+  o Changed class assignment of depmix.fitted object using as(). 
+
+  o Fixed a bug in the fit method of depmix models: linear inequality 
+    constraints were not passed on to rsolnp (thanks to Peiming Wang for 
+	  bringing this to my attention). 
+
 Changes in depmixS4 version 1.2-1
 
   o Fixed a bug in handling of missing values for mix models
