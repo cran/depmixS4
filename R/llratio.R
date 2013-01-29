@@ -19,7 +19,7 @@ llratio <- function(basemodel,constrainedmodel,...) {
 
 setMethod("show","llratio",
 	function(object) {
-		pvalue=round(pchisq(object@value,object@df,lower=FALSE),3)
+		pvalue=round(pchisq(object@value,object@df,lower.tail=FALSE),3)
 		cat("log Likelihood ratio: ", round(object@value,3), " (df=",object@df,"), p=",pvalue,"\n",sep="")
 	}
 )

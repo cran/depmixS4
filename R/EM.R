@@ -143,7 +143,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 
 	}
 
-	class(object) <- "mix.fitted"
+	object <- as(object,"mix.fitted") # class(object) <- "mix.fitted"
 
 	if(converge) {
 		object@message <- switch(crit,
@@ -275,7 +275,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		
 	}
 		
-	class(object) <- "depmix.fitted"
+	object <- as(object,"depmix.fitted") # class(object) <- "depmix.fitted"
 	
 	if(converge) {
 		object@message <- switch(crit,
