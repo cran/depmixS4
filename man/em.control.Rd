@@ -8,7 +8,8 @@
 
 \usage{
 	
-	em.control(maxit = 500, tol = 1e-08, crit = "relative", random.start = TRUE)
+	em.control(maxit = 500, tol = 1e-08, crit = c("relative","absolute"), 
+	random.start = TRUE, classification = c("soft","hard"))
 	
 }
 
@@ -24,6 +25,9 @@
 	\item{random.start}{This is used for a (limited) random
 	initialization of the parameters. See Details.}
 	
+	\item{classification}{Type of classification to states
+	used. See Details.}
+	
 }
 
 \details{
@@ -37,7 +41,8 @@ The absolute likelihood criterion assumes convergence on iteration
 \eqn{i}{i} when \eqn{\log L(i) - \log L(i-1) < tol}{(log L(i) - log L(i-1)) < tol}.  
 Use \code{crit="absolute"} to invoke the latter
 convergence criterion.  Note that in that case, optimal values of the 
-tolerance parameter \code{tol} scale with the value of the log-likelihood (and these are not changed automagically). 
+tolerance parameter \code{tol} scale with the value of the log-likelihood
+(and these are not changed automagically). 
 
 Argument \code{random.start} This is used for a (limited) random
 initialization of the parameters.  In particular, if
@@ -52,12 +57,26 @@ chosen at zero and one, the initialization is similar to that used in
 given to distinguish between the states.  It is also useful for repeated
 estimation from different starting values.
 
+Argument \code{classification} is used to choose either soft (default) or
+hard classification of observations to states. When using soft classification, observations
+are assigned to states with a weight equal to the posterior probability of
+the state. When using hard classification, observations are assigned to states
+according to the maximum a posteriori (MAP) states (i.e., each observation
+is assigned to one state, which is determined by the Viterbi algorithm in the
+case of \code{depmix} models). As a result, the EM algorithm will find a local
+maximum of the classification likelihood (Celeux & Govaert, 1992). 
+Warning: hard classification is an experimental feature, 
+especially for hidden Markov models, and its use is currently not advised.
 }
 
 \references{
 	Lawrence R. Rabiner (1989).  A tutorial on hidden Markov models and
 	selected applications in speech recognition.  \emph{Proceedings of
 	IEEE}, 77-2, p.  267-295.
+  
+  Gilles Celeux and Gerard Govaert (1992). A classification EM algorithm 
+  for clustering and two stochastic versions. \emph{Computational
+Statistics and Data Analysis, 14}, p. 315-332.
 }
 
 \value{
@@ -69,3 +88,17 @@ estimation from different starting values.
 \author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}
+
+\examples{
+# using "hard" assignment of observations to the states, we can maximise the
+# classification likelihood instead of the usual marginal likelihood
+data(speed)  
+mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,
+    family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+set.seed(1)
+# fit the model by calling fit
+fmod <- fit(mod,emcontrol=em.control(classification="hard"))
+# can get rather different solutions with different starting values...
+set.seed(3)
+fmod2 <- fit(mod,emcontrol=em.control(classification="hard"))
+}

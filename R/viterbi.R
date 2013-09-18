@@ -31,7 +31,7 @@ function(object,na.allow=TRUE) {
 		if(object@ntimes[case]>1) {
 			for(tt in ((bt[case]+1):et[case])) {
 				for(j in 1:ns) {
-					if(!object@stationary) {
+					if(!object@homogeneous) {
 						delta[tt,j] <- max(delta[tt-1,]*(A[tt,j,]))*B[tt,j]
 						k <- which.max(delta[tt-1,]*A[tt,j,])
 					} else {
@@ -56,7 +56,9 @@ function(object,na.allow=TRUE) {
 			}
 		}
 	}
-	
+  
+  colnames(delta) <- paste("S",1:ns,sep="")
+  
 	delta <- data.frame(state,delta) 	
 	return(delta)
 }

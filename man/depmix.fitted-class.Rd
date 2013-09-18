@@ -5,7 +5,10 @@
 \alias{depmix.fitted}
 \alias{depmix.fitted-class}
 
-\title{Class "depmix.fitted"}
+\alias{depmix.fitted.classLik}
+\alias{depmix.fitted.classLik-class}
+
+\title{Class "depmix.fitted" (and  "depmix.fitted.classLik")}
 
 \description{A fitted \code{\link{depmix}} model.}
 
@@ -58,8 +61,7 @@
 
 		\item{\code{lin.upper}}{The upper bounds on the linear constraints.}		
 		
-		\item{\code{posterior}:}{Posterior (Viterbi) state sequence (not
-			implemented currently).}
+		\item{\code{posterior}:}{Posterior (Viterbi) state sequence.}
 	}
 }
 
@@ -71,9 +73,11 @@
 }
 
 \section{Extends}{
-	\code{depmix.fitted} extends the \code{depmix} class.
+	\code{depmix.fitted} extends the \code{"\linkS4class{depmix}"} class directly. \code{depmix.fitted.classLik} is
+	similar to \code{depmix.fitted}, the only difference being that the model is fitted
+	by maximising the classification likelihood.
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{classes}

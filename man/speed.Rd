@@ -24,11 +24,13 @@
 \usage{data(speed)}
 
 \format{
-  A data frame with 439 observations on the following 3 variables.
+  A data frame with 439 observations on the following 4 variables.
   \describe{
 	\item{\code{rt}}{a numeric vector of response times (log ms)}
 	\item{\code{corr}}{a numeric vector of accuracy scores (0/1)}
 	\item{\code{Pacc}}{a numeric vector of the pay-off for accuracy}
+	\item{\code{prev}}{a numeric vector of accuracy scores (0/1) 
+				on the previous trial}
   }
 }
 

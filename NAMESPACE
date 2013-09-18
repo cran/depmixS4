@@ -1,4 +1,4 @@
-import(methods)
+import(methods, MASS, nnet, Rsolnp)
 
 importFrom(stats, predict, simulate)
 
@@ -57,5 +57,6 @@ exportMethods(
 	show,
 	simulate,
 	summary,
-	logLik
+	logLik,
+	getmodel
 )

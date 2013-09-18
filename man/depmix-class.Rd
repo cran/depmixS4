@@ -38,7 +38,7 @@
 	\item{\code{init}:}{Array of dimension \code{length(ntimes)}*nstates with 
 		the current predictions for the initial state probabilities.}
 	
-	\item{\code{stationary}:}{Logical indicating whether the transitions are
+	\item{\code{homogeneous}:}{Logical indicating whether the transitions are
 		time-dependent or not; for internal use.}
 	
 	\item{\code{ntimes}:}{A vector containing the lengths of independent time

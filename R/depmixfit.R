@@ -2,7 +2,13 @@
 
 setMethod("fit",
     signature(object="mix"),
-    function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conrows.lower=0,method=NULL,emcontrol=em.control(),verbose=TRUE,...) {
+    function(object,fixed=NULL,equal=NULL,
+				conrows=NULL,conrows.upper=0,conrows.lower=0,
+				method=NULL,verbose=TRUE,
+				emcontrol=em.control(),
+				solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
+				donlpcntrl=donlp2Control(),		
+				...) {
 	
 		fi <- !is.null(fixed)
 		cr <- !is.null(conrows)
@@ -28,8 +34,7 @@ setMethod("fit",
 		}
 		
 		if(method=="EM") {
-			if(!(emcontrol$crit %in% c("absolute","relative"))) stop("'crit' argument to em.control not recognized")
-			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,verbose=verbose,...)
+			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,classification=emcontrol$classification,verbose=verbose,...)
 		}
 		
 		if(!(method %in% c("EM","donlp","rsolnp"))) stop("'method' argument invalid; should be one of 'EM', 'rsolnp', 'donlp'.")
@@ -54,11 +59,11 @@ setMethod("fit",
 			# set those fixed parameters in the appropriate submodels
 			object <- setpars(object,fixed,which="fixed")			
 			
-		    # get the full set of parameters
-		    allpars <- getpars(object)
-						
+			# get the full set of parameters
+			allpars <- getpars(object)
+			
 			# get the reduced set of parameters, ie the ones that will be optimized
-		    pars <- allpars[!fixed]
+			pars <- allpars[!fixed]
 		    
 			constraints <- getConstraints(object)
 			
@@ -112,7 +117,7 @@ setMethod("fit",
 				allpars[!fixed] <- pars
 				object <- setpars(object,allpars)
 				ans = -as.numeric(logLik(object))
-				if(is.na(ans)) ans = 100000 # remove magic number here
+				if(is.na(ans)) ans = 100000 # remove magic number here!!!!!!!
 				ans
 			}
 			
@@ -121,9 +126,6 @@ setMethod("fit",
 				reqdon <- require(Rdonlp2,quietly=TRUE)
 				
 				if(!reqdon) stop("Rdonlp2 not available.")
-				
-				# set donlp2 control parameters
-				cntrl <- donlp2.control(hessian=FALSE,difftype=2,report=TRUE,epsx=1e-6)	
 				
 				mycontrol <- function(info) {
 					return(TRUE)
@@ -136,13 +138,13 @@ setMethod("fit",
 					A=lincon,
 					lin.upper=lin.u,
 					lin.lower=lin.l,
-					control=cntrl,
+					control=donlpcntrl,
 					control.fun=mycontrol,
 					...
 				)
 				
-				if(class(object)=="depmix") object <- as(object,"depmix.fitted") #class(object) <- "depmix.fitted"
-				if(class(object)=="mix") object <- as(object,"mix.fitted") # class(object) <- "mix.fitted"
+				if(class(object)=="depmix") object <- as(object,"depmix.fitted") # class(object) <- "depmix.fitted"
+				if(class(object)=="mix") object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
 				
 				# convergence info
 				object@message <- result$message
@@ -180,10 +182,6 @@ setMethod("fit",
 					linineq <- lincon[ineq, ,drop=FALSE]
 					ineqLB <- lin.l[ineq]
 					ineqUB <- lin.u[ineq]
-					ineqfun <- function(pp) {
-						ans = as.vector(linineq%*%pp)
-						ans
-					}
 				} else {
 					ineqfun = NULL
 					ineqLB=NULL
@@ -200,12 +198,12 @@ setMethod("fit",
 					ineqUB = ineqUB, 
 					LB = par.l[!fixed], 
 					UB = par.u[!fixed], 
-					control = list(delta = 1e-5, tol = 1e-6, trace = 1),
+					control = solnpcntrl,
 					...
 				)
 				
-				if(class(object)=="depmix") object <- as(object,"depmix.fitted") # class(object) <- "depmix.fitted"
-				if(class(object)=="mix") object <- as(object,"mix.fitted") # class(object) <- "mix.fitted"
+				if(class(object)=="depmix")  object <- as(object,"depmix.fitted") #  class(object) <- "depmix.fitted"
+				if(class(object)=="mix") object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
 				
 				object@message <- c(res$convergence," (0 is good in Rsolnp, check manual for other values)")
 				
@@ -219,9 +217,11 @@ setMethod("fit",
 			object@lin.upper <- lin.u
 			object@lin.lower <- lin.l
 			
+			object@posterior <- viterbi(object)
+			
 		}
 		
-		object@posterior <- viterbi(object)
+		
 		
 		return(object)
 	}

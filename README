@@ -13,7 +13,7 @@ multinomial logistics (or multinomials with identity link, which is the
 default when no covariates are present) with the possibility of including
 covariates.
 
-Optimization is by default done using the EM algorithm.  When linear
+Optimization is by default done using the EM algorithm.  When (linear)
 constraints are included, package Rsolnp is used for optimization (there is
 also support for using Rdonlp2 as optimizer, see USING RDONLP2 below).  New
 response distributions can be added by extending the response-class and
@@ -45,5 +45,9 @@ USING RDONLP2
 Optimization of models with (general) linear (in-)equality constraint is
 done using Rsolnp (available from CRAN).  Optionally the Rdonlp2 package
 can be used; Rdonlp2 was written by Ryuichi Tamura(ry.tamura @ gmail.com),
-and used to be available from: http://arumat.net/Rdonlp2/ The present 
-status of Rdonlp2 is unclear. 
+and can currently be installed using:
+
+install.packages("Rdonlp2", repos= c("http://R-Forge.R-project.org", getOption("repos")))
+
+Note the licence information which says, among other things: "The free use
+of donlp2 and parts of it is restricted for research purposes ..."

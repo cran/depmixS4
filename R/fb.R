@@ -4,7 +4,7 @@
 # FORWARD-BACKWARD algoritme, 23-3-2008
 # 
 
-fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,na.allow=TRUE) {
+fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,homogeneous=TRUE,useC=TRUE,na.allow=TRUE) {
 
 	# Forward-Backward algorithm (used in Baum-Welch)
 	# Returns alpha, beta, and full data likelihood
@@ -47,7 +47,7 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,n
 		xi <- array(0,dim=c(nt,ns,ns))
 		
 		res <- .C("forwardbackward",
-			hom=as.integer(stationary),
+			hom=as.integer(homogeneous),
 			ns=as.integer(ns),
 			lt=as.integer(lt),
  			nt=as.integer(nt),
@@ -83,7 +83,7 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,n
 						
 			if(ntimes[case]>1) {
 				for(i in bt[case]:(et[case]-1)) {
-					if(stationary) alpha[i+1,] <- (A[1,,]%*%alpha[i,])*B[i+1,]
+					if(homogeneous) alpha[i+1,] <- (A[1,,]%*%alpha[i,])*B[i+1,]
 					else alpha[i+1,] <- (A[i,,]%*%alpha[i,])*B[i+1,]
 					sca[i+1] <- 1/sum(alpha[i+1,])
 					alpha[i+1,] <- sca[i+1]*alpha[i+1,]
@@ -94,12 +94,12 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE,n
 						
 			if(ntimes[case]>1) {
 				for(i in (et[case]-1):bt[case]) {
-					if(stationary) beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[1,,]*sca[i]
+					if(homogeneous) beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[1,,]*sca[i]
 					else beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[i,,]*sca[i]
 				}
 				
 				for(i in bt[case]:(et[case]-1)) {
-					if(stationary) xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[1,,])
+					if(homogeneous) xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[1,,])
 					else xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[i,,])
 				}
 			}

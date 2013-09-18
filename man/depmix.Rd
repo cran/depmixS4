@@ -200,6 +200,23 @@ set.seed(1)
 # fit the model by calling fit
 fm <- fit(mod)
 
+# Volatility of S & P 500 returns
+# (thanks to Chen Haibo for providing this example)
+
+data(sp500)
+
+# fit some models
+msp <- depmix(logret~1,nstates=2,data=sp500)
+set.seed(1)
+fmsp <- fit(msp)	
+
+# plot posterior state sequence for the 2-state model
+plot(ts(posterior(fmsp)[,2], start=c(1950,2),deltat=1/12),ylab="probability",
+main="Posterior probability of state 1 (volatile, negative markets).",
+frame=FALSE)
+
+\dontrun{
+
 # this creates data with a single change point with Poisson data
 set.seed(3)
 y1 <- rpois(50,1)
@@ -220,8 +237,11 @@ fm3 <- fit(m3,em=em.control(maxit=500))
 # plot the BICs to select the proper model
 plot(1:3,c(BIC(fm1),BIC(fm2),BIC(fm3)),ty="b")
 
-# similar to the binomial model, data may also be entered in multi-column format where the n for each
-# row can be different
+}
+
+\dontrun{
+# similar to the binomial model, data may also be entered in 
+# multi-column format where the n for each row can be different
 dt <- data.frame(y1=c(0,1,1,2,4,5),y2=c(1,0,1,0,1,0),y3=c(4,4,3,2,1,1))
 # specify a mixture model ...
 m2 <- mix(cbind(y1,y2,y3)~1,data=dt,ns=2,family=multinomial("identity"))
@@ -231,29 +251,8 @@ fm2 <- fit(m2)
 dm2 <- depmix(cbind(y1,y2,y3)~1,data=dt,ns=2,family=multinomial("identity"))
 set.seed(1)
 fdm2 <- fit(dm2)
+}
 
-
-# Volatility of S & P 500 returns
-# (thanks to Chen Haibo for providing this example)
-
-require(TTR)
-
-# load SP500 returns
-Sys.setenv(tz='UTC')
-
-sp500 <- getYahooData('^GSPC',start=19500101,end=20110731,freq='daily')
-ep <- endpoints(sp500, on="months", k=1)
-sp500 <- sp500[ep[2:(length(ep)-1)]]
-sp500$sp500_ret <- log(sp500$Close) - lag(log(sp500$Close))
-sp500 <- na.exclude(sp500)
-
-# fit some models
-mod <- depmix(sp500_ret~1,nstates=2,data=sp500)
-set.seed(2)
-fm2 <- fit(mod)	
-
-# plot BIC and posterior state sequence for the 2-state model
-plot(as.ts(posterior(fm2)[,3]),ylab="probability",main="Posterior probability of state 2 (volatile, negative markets).")
 
 
 }

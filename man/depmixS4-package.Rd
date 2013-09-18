@@ -34,8 +34,8 @@ depmixS4 provides classes for specifying and fitting hidden Markov models
 	\tabular{ll}{
 		Package: \tab depmixS4\cr
 		Type: \tab Package\cr
-		Version: \tab 1.2-1\cr
-		Date: \tab 2012-08-12\cr
+		Version: \tab 1.3-0\cr
+		Date: \tab 2013-09-17\cr
 		License: \tab GPL\cr
 	}
 

@@ -28,7 +28,6 @@ setGeneric("transInit", function(formula, nstates, data = NULL, family = multino
                  pstart = NULL, fixed = NULL, prob=TRUE, ...) standardGeneric("transInit"))
 
 # extractors/set functions
-
 setGeneric("npar", function(object, ...) standardGeneric("npar"))
 
 setGeneric("ntimes", function(object, ...) standardGeneric("ntimes"))
@@ -45,11 +44,13 @@ setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
 setGeneric("getConstraints", function(object, ...) standardGeneric("getConstraints"))
 
-setGeneric("is.stationary", function(object,...) standardGeneric("is.stationary"))
+setGeneric("is.homogeneous", function(object,...) standardGeneric("is.homogeneous"))
 
 setGeneric("setpars", function(object,values,which="pars",...) standardGeneric("setpars"))
 
 setGeneric("getpars", function(object,which="pars",...) standardGeneric("getpars"))
+
+setGeneric("getmodel", function(object,...) standardGeneric("getmodel"))
 
 
 # functions 
@@ -66,11 +67,6 @@ setGeneric("logDens",function(object,...) standardGeneric("logDens"))
 setGeneric("dens",function(object,...) standardGeneric("dens"))
 
 setGeneric("predict", function(object, ...) standardGeneric("predict"))
-
-
-# redundant??
-
-# setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
 
 # these are imported from stats4
 # setGeneric("nobs", function(object, ...) standardGeneric("nobs"))

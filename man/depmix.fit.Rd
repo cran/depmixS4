@@ -1,6 +1,7 @@
 \name{fit}
 
 \alias{fit}
+
 \alias{depmix.fit}
 \alias{fit,depmix-method}
 
@@ -19,21 +20,24 @@
 
 	\code{fit} optimizes parameters of \code{\link{depmix}} or
 	\code{\link{mix}} models, optionally subject to general linear
-	(in)equality constraints.
+	(in)equality constraints. 
 
 }
 
 \usage{
-	
-	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
-	
-	\S4method{summary}{depmix.fitted}(object,which="all")
 
-	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
+	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, 
+		conrows=NULL, conrows.upper=0, conrows.lower=0, 
+		method=NULL, verbose=TRUE,
+		emcontrol=em.control(),
+		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, 
+		delta = 1e-7, tol = 1e-8),
+		donlpcntrl=donlp2Control(),
+		...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
+	
+	\S4method{summary}{depmix.fitted}(object,which="all")
 
 }
 
@@ -53,11 +57,19 @@
 
 	\item{method}{The optimization method; mostly determined by
 		constraints.}
+	
+	\item{verbose}{Should optimization information be displayed on screen?}
 		
 	\item{emcontrol}{Named list with control parameters for the EM
 		algorithm (see \code{\link{em.control}}).}
   
-	\item{verbose}{Should optimization information be displayed on screen?}
+	\item{solnpcntrl}{Control parameters passed to the 'rsolnp' optimizer;
+	  see \code{\link{solnp}} for explanation and defaults used there.}
+	
+	\item{donlpcntrl}{Control parameters passed to 'donlp' optimizer; see
+	\code{?donlp2Control} for explanation and defaults used there; this can 
+		be used to tweak optimization but note that extra output is not 
+		returned.}
 	
 	\item{which}{Should summaries be provided for "all" submodels? Options 
 		are "prior", "response", and for fitted depmix models also "transition".}
@@ -68,13 +80,13 @@
 
 \details{ 
 
-	Models are fitted by the EM algorithm if there are no constraints on
-	the parameters. Aspects of the EM algorithm can be controlled through
-	the \code{emcontrol} argument; see details in \code{\link{em.control}}. 
-	Otherwise the general optimizers \code{solnp}, the
-	default (from package \code{Rsolnp}) or \code{donlp2} (from package
-	\code{Rdonlp2}) are used which handle general linear (in-)equality
-	constraints.
+	Models are fitted by the EM algorithm if there are no constraints on the
+	parameters.  Aspects of the EM algorithm can be controlled through the
+	\code{emcontrol} argument; see details in \code{\link{em.control}}.
+	Otherwise the general optimizers \code{solnp}, the default (from package
+	\code{Rsolnp}) or \code{donlp2} (from package \code{Rdonlp2}) are used
+	which handle general linear (in-)equality constraints.  These optimizers
+	are selected by setting method='rsolnp' or method='donlp' respectively.
 	
 	Three types of constraints can be specified on the parameters: fixed,
 	equality, and general linear (in-)equality constraints.  Constraint
@@ -174,6 +186,28 @@ fmod1 # to see the logLik and optimization information
 # to see the parameters
 summary(fmod1)
 
+# same model, now with missing data
+\dontrun{
+speed[2,1] <- NA
+speed[3,2] <- NA
+
+# 2-state model on rt and corr from speed data set 
+# with Pacc as covariate on the transition matrix
+# ntimes is used to specify the lengths of 3 separate series
+mod1ms <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+# fit the model
+set.seed(3)
+fmod1ms <- fit(mod1ms)
+}
+
+# instead of the normal likelihood, we can also maximise the "classification" likelihood
+# this uses the maximum a posteriori state sequence to assign observations to states
+# and to compute initial and transition probabilities. 
+
+fmod1b <- fit(mod1,emcontrol=em.control(classification="hard"))
+fmod1b # to see the logLik and optimization information
+
 # FIX SOME PARAMETERS
 
 # get the starting values of this model to the optimized 
@@ -199,10 +233,13 @@ fmod2 <- fit(mod2,fixed=!free)
 # likelihood ratio insignificant, hence fmod2 better than fmod1
 llratio(fmod1,fmod2)
 
-# NOW ADD SOME GENERAL LINEAR CONSTRAINTS
+
+# ADDING SOME GENERAL LINEAR CONSTRAINTS
 
 # set the starting values of this model to the optimized 
 # values of the previously fitted model to speed optimization
+
+\dontrun{
 
 pars <- c(unlist(getpars(fmod2)))
 pars[4] <- pars[8] <- -4
@@ -232,17 +269,23 @@ conr[2,10] <- -1
 # starting values
 fmod3b <- fit(mod3,conrows=conr,fixed=!free) # using free defined above
 
+}
+
 data(balance)
 # four binary items on the balance scale task
 mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")))
+	family=list(multinomial("identity"),multinomial("identity"),
+	multinomial("identity"),multinomial("identity")))
 
 set.seed(1)
 fmod4 <- fit(mod4)
 
+\dontrun{
+
 # add age as covariate on class membership by using the prior argument
 mod5 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")),
+	family=list(multinomial("identity"),multinomial("identity"),
+	multinomial("identity"),multinomial("identity")),
 	prior=~age, initdata=balance)
 
 set.seed(1)
@@ -250,6 +293,8 @@ fmod5 <- fit(mod5)
 
 # check the likelihood ratio; adding age significantly improves the goodness-of-fit
 llratio(fmod5,fmod4)
+
+}
 
 }
 

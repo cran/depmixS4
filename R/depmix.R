@@ -35,7 +35,7 @@ setMethod("mix", signature(response = "ANY"), function(response,
     prior <- makePriorModel(nstates = nstates, ncases = length(ntimes), 
         formula = prior, data = initdata, values = instart)
     
-    # call main depmix with all these models, ntimes and stationary
+    # call main depmix with all these models, ntimes and homogeneous
     model <- makeMix(response = response, prior = prior)
         
     return(model)
@@ -77,19 +77,19 @@ setMethod("depmix", signature(response = "ANY"), function(response,
         nstates = nstates, family = family, values = respstart)
     
     # make transition models
-    stationary = FALSE
+    homogeneous = FALSE
     if (transition == ~1) 
-        stationary = TRUE
+        homogeneous = TRUE
     transition <- makeTransModels(nstates = nstates, formula = transition, 
-        data = data, stationary = stationary, values = trstart)
+        data = data, homogeneous = homogeneous, values = trstart)
     
     # make prior model
     prior <- makePriorModel(nstates = nstates, ncases = length(ntimes), 
         formula = prior, data = initdata, values = instart)
     
-    # call main depmix with all these models, ntimes and stationary
+    # call main depmix with all these models, ntimes and homogeneous
     model <- makeDepmix(response = response, transition = transition, 
-        prior = prior, ntimes = ntimes, stationary = stationary)
+        prior = prior, ntimes = ntimes, homogeneous = homogeneous)
     
     # deal with starting values here!!!!!!
     

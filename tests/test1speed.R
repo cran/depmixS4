@@ -98,7 +98,7 @@ dev <- -2*ll
 cat("Test 3: ", all.equal(c(dev),acc$deviance),"(same but now with covariate) \n")
 
 # 
-# 2-state model with covariate
+# TEST 4: 2-state model with covariate
 # 
 
 trstart=c(0.896,0.104,0.084,0.916)
@@ -112,3 +112,24 @@ ll <- logLik(mod)
 cat("Test 4: ll is now larger than speedll, ie ll is better due to introduction of a covariate \n")
 cat("Test 4: ", ll,"\t", logl, "\n")
 cat("Test 4: ", ll > logl, "\n")
+
+
+#
+# TEST 5: use em to optimize the model
+# 
+
+data(speed)
+
+# 2-state model on rt and corr from speed data set 
+# with Pacc as covariate on the transition matrix
+# ntimes is used to specify the lengths of 3 separate series
+mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+# fit the model
+set.seed(3)
+fmod1 <- fit(mod1, verbose=FALSE)
+
+llEM <- logLik(fmod1)
+lltest <- -248.972219
+
+cat("Test 5: ", all.equal(c(lltest),c(llEM),check.att=FALSE), "(loglike EM optimized model for speed data) \n")
