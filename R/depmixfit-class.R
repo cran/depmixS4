@@ -20,6 +20,17 @@ setClass("mix.fitted",
 	contains="mix"
 )
 
+setClass("mix.fitted.classLik",
+	representation(
+	    message="character", # convergence information
+		conMat="matrix", # constraint matrix on the parameters for general linear constraints
+		lin.upper="numeric", # upper bounds for linear constraint
+		lin.lower="numeric", # lower bounds for linear constraints
+		posterior="data.frame" # posterior probabilities for the states
+	),
+	contains="mix"
+)
+
 # accessor functions
 
 setMethod("posterior","mix.fitted",
@@ -37,32 +48,6 @@ setMethod("show","mix.fitted",
 	}
 )
 
-setMethod("summary","mix.fitted",
-	function(object,which="all") {
-		ans=switch(which,
-			"all" = 1,
-			"response" = 2,
-			"prior" = 3,
-			stop("Invalid 'which' argument in summary of fitted mix model")
-		)
-		if(ans==1|ans==3) {
-			cat("Mixture probabilities model \n")
-			print(object@prior)
-			cat("\n")
-		}
-		if(ans==1|ans==2) {
-			for(i in 1:object@nstates) {
-				cat("Response model(s) for state", i,"\n\n")
-				for(j in 1:object@nresp) {
-					cat("Response model for response",j,"\n")
-					print(object@response[[i]][[j]])
-					cat("\n")
-				}
-				cat("\n")
-			}
-		}
-	}	
-)
 
 # 
 # Ingmar Visser, 23-3-2008
@@ -82,6 +67,15 @@ setClass("depmix.fitted",
 	contains="depmix"
 )
 
+setClass("depmix.fitted.classLik",
+	representation(message="character", # convergence information
+		conMat="matrix", # constraint matrix on the parameters for general linear constraints
+		lin.upper="numeric", # upper bounds for linear constraints
+		lin.lower="numeric", # lower bounds for linear constraints
+		posterior="data.frame" # posterior probabilities for the states
+	),
+	contains="depmix"
+)
 # accessor functions
 
 setMethod("posterior","depmix.fitted",
@@ -98,41 +92,3 @@ setMethod("show","depmix.fitted",
 		cat("BIC: ", BIC(object),"\n")
 	}
 )
-
-setMethod("summary","depmix.fitted",
-	function(object,which="all") {
-		ans=switch(which,
-			"all" = 1,
-			"response" = 2,
-			"prior" = 3,
-			"transition" = 4,
-			stop("Invalid 'which' argument in summary of fitted depmix model")
-		)
-		if(ans==1|ans==3) {
-			cat("Initial state probabilties model \n")
-			print(object@prior)
-			cat("\n")
-		}
-		if(ans==1|ans==4) {
-			for(i in 1:object@nstates) {
-				cat("Transition model for state (component)", i,"\n")
-				print(object@transition[[i]])
-				cat("\n")
-			}
-			cat("\n")
-		}
-		if(ans==1|ans==2) {
-			for(i in 1:object@nstates) {
-				cat("Response model(s) for state", i,"\n\n")
-				for(j in 1:object@nresp) {
-					cat("Response model for response",j,"\n")
-					print(object@response[[i]][[j]])
-					cat("\n")
-				}
-				cat("\n")
-			}
-		}
-	}
-)
-
-

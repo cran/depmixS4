@@ -1,10 +1,57 @@
+Changes in depmixS4 version 1.3-0
+
+Major changes
+
+  o The EM algorithm has gained an extra argument 'classification',
+	passed from the 'fit' function using argument 'emcontrol', to allow a
+	choice between maximising the regular (classification="soft", the
+	default) or classification (classification="hard") likelihood. 
+	WARNING: using the classification likelihood combined with random 
+	starting values may easily lead to unstable results; use with 
+	caution. 
+
+  o Parameters are now given proper names, following the glm() scheme
+  	(e.g. '(Intercept)', 'x1', et cetera); with this, the show and summary
+	methods have changed considerably and now produce more compact and more
+	readable output.  The summary method (for both fitted and unfitted
+	models) now has an argument 'compact' (TRUE by default) that controls
+	the presentation of the repsonse model parameters.  The prior and
+	transition models are now presented more compactly when there are no
+	covariates.
+	
+  o The fit function has gained two arguments: solnpcntrl and donlpcntrl 
+    which can be used to fine tune optimization using packages Rsolnp and 
+	Rdonlp2; the latter is not on CRAN, and the version that depmixS4 is 
+	compatible with is from r-forge (note the licence from the package). 
+
+  o The EM algorithm is now more memory efficient and hence faster, 
+    most notably for large models and/or data; thanks to Robert McGehee
+    for generously providing these code enhancements. 
+
+Minor changes
+
+  o Binomial models now treat factors in the same way as glm(); that is
+    the first level of a factor is treated as a failure, and the remaining
+    levels as successes.
+
+  o Un-fitted models now also have a summary method, which is identical to 
+    the show method for these models.  
+
+  o Added function getmodel(object) to select submodels of a full mix or 
+	depmix model, eg to use in deriving predictions, getting at parameter 
+	values, et cetera. 
+
+  o Small parameter values in multinomial response models and the initial
+	probabilities and transition models (with identity link) are now set to
+	zero to speed-up convergence.  Current threshold is 1e-6. 
+
 Changes in depmixS4 version 1.2-2
 
   o Changed class assignment of depmix.fitted object using as(). 
 
   o Fixed a bug in the fit method of depmix models: linear inequality 
     constraints were not passed on to rsolnp (thanks to Peiming Wang for 
-	  bringing this to my attention). 
+	bringing this to my attention). 
 
 Changes in depmixS4 version 1.2-1
 

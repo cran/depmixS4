@@ -1,12 +1,12 @@
 makeTransModels <-
-function(nstates,formula=~1,data=NULL,stationary,values=NULL, ...) {
+function(nstates,formula=~1,data=NULL,homogeneous,values=NULL, ...) {
 	
 	# defaults that possibly need some work at some point 
 	# FIX ME
 	base=1
 	prob=TRUE
 	
-	if(!stationary&is.null(data)) stop("non-stationary transition models needs data argument")
+	if(!homogeneous&is.null(data)) stop("non-homogeneous transition models needs data argument")
 	
 	# starting values	
 	tst <- FALSE
@@ -18,10 +18,10 @@ function(nstates,formula=~1,data=NULL,stationary,values=NULL, ...) {
 	models <- list()
 	for(i in 1:nstates) {
 		if(tst) {
-			if(stationary) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,pstart=values[i,],prob=prob)
+			if(homogeneous) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,pstart=values[i,],prob=prob)
 			else models[[i]] <- transInit(formula,multinomial(base=base),data=data,nstates=nstates,pstart=values[i,],prob=prob)
 		} else {
-			if(stationary) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,prob=FALSE)
+			if(homogeneous) models[[i]] <- transInit(formula,multinomial(link="identity"),data=data.frame(1),nstates=nstates,prob=FALSE)
 			else models[[i]] <- transInit(formula,multinomial(base=base),data=data,nstates=nstates,prob=FALSE)
 		}
 	}

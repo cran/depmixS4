@@ -14,6 +14,7 @@ setClass("GLMresponse",
 	contains="response"
 )
 
+
 setMethod("GLMresponse",
 	signature(formula="formula"),
 	function(formula,data=NULL,family=gaussian(),pstart=NULL,fixed=NULL,prob=TRUE,na.action="na.pass", ...) {
@@ -32,6 +33,7 @@ setMethod("GLMresponse",
 		parameters <- list()
 		constr <- NULL
 		parameters$coefficients <- vector("numeric",length=ncol(x))
+		names(parameters$coefficients) <- attr(x,"dimnames")[[2]]
 		if(family$family=="gaussian") {
 			parameters$sd <- 1
 			constr <- list(
@@ -43,7 +45,7 @@ setMethod("GLMresponse",
 			# FIX ME
 			y <- model.response(mf)
 			if(NCOL(y) == 1) {
-				if(is.factor(y)) y <- as.matrix(as.numeric(as.numeric(y)==1)) else {
+				if(is.factor(y)) y <- as.matrix(as.numeric(as.numeric(y)!=1)) else { # 21/06/12 changed this from "==" to "!=" in line with glm
 					if(!is.numeric(y)) stop("model response not valid for binomial model")
 					if(sum(y %in% c(0,1)) != length(y)) stop("model response not valid for binomial model")
 					y <- as.matrix(y)
@@ -58,11 +60,13 @@ setMethod("GLMresponse",
 			y <- model.response(mf)
 			if(NCOL(y) == 1) {
 				if(is.factor(y)) {
+						namesy <- levels(y)
 				    mf <- model.frame(~y-1,na.action=na.action)
 				    y <- model.matrix(attr(mf, "terms"),mf)
 					#y <- model.matrix(~y-1,na.action=na.action) 
 				} else {
 					if(!is.numeric(y)) stop("model response not valid for multinomial model")
+					namesy <- levels(factor(y))
 					mf <- model.frame(~factor(y)-1,na.action=na.action)
 				    y <- model.matrix(attr(mf, "terms"),mf)
 					#y <- model.matrix(~factor(y)-1,na.action=na.action)
@@ -75,11 +79,17 @@ setMethod("GLMresponse",
 					fixed <- parameters$coefficients
 					fixed[,family$base] <- 1 
 					fixed <- c(as.logical(t(fixed)))
-				}
+			  }
+			  if(is.null(namesy)) namesy <- 1:ncol(y)
+			  colnames(parameters$coefficients) <- namesy
+				rownames(parameters$coefficients) <- attr(x,"dimnames")[[2]]
+# 				if(ncol(x)==1) names(parameters$coefficients) <- 1:ncol(y)
 			}
 			if(family$link=="identity") {
 				if(ncol(x)>1) stop("covariates not allowed in multinomial model with identity link")
-				parameters$coefficients <- matrix(1/ncol(y),ncol=ncol(y),1)
+				ncy <- ncol(y)
+				parameters$coefficients <- rep(1/ncy,ncy)
+				names(parameters$coefficients) <- paste("pr",1:ncol(y),sep="")
 				fixed <- rep(0,ncol(y)) 
 				fixed <- c(as.logical(t(fixed)))
 				constr <- list(
@@ -88,48 +98,49 @@ setMethod("GLMresponse",
 					linlow = 1,
 					parup = rep(1,ncol(y)),
 					parlow = rep(0,ncol(y))
-				)
-			}
+			  )
+		  }
 		}
 		npar <- length(unlist(parameters))
 		if(is.null(fixed)) fixed <- as.logical(rep(0,npar))
 		if(!is.null(pstart)) {
-			if(length(pstart)!=npar) stop("length of 'pstart' must be",npar)
-			if(family$family=="multinomial") {
-				if(family$link=="identity") {
-					parameters$coefficients[1,] <- pstart[1:ncol(parameters$coefficients)]/sum(pstart[1:ncol(parameters$coefficients)])
-					
+				if(length(pstart)!=npar) stop("length of 'pstart' must be",npar)
+				if(family$family=="multinomial") {
+						if(family$link=="identity") {
+								parameters$coefficients <- pstart[1:length(parameters$coefficients)]/sum(pstart[1:length(parameters$coefficients)])
+						} else {
+								if(prob) parameters$coefficients[1,] <- family$linkfun(pstart[1:ncol(parameters$coefficients)],base=family$base)
+								else parameters$coefficients[1,] <- pstart[1:ncol(parameters$coefficients)]
+						}
+						pstart <- matrix(pstart,ncol(x),byrow=TRUE)
+						if(ncol(x)>1) parameters$coefficients[2:ncol(x),] <- pstart[2:ncol(x),]
 				} else {
-					if(prob) parameters$coefficients[1,] <- family$linkfun(pstart[1:ncol(parameters$coefficients)],base=family$base)
-					else parameters$coefficients[1,] <- pstart[1:ncol(parameters$coefficients)]
+						# if(prob) parameters$coefficients <- family$linkfun(as.numeric(pstart[1:length(parameters$coefficients)]))
+						if(family$family=="binomial") {
+								if(prob) parameters$coefficients[1] <- family$linkfun(pstart[1])
+								else parameters$coefficients[1] <- pstart[1]
+								if(ncol(x)>1) parameters$coefficients[2:ncol(x)] <- pstart[2:ncol(x)]
+						} else {
+								parameters$coefficients[1:ncol(x)] <- pstart[1:ncol(x)]
+						}
+						if(length(unlist(parameters))>length(parameters$coefficients)) {
+								if(family$family=="gaussian") parameters$sd <- as.numeric(pstart[(length(parameters$coefficients)+1)])
+						}
 				}
-				pstart <- matrix(pstart,ncol(x),byrow=TRUE)
-				if(ncol(x)>1) parameters$coefficients[2:ncol(x),] <- pstart[2:ncol(x),]
-			} else {
-				# if(prob) parameters$coefficients <- family$linkfun(as.numeric(pstart[1:length(parameters$coefficients)]))
-				if(family$family=="binomial") {
-					if(prob) parameters$coefficients[1] <- family$linkfun(pstart[1])
-					else parameters$coefficients[1] <- pstart[1]
-					if(ncol(x)>1) parameters$coefficients[2:ncol(x)] <- pstart[2:ncol(x)]
-				} else {
-					parameters$coefficients[1:ncol(x)] <- pstart[1:ncol(x)]
-				}
-				if(length(unlist(parameters))>length(parameters$coefficients)) {
-					if(family$family=="gaussian") parameters$sd <- as.numeric(pstart[(length(parameters$coefficients)+1)])
-				}
-			}
 		}
 		mod <- switch(family$family,
-			gaussian = new("NORMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
-			binomial = new("BINOMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
-			multinomial = new("MULTINOMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
-			poisson = new("POISSONresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
-			Gamma = new("GAMMAresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
-			new("GLMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr)
+				gaussian = new("NORMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
+				binomial = new("BINOMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
+				multinomial = new("MULTINOMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
+				poisson = new("POISSONresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
+				Gamma = new("GAMMAresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr),
+				new("GLMresponse",formula=formula,family=family,parameters=parameters,fixed=fixed,x=x,y=y,npar=npar,constr=constr)
 		)
 		mod
-	}
+  }
 )
+
+
 
 setMethod("show","GLMresponse",
 	function(object) {
@@ -169,7 +180,7 @@ setMethod("setpars","GLMresponse",
 		npar <- npar(object)
 		if(length(values)!=npar) stop("length of 'values' must be",npar)
 		# determine whether parameters or fixed constraints are being set
-		nms <- names(object@parameters$coefficients)
+ 		nms <- attributes(object@parameters$coefficients)
 		if(length(values) == 0) return(object) # nothing to set; 
 		switch(which,
 			"pars"= {
@@ -188,31 +199,37 @@ setMethod("setpars","GLMresponse",
 			"fixed" = {
 				object@fixed <- as.logical(values)
 			}
-		)
-		names(object@parameters$coefficients) <- nms
+	  )
+	  attributes(object@parameters$coefficients) <- nms
 		return(object)
 	}
 )
 
 setMethod("getpars","GLMresponse",
-	function(object,which="pars",...) {
-		switch(which,
-			"pars" = {
-				parameters <- numeric()
-				if(object@family$family=="multinomial") {
-					# coefficient is usually a matrix here 		
-					parameters <- c(t(object@parameters$coefficients)) # Why transpose?
-				} else {
-					parameters <- unlist(object@parameters)
-				}
-				pars <- parameters
-			},
-			"fixed" = {
-				pars <- object@fixed
-			}
-		)
-		return(pars)
-	}
+		function(object,which="pars",...) {
+				switch(which,
+						"pars" = {
+								parameters <- numeric()
+								if(object@family$family=="multinomial"&object@family$link=="mlogit") {
+										# coefficient is usually a matrix here 
+										parameters <- c(t(object@parameters$coefficients)) # Why transpose?
+								} else {
+										parameters <- object@parameters$coefficients
+										if(object@family$family=="gaussian") {
+												nms <- names(parameters)
+												parameters <- c(parameters,object@parameters$sd)
+												names(parameters) <- c(nms,"sd")
+										}
+										
+								}
+								pars <- parameters
+						},
+						"fixed" = {
+								pars <- object@fixed
+						}
+				)
+				return(pars)
+		}
 )
 
 # methods: fit, logDens, predict
@@ -223,7 +240,9 @@ setMethod("fit","GLMresponse",
 	function(object,w) {
     if(missing(w)) w <- NULL
 		pars <- object@parameters
-		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=pars$coefficients)
+    start <- pars$coefficients
+    start[is.na(start)] <- 0
+		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
 		pars$coefficients <- fit$coefficients
 		object <- setpars(object,unlist(pars))
 		object
@@ -238,6 +257,11 @@ setMethod("logLik","GLMresponse",
 
 setMethod("predict","GLMresponse",
 	function(object) {
-		object@family$linkinv(object@x%*%object@parameters$coefficients)
+	  nas <- is.na(object@parameters$coefficients)
+    if(sum(nas) == 0) {
+      object@family$linkinv(object@x%*%object@parameters$coefficients)
+    } else {
+		  object@family$linkinv(as.matrix(object@x[,!nas])%*%object@parameters$coefficients[!nas])
+    }
 	}
 )

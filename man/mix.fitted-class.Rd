@@ -3,8 +3,9 @@
 \docType{class}
 
 \alias{mix.fitted-class}
+\alias{mix.fitted.classLik-class}
 
-\title{Class "mix.fitted"}
+\title{Class "mix.fitted" (and "mix.fitted.classLik")}
 
 \description{A fitted \code{\link{mix}} model.}
 
@@ -48,8 +49,7 @@
 
 		\item{\code{lin.upper}}{The upper bounds on the linear constraints.}
 			
-		\item{\code{posterior}:}{Posterior (Viterbi) state sequence (not
-			implemented currently).}
+		\item{\code{posterior}:}{Posterior (Viterbi) state sequence.}
 	}
 }
 
@@ -61,10 +61,12 @@
 }
 
 \section{Extends}{
-	Class \code{"\linkS4class{mix}"}, directly.
+	Class \code{"\linkS4class{mix}"} directly. \code{mix.fitted.classLik} is
+	similar to \code{mix.fitted}, the only difference being that the model is fitted
+	by maximising the classification likelihood.
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \examples{
 	showClass("mix.fitted")

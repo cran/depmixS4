@@ -4,7 +4,7 @@
 # LYSTIG algoritme voor de loglikelihood, 23-3-2008
 # 
 
-lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE,na.allow=TRUE) {
+lystig <- function(init,A,B,ntimes=NULL,homogeneous=TRUE,na.allow=TRUE) {
 
 	# Log likelihood computation according to Lystig & Hughes (2002).  This
 	# is very similar to the Forward part of the Forward-Backward algorithm
@@ -43,7 +43,7 @@ lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE,na.allow=TRUE) {
 			sca[bt[case]] <- 1/sum(phi[bt[case],])
 			if(ntimes[case]>1) {
 				for(i in (bt[case]+1):et[case]) {
-					if(stationary) phi[i,] <- (A[1,,]%*%phi[i-1,])*B[i,]
+					if(homogeneous) phi[i,] <- (A[1,,]%*%phi[i-1,])*B[i,]
 					else phi[i,] <- (A[i-1,,]%*%phi[i-1,])*B[i,]
 					phi[i,] <- sca[i-1]*phi[i,]
 					sca[i] <- 1/sum(phi[i,])
@@ -60,7 +60,7 @@ lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE,na.allow=TRUE) {
 		phi[1,] <- init[1,]*B[1,] # initialize
 		sca[1] <- 1/sum(phi[1,])
 		for(i in 2:nt) {
-			if(stationary) phi[i,] <- (A[1,,]%*%phi[i-1,])*B[i,]
+			if(homogeneous) phi[i,] <- (A[1,,]%*%phi[i-1,])*B[i,]
 			else phi[i,] <- (A[i-1,,]%*%phi[i-1,])*B[i,]			
 			phi[i,] <- sca[i-1]*phi[i,]
 			sca[i] <- 1/sum(phi[i,])

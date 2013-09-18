@@ -14,3 +14,10 @@ setClass("depmix.sim",
 	)
 )
 
+setAs("mix.fitted","mix.sim",def=function(from) {
+  as(as(from,"mix"),"mix.sim")
+})
+
+setAs("depmix.fitted","depmix.sim",def=function(from) {
+  as(as(from,"mix"),"mix.sim")
+})
