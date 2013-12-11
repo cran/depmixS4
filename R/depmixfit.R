@@ -3,7 +3,7 @@
 setMethod("fit",
     signature(object="mix"),
     function(object,fixed=NULL,equal=NULL,
-				conrows=NULL,conrows.upper=0,conrows.lower=0,
+				conrows=NULL,conrows.upper=NULL,conrows.lower=NULL,
 				method=NULL,verbose=TRUE,
 				emcontrol=em.control(),
 				solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
@@ -84,20 +84,20 @@ setMethod("fit",
 			
 			# incorporate general linear constraints, if any
 			if(cr) {
-				if(ncol(conrows)!=npar(object)) stop("'conrows' does not have the right dimensions")
-				lincon <- rbind(lincon,conrows)
-				if(any(conrows.upper==0)) {
-					lin.u <- c(lin.u,rep(0,nrow(conrows)))
-				} else {
-					if(length(conrows.upper)!=nrow(conrows)) stop("'conrows.upper does not have correct length")
-					lin.u <- c(lin.u,conrows.upper)
-				}
-				if(any(conrows.lower==0)) {
-					lin.l <- c(lin.l,rep(0,nrow(conrows)))
-				} else {
-					if(length(conrows.lower)!=nrow(conrows)) stop("'conrows.lower does not have correct length")
-					lin.l <- c(lin.l,conrows.lower)
-				}
+					if(ncol(conrows)!=npar(object)) stop("'conrows' does not have the right dimensions")
+					lincon <- rbind(lincon,conrows)
+					if(is.null(conrows.upper)) {
+							lin.u <- c(lin.u,rep(0,nrow(conrows)))
+					} else {
+							if(length(conrows.upper)!=nrow(conrows)) stop("'conrows.upper does not have correct length")
+							lin.u <- c(lin.u,conrows.upper)
+					}
+					if(is.null(conrows.lower)) {
+							lin.l <- c(lin.l,rep(0,nrow(conrows)))
+					} else {
+							if(length(conrows.lower)!=nrow(conrows)) stop("'conrows.lower does not have correct length")
+							lin.l <- c(lin.l,conrows.lower)
+					}
 			}
 			
 			# select only those columns of the constraint matrix that correspond to non-fixed parameters
@@ -112,12 +112,15 @@ setMethod("fit",
 				lin.l <- lin.l[-allzero]
 			}
 			
+			startLogLik <- -logLik(object)*1.01
+						
 			# make loglike function that only depends on pars
 			logl <- function(pars) {
 				allpars[!fixed] <- pars
 				object <- setpars(object,allpars)
 				ans = -as.numeric(logLik(object))
-				if(is.na(ans)) ans = 100000 # remove magic number here!!!!!!!
+				if(is.na(ans)) ans <- startLogLik 
+				if(is.infinite(ans)) ans <- startLogLik				
 				ans
 			}
 			
