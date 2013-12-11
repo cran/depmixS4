@@ -110,7 +110,7 @@ fm2 <- fit(fm1, equal = conpat)
 
 
 ###################################################
-### code chunk number 15: depmixS4.Rnw:763-772
+### code chunk number 15: depmixS4.Rnw:766-775
 ###################################################
 data("balance")
 set.seed(1)
@@ -124,13 +124,13 @@ fm
 
 
 ###################################################
-### code chunk number 16: depmixS4.Rnw:790-791
+### code chunk number 16: depmixS4.Rnw:793-794
 ###################################################
 summary(fm, which = "prior")
 
 
 ###################################################
-### code chunk number 17: depmixS4.Rnw:809-822
+### code chunk number 17: depmixS4.Rnw:812-825
 ###################################################
 x <- mlogit(base=1)
 coeff <- coefficients(fm@prior@parameters)
@@ -148,13 +148,13 @@ legend("right",legend=c("Class 1 (correct)","Class 2 (incorrect)","Class 3 (gues
 
 
 ###################################################
-### code chunk number 18: depmixS4.Rnw:895-896
+### code chunk number 18: depmixS4.Rnw:898-899
 ###################################################
 setClass("exgaus", contains="response")
 
 
 ###################################################
-### code chunk number 19: depmixS4.Rnw:920-944
+### code chunk number 19: depmixS4.Rnw:923-947
 ###################################################
 library("gamlss")
 library("gamlss.dist")
@@ -183,7 +183,7 @@ setMethod("exgaus",
 
 
 ###################################################
-### code chunk number 20: depmixS4.Rnw:947-999
+### code chunk number 20: depmixS4.Rnw:950-1002
 ###################################################
 setMethod("dens","exgaus",
     function(object,log=FALSE) {
@@ -240,7 +240,7 @@ setMethod("predict","exgaus",
 
 
 ###################################################
-### code chunk number 21: depmixS4.Rnw:1004-1019
+### code chunk number 21: depmixS4.Rnw:1007-1022
 ###################################################
 setMethod("fit", "exgaus",
   function(object, w) {
@@ -260,7 +260,7 @@ setMethod("fit", "exgaus",
 
 
 ###################################################
-### code chunk number 22: depmixS4.Rnw:1033-1043
+### code chunk number 22: depmixS4.Rnw:1036-1046
 ###################################################
 rModels <- list()
 rModels[[1]] <- list()
@@ -275,7 +275,7 @@ rModels[[2]][[2]] <- GLMresponse(formula = corr ~ 1, data = speed,
 
 
 ###################################################
-### code chunk number 23: depmixS4.Rnw:1049-1057
+### code chunk number 23: depmixS4.Rnw:1052-1060
 ###################################################
 trstart <- c(0.9, 0.1, 0.1, 0.9)
 transition <- list()
@@ -288,7 +288,7 @@ inMod <- transInit(~ 1, ns = 2, pstart = c(0.1, 0.9),
 
 
 ###################################################
-### code chunk number 24: depmixS4.Rnw:1062-1065
+### code chunk number 24: depmixS4.Rnw:1065-1068
 ###################################################
 mod <- makeDepmix(response = rModels, transition = transition,
   prior = inMod, homogeneous = FALSE)

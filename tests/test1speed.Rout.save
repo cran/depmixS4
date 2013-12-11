@@ -154,7 +154,7 @@ Test 4:  TRUE
 > # fit the model
 > set.seed(3)
 > fmod1 <- fit(mod1, verbose=FALSE)
-iteration 26 logLik: -248.9722 
+converged at iteration 26 with logLik: -248.9722 
 > 
 > llEM <- logLik(fmod1)
 > lltest <- -248.972219

@@ -9,7 +9,7 @@ setMethod("nobs", signature(object="mix"),
     #}
     n <- sum(nmiss)
 		#n <- sum(!apply(object@response[[1]]y,1,function(x) any(is.na(x))))
-		if(n!=nt) warning("missing values detected; nobs is number of cases without any missing values")
+		if(n!=nt) warning("missing values detected; nobs is number of cases with complete data")
 		return(n)
 	}
 )

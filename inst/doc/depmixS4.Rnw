@@ -702,8 +702,11 @@ comparatively fast responses.  Similarly for elements 1 and 2,
 resulting in fixed initial probabilities.  The function \code{llratio}
 computes the likelihood ratio $\chi^2$-statistic and the associated
 $p$-value with appropriate degrees of freedom for testing the
-tenability of constraints \citep{Dannemann2007}.  Note that these
-arguments (i.e., \code{conpat} and \code{conrows}) provide the
+tenability of constraints; \cite{Giudici2000} shows that the `standard
+asymptotic theory of likelihood-ratio tests is valid' in hidden Markov
+models.  \citep{Dannemann2007} discusses extension to non-standard
+situations, e.g.\ for testing parameters on the boundary.  Note that
+these arguments (i.e., \code{conpat} and \code{conrows}) provide the
 possibility for arbitrary constraints, also between, e.g., a
 multinomial regression coefficient for the transition matrix and the
 mean of a Gaussian response model.  Whether such constraints make
