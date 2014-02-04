@@ -1,21 +1,21 @@
 ### R code from vignette source 'depmixS4.Rnw'
 
 ###################################################
-### code chunk number 1: depmixS4.Rnw:71-73
+### code chunk number 1: depmixS4.Rnw:72-74
 ###################################################
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE, digits = 4)
 library("depmixS4")
 
 
 ###################################################
-### code chunk number 2: depmixS4.Rnw:183-185
+### code chunk number 2: depmixS4.Rnw:184-186
 ###################################################
 data("speed")
 plot(as.ts(speed[1:168,]), main = "Speed-accuracy trade-off")
 
 
 ###################################################
-### code chunk number 3: depmixS4.Rnw:462-467
+### code chunk number 3: depmixS4.Rnw:464-469
 ###################################################
 library("depmixS4")
 data("speed")
@@ -25,25 +25,25 @@ mod <- depmix(response = rt ~ 1, data = speed, nstates = 2,
 
 
 ###################################################
-### code chunk number 4: depmixS4.Rnw:507-508
+### code chunk number 4: depmixS4.Rnw:509-510
 ###################################################
 fm <- fit(mod, emc=em.control(rand=FALSE))
 
 
 ###################################################
-### code chunk number 5: depmixS4.Rnw:518-519
+### code chunk number 5: depmixS4.Rnw:520-521
 ###################################################
 fm 
 
 
 ###################################################
-### code chunk number 6: depmixS4.Rnw:535-536
+### code chunk number 6: depmixS4.Rnw:537-538
 ###################################################
 summary(fm)
 
 
 ###################################################
-### code chunk number 7: depmixS4.Rnw:569-573
+### code chunk number 7: depmixS4.Rnw:571-575
 ###################################################
 set.seed(1)
 mod <- depmix(rt ~ 1, data = speed, nstates = 2, family = gaussian(),
@@ -52,13 +52,13 @@ fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
 
 
 ###################################################
-### code chunk number 8: depmixS4.Rnw:580-581
+### code chunk number 8: depmixS4.Rnw:582-583
 ###################################################
 summary(fm, which = "transition") 
 
 
 ###################################################
-### code chunk number 9: depmixS4.Rnw:599-604
+### code chunk number 9: depmixS4.Rnw:601-606
 ###################################################
 set.seed(1)
 mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, nstates = 2, 
@@ -68,25 +68,25 @@ fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
 
 
 ###################################################
-### code chunk number 10: depmixS4.Rnw:609-610
+### code chunk number 10: depmixS4.Rnw:611-612
 ###################################################
 summary(fm, which = "response")
 
 
 ###################################################
-### code chunk number 11: depmixS4.Rnw:660-661
+### code chunk number 11: depmixS4.Rnw:662-663
 ###################################################
 setpars(mod, value = 1:npar(mod))
 
 
 ###################################################
-### code chunk number 12: depmixS4.Rnw:667-668
+### code chunk number 12: depmixS4.Rnw:669-670
 ###################################################
 setpars(mod, getpars(mod, which = "fixed"))
 
 
 ###################################################
-### code chunk number 13: depmixS4.Rnw:673-678
+### code chunk number 13: depmixS4.Rnw:675-680
 ###################################################
 trst <- c(0.9, 0.1, 0, 0, 0.1, 0.9, 0, 0)
 mod <- depmix(list(rt ~ 1,corr ~ 1), data = speed, transition = ~ Pacc,
@@ -96,7 +96,7 @@ fm1 <- fit(mod,verbose = FALSE, emc=em.control(rand=FALSE))
 
 
 ###################################################
-### code chunk number 14: depmixS4.Rnw:684-693
+### code chunk number 14: depmixS4.Rnw:686-695
 ###################################################
 pars <- c(unlist(getpars(fm1)))
 pars[6] <- pars[10] <- 11
@@ -110,7 +110,7 @@ fm2 <- fit(fm1, equal = conpat)
 
 
 ###################################################
-### code chunk number 15: depmixS4.Rnw:766-775
+### code chunk number 15: depmixS4.Rnw:768-777
 ###################################################
 data("balance")
 set.seed(1)
@@ -124,13 +124,13 @@ fm
 
 
 ###################################################
-### code chunk number 16: depmixS4.Rnw:793-794
+### code chunk number 16: depmixS4.Rnw:795-796
 ###################################################
 summary(fm, which = "prior")
 
 
 ###################################################
-### code chunk number 17: depmixS4.Rnw:812-825
+### code chunk number 17: depmixS4.Rnw:814-827
 ###################################################
 x <- mlogit(base=1)
 coeff <- coefficients(fm@prior@parameters)
@@ -148,13 +148,13 @@ legend("right",legend=c("Class 1 (correct)","Class 2 (incorrect)","Class 3 (gues
 
 
 ###################################################
-### code chunk number 18: depmixS4.Rnw:898-899
+### code chunk number 18: depmixS4.Rnw:900-901
 ###################################################
 setClass("exgaus", contains="response")
 
 
 ###################################################
-### code chunk number 19: depmixS4.Rnw:923-947
+### code chunk number 19: depmixS4.Rnw:925-949
 ###################################################
 library("gamlss")
 library("gamlss.dist")
@@ -183,7 +183,7 @@ setMethod("exgaus",
 
 
 ###################################################
-### code chunk number 20: depmixS4.Rnw:950-1002
+### code chunk number 20: depmixS4.Rnw:952-1004
 ###################################################
 setMethod("dens","exgaus",
     function(object,log=FALSE) {
@@ -240,7 +240,7 @@ setMethod("predict","exgaus",
 
 
 ###################################################
-### code chunk number 21: depmixS4.Rnw:1007-1022
+### code chunk number 21: depmixS4.Rnw:1009-1024
 ###################################################
 setMethod("fit", "exgaus",
   function(object, w) {
@@ -260,7 +260,7 @@ setMethod("fit", "exgaus",
 
 
 ###################################################
-### code chunk number 22: depmixS4.Rnw:1036-1046
+### code chunk number 22: depmixS4.Rnw:1038-1048
 ###################################################
 rModels <- list()
 rModels[[1]] <- list()
@@ -275,7 +275,7 @@ rModels[[2]][[2]] <- GLMresponse(formula = corr ~ 1, data = speed,
 
 
 ###################################################
-### code chunk number 23: depmixS4.Rnw:1052-1060
+### code chunk number 23: depmixS4.Rnw:1054-1062
 ###################################################
 trstart <- c(0.9, 0.1, 0.1, 0.9)
 transition <- list()
@@ -288,7 +288,7 @@ inMod <- transInit(~ 1, ns = 2, pstart = c(0.1, 0.9),
 
 
 ###################################################
-### code chunk number 24: depmixS4.Rnw:1065-1068
+### code chunk number 24: depmixS4.Rnw:1067-1070
 ###################################################
 mod <- makeDepmix(response = rModels, transition = transition,
   prior = inMod, homogeneous = FALSE)

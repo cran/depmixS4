@@ -1,6 +1,6 @@
-24234f81243fe8ad3a24878c9d6cf0da *DESCRIPTION
+4cd6a0b35e48c9036f9c85172848534a *DESCRIPTION
 0e8cffcbb7f9a80410191d2cf4b8e5ed *NAMESPACE
-cecec6e7b833d890aad235beaba4d732 *NEWS
+dcb5b417067468ad6d3c734cad6af943 *NEWS
 dc8732e1ea8cd57ebaecc4809b14c9b2 *R/EM.R
 1a0335c9dff8b178e4f5e33be5132aa8 *R/allGenerics.R
 a0b7e0bc19ff542a62a29d770b56c62a *R/depmix-class.R
@@ -37,13 +37,14 @@ e79d3dc042cd06d1dccee597fa66859b *R/stationary.R
 460e0c79781690b23e481764647c1429 *R/transInit.R
 2e964f42e769163602934dad8a2f5f07 *R/viterbi.R
 550088c113a80bc5cd7d8a4c72277894 *README
-65bc0229e5bc08041b8d5ede3714a26c *data/balance.rda
-8f46df985c00b0a9fe0eccf89aae5904 *data/sp500.rda
-5720ccb50753054368cc424ef84dd771 *data/speed.rda
+b9382159e897a985f9e3b4f20bb6a1ec *build/vignette.rds
+400e5b5a3d53e99f50e4278ef61dbbcb *data/balance.rda
+ae25290c361f8f487bc2ddb72e89f039 *data/sp500.rda
+d3d6c22a399b2a3c6b6596e4c5568922 *data/speed.rda
 cf783bb00e78e646ece3cc58af47785f *inst/CITATION
-cda9cf052b62f47b2f2839b157fc5215 *inst/doc/depmixS4.R
-8fd4b5e3f68a09e89b986425e889d671 *inst/doc/depmixS4.Rnw
-09d4615b227445e40017c1242975f4e1 *inst/doc/depmixS4.pdf
+52897cb895eeba85d9ad03e6f46751f6 *inst/doc/depmixS4.R
+be529aff70077601a0c7d7833963a53b *inst/doc/depmixS4.Rnw
+ffca77acc135b0df5c45e6fb9b6d95bb *inst/doc/depmixS4.pdf
 55a7e584b631689a190bc4c8e5c96e87 *man/GLMresponse.Rd
 a19f6d5540f45662788e30223e50bf3a *man/balance.Rd
 cd2ed7e0a56a29d231a84a5a66e20c3f *man/depmix-class.Rd
@@ -65,7 +66,7 @@ a9798cc23c13f25ab360cc6d83ad8757 *man/mix.sim-class.Rd
 48b99f799e9443d4ba3ec43605be4f92 *man/posterior.Rd
 a65db4b2da8172e166b4434b17b17694 *man/response-class.Rd
 b81e9a664a5e74c7a9cf2238771cd36e *man/response-classes.Rd
-e98accb300b8e31fb66d8e74936ce55b *man/responses.Rd
+a44bdb42587e88707bdc24754955f639 *man/responses.Rd
 314b0526e7bc5c2ccbc99a1d8750ac68 *man/simulate.Rd
 cfd45e84e4b51322a20e860e2350609a *man/sp500.Rd
 6491bdec5b20fcfa269197fe28424201 *man/speed.Rd
@@ -78,5 +79,5 @@ c92cb9cf5f580cdfc2dcec08fdf66429 *tests/test1speed.Rout.save
 3539bdfe7da6003e6beccd1f935db6a2 *tests/test2getsetpars.Rout.save
 a94fc537791acba32b2abc9a4a15348c *tests/test3responses.R
 aa9a76dcc11642de63eeba9bdb02f482 *vignettes/baldist.pdf
-8fd4b5e3f68a09e89b986425e889d671 *vignettes/depmixS4.Rnw
-164d506a40a4d8629737216b6ae58e1f *vignettes/depmixS4.bib
+be529aff70077601a0c7d7833963a53b *vignettes/depmixS4.Rnw
+41c4587ceb5fd27bf21dadf84aad5e6f *vignettes/depmixS4.bib

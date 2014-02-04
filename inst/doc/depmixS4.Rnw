@@ -25,12 +25,13 @@
 \Abstract{	
 
 	This introduction to the \proglang{R} package \pkg{depmixS4} is a
-	(slightly) modified version of \cite{Visser+Speekenbrink:2010},
-	published in the \emph{Journal of Statistical Software}.  Please
-	refer to that article when using \pkg{depmixS4}.  The current
-	version is 1.3-0; the version history and changes can be found in
-	the NEWS file of the package. Below, the major versions are listed 
-	along with the most noteworthy changes. 
+	(slightly) modified version of \cite{Visser2010}, published in the
+	\emph{Journal of Statistical Software}.  Please refer to that
+	article when using \pkg{depmixS4}.  The current version is
+	\Sexpr{packageDescription("depmixS4")$Version}; the version
+	history and changes can be found in the NEWS file of the package.
+	Below, the major versions are listed along with the most
+	noteworthy changes.
 
 	\pkg{depmixS4} implements a general framework for defining and
 	estimating dependent mixture models in the \proglang{R} programming
@@ -300,11 +301,12 @@ log-likelihood:
 
 \subsection{Parameter estimation}
 
-Parameters are estimated in \pkg{depmixS4} using the expectation-maximization (EM) algorithm or
-through the use of a general Newton-Raphson optimizer.  In the EM
-algorithm, parameters are estimated by iteratively maximizing the
-expected joint log-likelihood of the parameters given the observations and
-states.  Let $\greekv{\theta} = (\greekv{\theta}_1,
+Parameters are estimated in \pkg{depmixS4} using the
+expectation-maximization (EM) algorithm or through the use of a
+general Newton-Raphson optimizer.  In the EM algorithm, parameters are
+estimated by iteratively maximizing the expected joint log-likelihood
+of the parameters given the observations and states.  Let
+$\greekv{\theta} = (\greekv{\theta}_1,
 \greekv{\theta}_2,\greekv{\theta}_3)$ be the general parameter vector
 consisting of three subvectors with parameters for the prior model,
 transition model, and response models respectively.  The joint

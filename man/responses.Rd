@@ -154,7 +154,7 @@ var(y)
 y <- rnorm(1000)
 mod <- GLMresponse(y~1)
 fm <- fit(mod)
-cat("Test gaussian fit: ", all.equal(getpars(fm),c(mean(y),sd(y)),check=FALSE))
+cat("Test gaussian fit: ", all.equal(getpars(fm),c(mean(y),sd(y)),check.attributes=FALSE))
 
 # poisson response model
 x <- abs(rnorm(1000,2))
