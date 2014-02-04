@@ -1,24 +1,29 @@
+Changes in depmixS4 version 1.3-2
+
+  o Removed partial matching argument in call to check.attributes for 
+    compatibility with R release 3.1.0. 
+
 Changes in depmixS4 version 1.3-1
 
 Major changes
 
   o Fixed a bug in the fit function of (dep-)mix objects; upper and lower 
     bounds of general linear contraints were not passed to the optimization 
-		routines when any of the bounds was zero; in that case, all bounds were 
-		set to zero. Thanks to Vincent Miele for bringing this to my 
-		attention. 
+	routines when any of the bounds was zero; in that case, all bounds were 
+	set to zero. Thanks to Vincent Miele for bringing this to my 
+	attention. 
 
 Minor changes
 
   o Added a reference to Giudici et al (2000) in the vignette in the 
-	  section on likelihood ratio testing which fits better with the 
-		procedure that is implemented. Thanks to Jan Bulla for probing us 
-		about the vignette text there. 	  
+	section on likelihood ratio testing which fits better with the 
+	procedure that is implemented. Thanks to Jan Bulla for probing us 
+	about the vignette text there. 	  
 
-	o Added a conditional to set the log likelihood of a model to a value
-	  just above the starting value (i.e. the values before iterations start)
-	  when the logl functions returns Infinite (which may sometimes occur when
-	  parameters are set outside their boundaries).
+  o Added a conditional to set the log likelihood of a model to a value
+	just above the starting value (i.e. the values before iterations start)
+	when the logl functions returns Infinite (which may sometimes occur when
+	parameters are set outside their boundaries).
 
 
 Changes in depmixS4 version 1.3-0
@@ -26,26 +31,26 @@ Changes in depmixS4 version 1.3-0
 Major changes
 
   o The EM algorithm has gained an extra argument 'classification',
-	  passed from the 'fit' function using argument 'emcontrol', to allow a
- 	  choice between maximising the regular (classification="soft", the
-	  default) or classification (classification="hard") likelihood. 
-	  WARNING: using the classification likelihood combined with random 
-	  starting values may easily lead to unstable results; use with 
-	  caution. 
+	passed from the 'fit' function using argument 'emcontrol', to allow a
+ 	choice between maximising the regular (classification="soft", the
+	default) or classification (classification="hard") likelihood. 
+	WARNING: using the classification likelihood combined with random 
+	starting values may easily lead to unstable results; use with 
+	caution. 
 
   o Parameters are now given proper names, following the glm() scheme
   	(e.g. '(Intercept)', 'x1', et cetera); with this, the show and summary
-	  methods have changed considerably and now produce more compact and more
-	  readable output.  The summary method (for both fitted and unfitted
-	  models) now has an argument 'compact' (TRUE by default) that controls
-	  the presentation of the repsonse model parameters.  The prior and
-	  transition models are now presented more compactly when there are no
-	  covariates.
+	methods have changed considerably and now produce more compact and more
+	readable output.  The summary method (for both fitted and unfitted
+	models) now has an argument 'compact' (TRUE by default) that controls
+	the presentation of the repsonse model parameters.  The prior and
+	transition models are now presented more compactly when there are no
+	covariates.
 	
   o The fit function has gained two arguments: solnpcntrl and donlpcntrl 
     which can be used to fine tune optimization using packages Rsolnp and 
-	  Rdonlp2; the latter is not on CRAN, and the version that depmixS4 is 
-	  compatible with is from r-forge (note the licence from the package). 
+	Rdonlp2; the latter is not on CRAN, and the version that depmixS4 is 
+	compatible with is from r-forge (note the licence from the package). 
 
   o The EM algorithm is now more memory efficient and hence faster, 
     most notably for large models and/or data; thanks to Robert McGehee
@@ -61,12 +66,12 @@ Minor changes
     the show method for these models.  
 
   o Added function getmodel(object) to select submodels of a full mix or 
-	  depmix model, eg to use in deriving predictions, getting at parameter 
-	  values, et cetera. 
+	depmix model, eg to use in deriving predictions, getting at parameter 
+	values, et cetera. 
 
   o Small parameter values in multinomial response models and the initial
-	  probabilities and transition models (with identity link) are now set to
-	  zero to speed-up convergence.  Current threshold is 1e-6. 
+	probabilities and transition models (with identity link) are now set to
+	zero to speed-up convergence.  Current threshold is 1e-6. 
 
 Changes in depmixS4 version 1.2-2
 
@@ -74,7 +79,7 @@ Changes in depmixS4 version 1.2-2
 
   o Fixed a bug in the fit method of depmix models: linear inequality 
     constraints were not passed on to rsolnp (thanks to Peiming Wang for 
-	  bringing this to my attention). 
+	bringing this to my attention). 
 
 Changes in depmixS4 version 1.2-1
 
@@ -85,7 +90,7 @@ Changes in depmixS4 version 1.2-0
 Major changes
   
   o Missing values for responses are now allowed. Note that missing values 
-	  in covariates will cause errors. 
+	in covariates will cause errors. 
     
 Changes in depmixS4 version 1.1-0
   
@@ -135,8 +140,8 @@ Changes in depmixS4 version 1.0-4
 
   o Fixed a bug in simulation of gaussian response model, which was 
     returning NaNs due to an error in assignment of the sd parameter
-   (introduced in version x). Thanks to Jeffrey Arnold for reporting
-   this (bug #1365). 
+    (introduced in version x). Thanks to Jeffrey Arnold for reporting
+	this (bug #1365). 
 
 Changes in depmixS4 version 1.0-3
 
