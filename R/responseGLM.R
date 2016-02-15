@@ -58,6 +58,7 @@ setMethod("GLMresponse",
 		}
 		if(family$family=="multinomial") {
 			y <- model.response(mf)
+			namesy <- NULL
 			if(NCOL(y) == 1) {
 				if(is.factor(y)) {
 						namesy <- levels(y)
@@ -89,11 +90,12 @@ setMethod("GLMresponse",
 				if(ncol(x)>1) stop("covariates not allowed in multinomial model with identity link")
 				ncy <- ncol(y)
 				parameters$coefficients <- rep(1/ncy,ncy)
-				names(parameters$coefficients) <- paste("pr",1:ncol(y),sep="")
+				if(is.null(namesy)) names(parameters$coefficients) <- paste("pr",1:ncol(y),sep="")
+				else names(parameters$coefficients) <- namesy
 				fixed <- rep(0,ncol(y)) 
 				fixed <- c(as.logical(t(fixed)))
 				constr <- list(
-					lin = matrix(1,nr=1,nc=ncol(y)),
+					lin = matrix(1,nrow=1,ncol=ncol(y)),
 					linup = 1,
 					linlow = 1,
 					parup = rep(1,ncol(y)),
@@ -206,30 +208,32 @@ setMethod("setpars","GLMresponse",
 )
 
 setMethod("getpars","GLMresponse",
-		function(object,which="pars",...) {
-				switch(which,
-						"pars" = {
-								parameters <- numeric()
-								if(object@family$family=="multinomial"&object@family$link=="mlogit") {
-										# coefficient is usually a matrix here 
-										parameters <- c(t(object@parameters$coefficients)) # Why transpose?
-								} else {
-										parameters <- object@parameters$coefficients
-										if(object@family$family=="gaussian") {
-												nms <- names(parameters)
-												parameters <- c(parameters,object@parameters$sd)
-												names(parameters) <- c(nms,"sd")
-										}
-										
-								}
-								pars <- parameters
-						},
-						"fixed" = {
-								pars <- object@fixed
-						}
-				)
-				return(pars)
-		}
+	function(object,which="pars",...) {
+		switch(which,
+			"pars" = {
+				parameters <- numeric()
+				if(object@family$family=="multinomial"&object@family$link=="mlogit") {
+					# coefficient is usually a matrix here
+					tmp <- object@parameters$coefficients
+					parameters <- c(t(tmp)) # Why transpose?
+					names(parameters) <- paste(rep(rownames(tmp),each=length(colnames(tmp))),colnames(tmp),sep=".")
+				} else {
+					parameters <- object@parameters$coefficients
+					if(object@family$family=="gaussian") {
+						nms <- names(parameters)
+						parameters <- c(parameters,object@parameters$sd)
+						names(parameters) <- c(nms,"sd")
+					}
+					
+				}
+				pars <- parameters
+			},
+			"fixed" = {
+				pars <- object@fixed
+			}
+		)
+		return(pars)
+	}
 )
 
 # methods: fit, logDens, predict
@@ -240,8 +244,8 @@ setMethod("fit","GLMresponse",
 	function(object,w) {
     if(missing(w)) w <- NULL
 		pars <- object@parameters
-    start <- pars$coefficients
-    start[is.na(start)] <- 0
+		start <- pars$coefficients
+		start[is.na(start)] <- 0
 		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
 		pars$coefficients <- fit$coefficients
 		object <- setpars(object,unlist(pars))

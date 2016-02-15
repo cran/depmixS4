@@ -186,6 +186,19 @@ fmod1 # to see the logLik and optimization information
 # to see the parameters
 summary(fmod1)
 
+# to see the posterior state sequence and associated delta probabilties
+pst <- posterior(fmod1)
+
+# testing viterbi states for new data
+df <- data.frame(corr=c(1,0,1),rt=c(6.4,5.5,5.3),Pacc=c(0.6,0.1,0.1))
+# define model with new data like above
+modNew <- depmix(list(rt~1,corr~1),data=df,transition=~Pacc,nstates=2,
+	family=list(gaussian(),multinomial("identity")))
+# get parameters from estimated model
+modNew <- setpars(modNew,getpars(fmod1))
+# check the state sequence and probabilities
+viterbi(modNew)
+
 # same model, now with missing data
 \dontrun{
 speed[2,1] <- NA

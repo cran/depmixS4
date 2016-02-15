@@ -55,12 +55,12 @@ setMethod("logDens","MULTINOMresponse",
 			return(log(rowSums(object@y*predict(object))))
 		} else {
 			nr <- nrow(object@y)
-			res <- matrix(nr=nr)
+			res <- matrix(nrow=nr)
 			pr <- predict(object)
 			# fix this loop!!!! replace with call to apply? or dmultinomial? or other vectorized version?
 			# possibly use dmultinomial in package mcd2
 			for(i in 1:nrow(object@y)) {
-				res[i,1] <- dmultinom(object@y[i,],pr=pr[i,])
+				res[i,1] <- dmultinom(object@y[i,],prob=pr[i,])
 			}
 			return(log(res))
 		}
@@ -75,12 +75,12 @@ setMethod("dens","MULTINOMresponse",
 			else return(rowSums(object@y*predict(object)))
 		} else {
 			nr <- nrow(object@y)
-			res <- matrix(nr=nr)
+			res <- matrix(nrow=nr)
 			pr <- predict(object)
 			# fix this loop!!!! replace with call to apply? or dmultinomial? or other vectorized version?
 			# possibly use dmultinomial in package mcd2
 			for(i in 1:nrow(object@y)) {
-				res[i,1] <- dmultinom(object@y[i,],pr=pr[i,])
+				res[i,1] <- dmultinom(object@y[i,],prob=pr[i,])
 			}
 			if(log) return(log(res)) 
 			else return(res)

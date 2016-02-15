@@ -43,8 +43,8 @@
 
 \author{ Ingmar Visser }
 
-\examples{
-	# add some later
+\details{
+	See the \code{\link{fit}} help page for an example. 
 }
 
 \keyword{ methods }

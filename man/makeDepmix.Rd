@@ -32,7 +32,7 @@
 	
 	\item{transition}{A list of transition models, each created by a
 		call to \code{\link{transInit}}.  The lenght of this list should be
-		the nubmer of states of the model.}
+		the number of states of the model.}
 	
 	\item{prior}{The initial state probabilities model; created through a
 	call to \code{\link{transInit}}.}

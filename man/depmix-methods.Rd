@@ -128,7 +128,7 @@ Various methods for \code{depmix} and \code{mix} objects.
 	
 	\item{nobs}{returns the number of observations (used in computing the BIC).}
 
-	\item{npar}{returns the number of paramters of a model.}
+	\item{npar}{returns the number of paramaters of a model.}
 
 	\item{freepars}{returns the number of non-redundant parameters.}
 

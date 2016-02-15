@@ -44,13 +44,13 @@
 	
 	\item{beta}{The backward variables.}
 	
-	\item{gamma}{The smoothed transition probabilities.}
+	\item{gamma}{The smoothed state probabilities.}
 	
-	\item{xi}{The smoothed state probabilities.}
+	\item{xi}{The smoothed transition probabilities.}
 	
 	\item{sca}{The scale factors (called lambda in Rabiner, 1989).}
 	
-	\item{logLike}{The log likelihood (computed as \code{sum(log(sca))}.}
+	\item{logLike}{The log likelihood (computed as \code{-sum(log(sca))}.}
 	
 	If return.all=FALSE, only gamma, xi and the log likelihood are returned.
 }
@@ -66,7 +66,18 @@
 \author{ Maarten Speekenbrink & Ingmar Visser }
 
 \examples{
-	# add some later
+
+data(speed)
+
+# 2-state model on rt and corr from speed data set 
+# with Pacc as covariate on the transition matrix
+# ntimes is used to specify the lengths of 3 separate series
+mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+
+fb <- forwardbackward(mod1)
+all.equal(-sum(log(fb$sca)),fb$logLike)
+
 }
 
 \keyword{ methods }

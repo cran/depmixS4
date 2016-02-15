@@ -184,9 +184,9 @@ setMethod("summary","mix",
 								np <- numeric(object@nresp)
 								for(j in 1:object@nresp) {
 										np[j] <- npar(object@response[[1]][[j]])
-										pars[[j]] <- matrix(,nr=ns,nc=np[j])
+										pars[[j]] <- matrix(,nrow=ns,ncol=np[j])
 								}
-								allpars <- matrix(,nr=ns,nc=0)
+								allpars <- matrix(,nrow=ns,ncol=0)
 								nms <- c()
 								for(j in 1:object@nresp) {
 										for(i in 1:ns) {
@@ -354,113 +354,112 @@ setMethod("simulate",signature(object="depmix"),
 # copied from hmmr (and removed there)
 
 setMethod("summary","depmix",
-		function(object,which="all", compact=TRUE) {
-				ns <- object@nstates
-				ans=switch(which,
-						"all" = 1,
-						"response" = 2,
-						"prior" = 3,
-						"transition" = 4,
-						stop("Invalid 'which' argument in summary of fitted depmix model")
-				)
-				if(ans==1|ans==3) {
-						# show the prior models
-						cat("Initial state probabilties model \n")
-						if(object@prior@formula==~1) {
-								pr <- object@prior@parameters$coefficients
-								print(pr)
-								cat("\n")
-						} else show(object@prior)
-				}
-				if(ans==1|ans==4) {
-						# show the transition models
-						if(object@transition[[1]]@formula==~1) {
-								cat("\nTransition matrix \n")
-								pars <- getpars(object)
-								trm <- matrix(pars[(ns+1):(ns^2+ns)],ns,ns,byr=T)
-								if(object@transition[[1]]@family$link == "mlogit") {
-								    trm <- t(apply(trm,1,object@transition[[1]]@family$linkinv,base=object@transition[[1]]@family$base))
-								}
-								rownames(trm) <- paste("fromS",1:ns,sep="")
-								colnames(trm) <- paste("toS",1:ns,sep="")
-								print(trm)
-								cat("\n")
-						} else {
-								for(i in 1:ns) {
-										cat("Transition model for state (component)", i,"\n")
-										show(object@transition[[i]])
-										cat("\n")
-								}
-								cat("\n")
-						}
-				}
-				if(ans==1|ans==2) {
-						# show the response models
-						if(!compact) {
-								for(i in 1:ns) {
-										cat("Response model(s) for state", i,"\n\n")
-										for(j in 1:object@nresp) {
-												cat("Response model for response",j,"\n")
-												show(object@response[[i]][[j]])
-												cat("\n")
-										}
-										cat("\n")
-								}
-						} else {
-								cat("Response parameters \n")
-								for(j in 1:object@nresp) {
-								    # FIXME: responses can have different families too!
-										if("family" %in% slotNames(object@response[[1]][[j]])) cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
-								}
-								pars <- list()
-								np <- numeric(object@nresp)
-								# get the parameter names
-								allparnames <- list()
-								parnames <- list() # for renaming empty names
-								for(j in 1:object@nresp) {
-								    parnames[[j]] <- list()
-								    nms <- character()
-								    for(i in 1:ns) {
-								        tnms <- names(getpars(object@response[[i]][[j]]))
-												if(is.null(tnms)) tnms=rep("",length=length(getpars(object@response[[i]][[j]])))
-								        if(any(tnms == "")) {
-								            tnms[tnms == ""] <- paste("anonym",1:sum(tnms == ""),sep="") # assume unnamed parameters are the same between states
-								        }
-								        parnames[[j]][[i]] <- tnms
-								        nms <- c(nms,tnms)
-								    }
-								    allparnames[[j]] <- unique(nms)
-								}
-								
-								
-								for(j in 1:object@nresp) {
-										#np[j] <- npar(object@response[[1]][[j]]) # this will not always work!
-										np[j] <- length(allparnames[[j]]) 
-										pars[[j]] <- matrix(,nr=ns,nc=np[j])
-										colnames(pars[[j]]) <- allparnames[[j]]
-								}
-								allpars <- matrix(,nr=ns,nc=0)
-								nms <- c()
-								for(j in 1:object@nresp) {
-										for(i in 1:ns) {
-												tmp <- getpars(object@response[[i]][[j]])
-												#pars[[j]][i,] <- tmp
-												pars[[j]][i,parnames[[j]][[i]]] <- tmp
-										}
-										nmsresp <- paste("Re",j,sep="")
-										#nmstmp <- names(tmp)
-										nmstmp <- allparnames[[j]]
-										if(is.null(nmstmp)) nmstmp <- 1:length(tmp)
-										nms <- c(nms,paste(nmsresp,nmstmp,sep="."))
-										allpars <- cbind(allpars,pars[[j]])					
-								}
-								rownames(allpars) <- paste("St",1:ns,sep="")
-								colnames(allpars) <- nms
-								print(allpars,na.print=".")
-						}
-				}
+	function(object, which="all", compact=TRUE, digits=3) {
+		ns <- object@nstates
+		ans=switch(which,
+			"all" = 1,
+			"response" = 2,
+			"prior" = 3,
+			"transition" = 4,
+			stop("Invalid 'which' argument in summary of fitted depmix model")
+		)
+		if(ans==1|ans==3) {
+			# show the prior models
+			cat("Initial state probabilties model \n")
+			if(object@prior@formula==~1) {
+				pr <- object@prior@parameters$coefficients
+				print(round(pr,digits))
+				cat("\n")
+			} else show(object@prior)
 		}
-)
+		if(ans==1|ans==4) {
+			# show the transition models
+			if(object@transition[[1]]@formula==~1) {
+				cat("Transition matrix \n")
+				pars <- getpars(object)
+				npprior <- length(getpars(object@prior))
+				trm <- matrix(pars[(npprior+1):(ns^2+npprior)],ns,ns,byrow=T)
+				if(object@transition[[1]]@family$link == "mlogit") {
+					trm <- t(apply(trm,1,object@transition[[1]]@family$linkinv,base=object@transition[[1]]@family$base))
+				}
+				rownames(trm) <- paste("fromS",1:ns,sep="")
+				colnames(trm) <- paste("toS",1:ns,sep="")
+				print(round(trm,digits))
+				cat("\n")
+				trm
+			} else {
+				for(i in 1:ns) {
+					cat("Transition model for state (component)", i,"\n")
+					show(object@transition[[i]])
+					cat("\n")
+				}
+				cat("\n")
+			}
+		}
+		if(ans==1|ans==2) {
+			# show the response models
+			if(!compact) {
+				for(i in 1:ns) {
+					cat("Response model(s) for state", i,"\n\n")
+					for(j in 1:object@nresp) {
+						cat("Response model for response",j,"\n")
+						show(object@response[[i]][[j]])
+						cat("\n")
+					}
+					cat("\n")
+				}
+			} else {
+				cat("Response parameters \n")
+				for(j in 1:object@nresp) {
+					# FIXME: responses can have different families too!
+					if("family" %in% slotNames(object@response[[1]][[j]])) cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
+				}
+				pars <- list()
+				np <- numeric(object@nresp)
+				# get the parameter names
+				allparnames <- list()
+				parnames <- list() # for renaming empty names
+				for(j in 1:object@nresp) {
+					parnames[[j]] <- list()
+					nms <- character()
+					for(i in 1:ns) {
+						tnms <- names(getpars(object@response[[i]][[j]]))
+						if(is.null(tnms)) tnms=rep("",length=length(getpars(object@response[[i]][[j]])))
+						if(any(tnms == "")) {
+							tnms[tnms == ""] <- paste("anonym",1:sum(tnms == ""),sep="") # assume unnamed parameters are the same between states
+					}
+					parnames[[j]][[i]] <- tnms
+					nms <- c(nms,tnms)
+				}
+				allparnames[[j]] <- unique(nms)
+			}		
+			for(j in 1:object@nresp) {
+				#np[j] <- npar(object@response[[1]][[j]]) # this will not always work!
+				np[j] <- length(allparnames[[j]]) 
+				pars[[j]] <- matrix(,nrow=ns,ncol=np[j])
+				colnames(pars[[j]]) <- allparnames[[j]]
+			}
+			allpars <- matrix(,nrow=ns,ncol=0)
+			nms <- c()
+			for(j in 1:object@nresp) {
+				for(i in 1:ns) {
+					tmp <- getpars(object@response[[i]][[j]])
+					#pars[[j]][i,] <- tmp
+					pars[[j]][i,parnames[[j]][[i]]] <- tmp
+				}
+				nmsresp <- paste("Re",j,sep="")
+				#nmstmp <- names(tmp)
+				nmstmp <- allparnames[[j]]
+				if(is.null(nmstmp)) nmstmp <- 1:length(tmp)
+				nms <- c(nms,paste(nmsresp,nmstmp,sep="."))
+				allpars <- cbind(allpars,pars[[j]])					
+			}
+			rownames(allpars) <- paste("St",1:ns,sep="")
+			colnames(allpars) <- nms
+			print(round(allpars,digits),na.print=".")
+		}
+	}
+})
 
 
 

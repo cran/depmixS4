@@ -44,6 +44,10 @@
 	
 }
 
+\details{
+	See the \code{\link{fit}} help page for an example. 
+}
+
 \author{Ingmar Visser}
 
 \keyword{methods}

@@ -1,3 +1,31 @@
+Changes in depmixS4 version 1.3-3
+  
+  o The underlying code for the forwardbackward function was changed from 
+    extern 'C' in a c++ environment to plain C (the c++ definitions were 
+    there for historical reasons but no longer necessary). 
+
+  o Added support for fitting linear inequality constraints using solnp 
+    optimization (thanks to Romann Weber for noticing this support was 
+    missing). 
+
+  o Added factor level names to summary of multinomial() models
+    to ease interpretation. 
+    
+  o Fixed bug in EM with "hard" classification for mixture models (did not work
+    with random starting values).
+    
+  o In EM with "hard" classification, when a component/state is empty
+    (has no assignments), previous parameter values are now retained.
+
+  o Improved error message when optimization method is wrongly specified 
+    in fit function.
+
+  o Fixed a bug in the summary method for fitted models; in some cases 
+    parameters of the prior model were printed in the transition matrix; 
+    thanks to Verena Schmittmann for catching this bug (which was 
+    introduced in 1.3-0 along with compact argument in summary's of fitted 
+    models). 
+
 Changes in depmixS4 version 1.3-2
 
   o Removed partial matching argument in call to check.attributes for 

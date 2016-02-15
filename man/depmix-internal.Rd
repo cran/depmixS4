@@ -10,6 +10,8 @@
 \alias{makeResponseModels}
 \alias{makeTransModels}
 
+\alias{hess2cov}
+
 \alias{mlogit}
 \alias{multinomial}
 
