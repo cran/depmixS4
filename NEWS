@@ -1,3 +1,26 @@
+Changes in depmixS4 version 1.3-5
+
+  o GLM responses now allow missing values in covariates, as long as the
+    response variable (dependent variable) is also missing at those positions
+
+  o If the likelihood decreases on an interation in the EM algorithm, the 
+    fitted model is returned with a warning, rather than producing an error 
+    (requested by Arthur Bossavy).
+
+  o Removed the meta-data from the depmixS4-package help page as that 
+    tends to get out of sync with new releases (and adds little information).
+  
+  o Added documentation for makeMix (following a request by Ivan Jimenez; the
+    function has not been tested extensively). 
+
+Changes in depmixS4 version 1.3-4
+
+  o Fixed a bug in glm.fit which produced an error for a poisson response
+    when there were missing values. 
+	
+  o Added an example on ?fit to get posterior state sequences for new
+    or 'out-of-sample' data. 
+
 Changes in depmixS4 version 1.3-3
   
   o The underlying code for the forwardbackward function was changed from 

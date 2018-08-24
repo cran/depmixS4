@@ -31,7 +31,7 @@
 
 // gamma is computed as alpha*beta/sca in R (no loop needed)
 
-void forwardbackward(int *hom, int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
+void forwardbackwardC(int *hom, int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 		     double *init, double *trdens, double *dens, 
 		     double *alpha, double *beta, double *sca, double *xi) {
 		

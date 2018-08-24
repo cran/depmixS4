@@ -6,13 +6,13 @@
 # 17-6-2011: added dynamic lib statement to include the C code 
 # version of forward backward routine
 
-.onLoad <- function(lib, pkg) { 
-    library.dynam("depmixS4", pkg, lib)
-}
+#.onLoad <- function(lib, pkg) { 
+#    library.dynam("depmixS4", pkg, lib)
+#}
 
-.onUnLoad <- function(libpath) {
-    library.dynam.unload("depmixS4",libpath)
-}
+#.onUnLoad <- function(libpath) {
+#    library.dynam.unload("depmixS4",libpath)
+#}
 
 utils::globalVariables(c("donlp2", "donlp2Control"))
 

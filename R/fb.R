@@ -30,7 +30,8 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,homogeneous=TRUE,useC=TRUE,
 	
 	if(na.allow) B <- replace(B,is.na(B) & !is.nan(B),1)
 
-	B <- apply(B,c(1,3),prod)
+    # 22/2/2017: avoid apply if not necessary
+	if(dim(B)[2]>1) B <- apply(B,c(1,3),prod) else dim(B) <- dim(B)[c(1,3)]
 	
 	if(is.null(ntimes)) ntimes <- nt
 	
@@ -40,13 +41,14 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,homogeneous=TRUE,useC=TRUE,
 	
  	if(useC) {
 		
-		alpha <- matrix(0,ncol=ns,nrow=nt)
-		sca <- rep(0,nt)
+		# 22/2/2017: initialize as doubles
+		alpha <- matrix(0.0,ncol=ns,nrow=nt)
+		sca <- rep(0.0,nt)
 		
-		beta <- matrix(0,ncol=ns,nrow=nt)
-		xi <- array(0,dim=c(nt,ns,ns))
+		beta <- matrix(0.0,ncol=ns,nrow=nt)
+		xi <- array(0.0,dim=c(nt,ns,ns))
 		
-		res <- .C("forwardbackward",
+		res <- .C("forwardbackwardC",
 			hom=as.integer(homogeneous),
 			ns=as.integer(ns),
 			lt=as.integer(lt),
@@ -71,10 +73,11 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,homogeneous=TRUE,useC=TRUE,
 				
 	} else {
 		
-		alpha <- matrix(ncol=ns,nrow=nt)
-		beta <- matrix(ncol=ns,nrow=nt)
-		sca <- vector(length=nt)
-		xi <- array(dim=c(nt,ns,ns))
+		# 22/2/2017: initialize as doubles
+		alpha <- matrix(0.0,ncol=ns,nrow=nt)
+		beta <- matrix(0.0,ncol=ns,nrow=nt)
+		sca <- vector("double",length=nt)
+		xi <- array(0.0,dim=c(nt,ns,ns))
 		
 		for(case in 1:lt) {
 			alpha[bt[case],] <- init[case,]*B[bt[case],] # initialize

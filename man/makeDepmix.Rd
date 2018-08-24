@@ -23,6 +23,7 @@
 	makeDepmix(response, transition, prior, ntimes = NULL, homogeneous = TRUE, 
 		stationary = NULL, ...) 	
 	
+	makeMix(response, prior, ...) 	
 }
 
 \arguments{

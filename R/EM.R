@@ -125,6 +125,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 	init <- dens(object@prior)
 
 	converge <- FALSE
+	likelihood_decreased <- FALSE
 	
 	if(random.start) {
 		nr <- sum(ntimes(object))
@@ -214,7 +215,17 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 			}
 		} else {
 			# this should not really happen...
-			if(j > 0 && (LL.old - LL) > tol) stop("likelihood decreased on iteration ",j)
+			if(j > 0 && (LL.old - LL) >= tol) {
+			  likelihood_decreased <- TRUE
+			  warning("likelihood decreased on iteration ",j)
+			  break
+			}
+		  if(j > 0 && ((crit == "absolute" && abs(LL.old - LL) < tol) || (crit == "relative" && abs(LL - LL.old)/abs(LL.old)  < tol))) {
+		    likelihood_decreased <- TRUE
+		    warning("likelihood decreased on iteration ",j, " but decrease was within tolerance, so assuming convergence")
+		    converge <- TRUE
+		    break
+		  }
 		}
 
 		LL.old <- LL
@@ -245,7 +256,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 			  absolute = "Log likelihood converged to within tol. (absolute change)"
 		  )
 		}
-	} else object@message <- "'maxit' iterations reached in EM without convergence."
+	} else {
+	  if(likelihood_decreased) {
+	    object@message <- "likelihood decreased in EM iteration; stopped without convergence."
+	  } else {
+	    object@message <- "'maxit' iterations reached in EM without convergence."
+	  }
+	}
 
 	# no constraints in EM, except for the standard constraints ...
 	# which are produced by the following (only necessary for getting df right in logLik and such)
@@ -318,6 +335,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 	LL.old <- LL + 1 # force the "old" likelihood to be larger...
 	
 	converge <- FALSE
+	likelihood_decreased <- FALSE
 	for(j in 0:maxit) {
 		
 		# maximization
@@ -390,7 +408,17 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 			}
 		} else {
 		  # this should not really happen...
-		  if(j > 0 && (LL.old - LL) > tol) stop("likelihood decreased on iteration ",j)
+		  if(j > 0 && (LL.old - LL) > tol) {
+		    likelihood_decreased <- TRUE
+		    warning("likelihood decreased on iteration ",j)
+		    break
+		  }
+		  if(j > 0 && ((crit == "absolute" && abs(LL.old - LL) < tol) || (crit == "relative" && abs(LL - LL.old)/abs(LL.old)  < tol))) {
+		    likelihood_decreased <- TRUE
+		    warning("likelihood decreased on iteration ",j, " but decrease was within tolerance, so assuming convergence")
+		    converge <- TRUE
+		    break
+		  }
 		}
 		
 		LL.old <- LL
@@ -426,7 +454,13 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 			    absolute = "Log likelihood converged to within tol. (absolute change)"
 		    )
 		}
-	} else object@message <- "'maxit' iterations reached in EM without convergence."
+	} else {
+	  if(likelihood_decreased) {
+	    object@message <- "likelihood decreased in EM iteration; stopped without convergence."
+	  } else {
+	    object@message <- "'maxit' iterations reached in EM without convergence."
+	  }
+	}
 	
 	# no constraints in EM, except for the standard constraints ...
 	# which are produced by the following (only necessary for getting df right in logLik and such)

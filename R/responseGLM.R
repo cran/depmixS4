@@ -27,9 +27,13 @@ setMethod("GLMresponse",
 		mf[[1]] <- as.name("model.frame")
 		mf <- eval(mf, parent.frame())
 		x <- model.matrix(attr(mf, "terms"),mf)
-		if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		y <- model.response(mf)
 		if(!is.matrix(y)) y <- matrix(y,ncol=1)
+		if(any(is.na(x))) {
+		  # check whether the response is also missing
+		  y_na <- apply(y,1,function(x) all(is.na(x)))
+		  if(any(is.na(x[!y_na,]))) stop("'depmixS4' does not currently handle covariates with missing data.")
+		}
 		parameters <- list()
 		constr <- NULL
 		parameters$coefficients <- vector("numeric",length=ncol(x))
@@ -246,7 +250,16 @@ setMethod("fit","GLMresponse",
 		pars <- object@parameters
 		start <- pars$coefficients
 		start[is.na(start)] <- 0
-		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
+		# 22/2/2017: check for missing data and remove (necessary for Poission regression)
+		nas <- any(is.na(object@y))
+		if(sum(nas)>0) {
+		  x <- object@x[!is.na(object@y),,drop=FALSE]
+		  y <- object@y[!is.na(object@y),,drop=FALSE]
+		  w <- w[!is.na(object@y)]
+		  fit <- glm.fit(x=x,y=y,weights=w,family=object@family,start=start)
+		} else {
+		  fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
+		}
 		pars$coefficients <- fit$coefficients
 		object <- setpars(object,unlist(pars))
 		object
