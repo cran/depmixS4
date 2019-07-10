@@ -19,7 +19,7 @@ setMethod("fit","NORMresponse",
 		if(!is.null(w)) {
 			pars$sd <- sqrt(sum(w[!nas]*fit$residuals^2/sum(w[!nas])))
 		} else {
-			pars$sd <- sd(fit$residuals)
+			pars$sd <- sqrt(sum(fit$residuals^2)/length(fit$residuals))
 		}
 		object <- setpars(object,unlist(pars))
 		object

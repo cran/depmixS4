@@ -310,7 +310,7 @@ setMethod("simulate",signature(object="depmix"),
 		}
 		
 		# generate new depmix.sim object
-		object <- as(object,"depmix.sim") 
+		object <- as(object,"depmix.sim", strict=FALSE) 
 		object@states <- as.matrix(states)
 		
 		object@prior@x <- as.matrix(apply(object@prior@x,2,rep,nsim))

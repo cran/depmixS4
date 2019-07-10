@@ -183,7 +183,7 @@ following slots:
 
 	Lawrence R. Rabiner (1989).  A tutorial on hidden Markov models and
 	selected applications in speech recognition.  \emph{Proceedings of
-	IEEE}, 77-2, p.  267-295.
+	IEEE}, 77-2, p. 267-295.
 	
 }
 

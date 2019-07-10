@@ -4,7 +4,7 @@ setMethod("fit",
     signature(object="mix"),
     function(object,fixed=NULL,equal=NULL,
 	conrows=NULL,conrows.upper=NULL,conrows.lower=NULL,
-	method=NULL,verbose=TRUE,
+	method=NULL,verbose=FALSE,
 	emcontrol=em.control(),
 	solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
 	donlpcntrl=donlp2Control(),		
@@ -102,7 +102,10 @@ setMethod("fit",
 	    
 	    # select only those columns of the constraint matrix that correspond to non-fixed parameters
 	    linconFull <- lincon
-	    lincon <- lincon[,!fixed,drop=FALSE]			
+		lin.uFull <- lin.u
+		lin.lFull <- lin.l 
+		
+	    lincon <- lincon[,!fixed,drop=FALSE]		
 	    
 	    # remove redundant rows in lincon (all zeroes)
 	    allzero <- which(apply(lincon,1,function(y) all(y==0)))
@@ -219,8 +222,8 @@ setMethod("fit",
 	    }
 	    
 	    object@conMat <- linconFull
-	    object@lin.upper <- lin.u
-	    object@lin.lower <- lin.l
+	    object@lin.upper <- lin.uFull
+	    object@lin.lower <- lin.lFull
 	    
 	    object@posterior <- viterbi(object)
 	    

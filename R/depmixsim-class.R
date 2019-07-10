@@ -19,5 +19,5 @@ setAs("mix.fitted","mix.sim",def=function(from) {
 })
 
 setAs("depmix.fitted","depmix.sim",def=function(from) {
-  as(as(from,"mix"),"mix.sim")
+  as(as(from,"depmix"),"depmix.sim")
 })

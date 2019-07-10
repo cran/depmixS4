@@ -1,3 +1,22 @@
+Changes in depmixS4 version 1.4-0
+
+Major changes
+
+  o Added functionality for computing a finite differences Hessian of fitted 
+    models, which is returned by default from the fit function. 
+	
+Minor changes
+
+  o Multivariate normal distribution models now use ML estimates (instead of the 
+    unbiased version that was hitherto used).
+	
+  o Fixed a bug in the simulate class where a depmix.fitted object used
+  	to simulate data was cast to mix.sim object rather than the correct
+	depmix.sim object.
+	
+  o Added function 'stationary' that computes the stationary distribution of 
+    a transition probability matrix. 
+	
 Changes in depmixS4 version 1.3-5
 
   o GLM responses now allow missing values in covariates, as long as the

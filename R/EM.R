@@ -217,7 +217,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 			# this should not really happen...
 			if(j > 0 && (LL.old - LL) >= tol) {
 			  likelihood_decreased <- TRUE
-			  warning("likelihood decreased on iteration ",j)
+			  warning("Log likelihood decreased on iteration ",j, " from ", LL.old, " to ", LL)
 			  break
 			}
 		  if(j > 0 && ((crit == "absolute" && abs(LL.old - LL) < tol) || (crit == "relative" && abs(LL - LL.old)/abs(LL.old)  < tol))) {
@@ -410,7 +410,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 		  # this should not really happen...
 		  if(j > 0 && (LL.old - LL) > tol) {
 		    likelihood_decreased <- TRUE
-		    warning("likelihood decreased on iteration ",j)
+		    warning("Log likelihood decreased on iteration ",j, " from ", LL.old, " to ", LL)
 		    break
 		  }
 		  if(j > 0 && ((crit == "absolute" && abs(LL.old - LL) < tol) || (crit == "relative" && abs(LL - LL.old)/abs(LL.old)  < tol))) {
