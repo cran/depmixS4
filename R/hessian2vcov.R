@@ -16,17 +16,17 @@ hessian2vcov <- function(hessian,lincon=NULL) {
 			A <- lincon
 			d <- hessian+t(lincon)%*%lincon
 			di <- try(solve(d),silent=TRUE)
-			if(class(di)=="try-error") {
+			if(is(di,"try-error")) {
 				warning("Hessian singular, ses could not be computed.") 
 				vcov <- 0 
 			} else {
 				ada <- A%*%di%*%t(A)
 				adai <- try(solve(ada),silent=TRUE)
-				if(class(adai)=="try-error") {
+				if(is(adai, "try-error")) {
 					warning("Near-singular hessian, ses may be bad.\n")
 					diag(ada) <- diag(ada)*1.000001
 					adai <- try(solve(ada))
-					if(class(adai)=="try-error") {
+					if(is(adai,"try-error")) {
 						warning("Corrected hessian also singular, ses computed without contraints.\n")
 					} else {
 						vcov <- di-di%*%t(A)%*%adai%*%A%*%di

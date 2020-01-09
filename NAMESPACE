@@ -42,6 +42,7 @@ exportClasses(
 
 exportMethods(
 	fit,
+	multistart,
 	getConstraints,
 	npar,
 	freepars,

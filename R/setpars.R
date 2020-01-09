@@ -19,7 +19,7 @@ setMethod("setpars","mix",
 		  bp <- bp+1
 		  values <- values[bp:npar(object)]
 		}
-		if(class(object)=="depmix"|class(object)=="depmix.fitted") {
+		if(is(object,"depmix")|is(object,"depmix.fitted")) {
 			for(i in 1:object@nstates) {
 				bp <- npar(object@transition[[i]])
 				if(bp > 0) {

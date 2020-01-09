@@ -365,7 +365,7 @@ setMethod("summary","depmix",
 		)
 		if(ans==1|ans==3) {
 			# show the prior models
-			cat("Initial state probabilties model \n")
+			cat("Initial state probabilities model \n")
 			if(object@prior@formula==~1) {
 				pr <- object@prior@parameters$coefficients
 				print(round(pr,digits))

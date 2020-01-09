@@ -6,7 +6,7 @@ function(response,data=NULL,nstates,family,values=NULL,prob=TRUE,...) {
 	nresppars <- 0
 		
 	# univariate response data
-	if(class(resp)=="formula") {
+	if(is(resp,"formula")) {
 		resp <- list(resp)
 		family <- list(family)
 	}

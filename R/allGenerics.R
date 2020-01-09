@@ -62,6 +62,8 @@ setGeneric("standardError", function(object, ...) standardGeneric("standardError
 # functions 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))
 
+setGeneric("multistart", function(object, ...) standardGeneric("multistart"))
+
 setGeneric("posterior", function(object, ...) standardGeneric("posterior"))
 
 setGeneric("forwardbackward", function(object, ...) standardGeneric("forwardbackward"))

@@ -68,7 +68,7 @@ setMethod("vcov", "mix",
 	par.u <- constraints$par.u
 	par.l <- constraints$par.l
 	
-	if(class(object)=="depmix.fitted"|class(object)=="mix.fitted") {
+	if(is(object,"depmix.fitted")|is(object,"mix.fitted")) {
 		lincon <- object@conMat
 		lin.u <- object@lin.upper
 		lin.l <- object@lin.lower

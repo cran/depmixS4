@@ -1,3 +1,13 @@
+Changes in depmixS4 version 1.4-1
+
+Major changes
+  o Replaced errorprone calls using class(x)=="y", now using is(x,"y"). 
+
+Minor changes
+
+  o Added function multistart to fit models using multiple sets of random starting
+  	values. 
+
 Changes in depmixS4 version 1.4-0
 
 Major changes
