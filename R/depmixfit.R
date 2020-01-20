@@ -147,8 +147,11 @@ setMethod("fit",
 		    ...
 		)
 		
-		if(is(object,"depmix")) object <- as(object,"depmix.fitted") # class(object) <- "depmix.fitted"
-#		if(is(object,"mix")) object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
+		if(is(object,"depmix")) {
+		  object <- as(object,"depmix.fitted") # class(object) <- "depmix.fitted"
+		} else {
+		  if(is(object,"mix")) object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
+		}
 		
 		# convergence info
 		object@message <- result$message
@@ -210,8 +213,11 @@ setMethod("fit",
 		    ...
 		)
 		
-		if(is(object, "depmix"))  object <- as(object,"depmix.fitted") #  class(object) <- "depmix.fitted"
-#		if(is(object, "mix")) object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
+		if(is(object, "depmix"))  {
+		  object <- as(object,"depmix.fitted") #  class(object) <- "depmix.fitted"
+		} else if(is(object, "mix")) {
+		  object <- as(object,"mix.fitted") #  class(object) <- "mix.fitted"
+		}
 		
 		object@message <- c(res$convergence," (0 is good in Rsolnp, check manual for other values)")
 		

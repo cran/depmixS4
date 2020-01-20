@@ -1,4 +1,4 @@
-b57b0c5893f1157612231e347e81911d *DESCRIPTION
+e6fbf7cc9be723faff99509973b70027 *DESCRIPTION
 1f1f5b117b5c0a7c62cfc6dbd6bbbaa1 *NAMESPACE
 a283c35b6e032c17778896b07600ae3f *NEWS
 bb0aca21507fc00587535b5686d70456 *R/EM.R
@@ -7,7 +7,7 @@ bb0aca21507fc00587535b5686d70456 *R/EM.R
 bb0c1dd92c87c64e6d22b402dc28ceab *R/depmix-class.R
 cec28f233b1bf1d8041463afe658967e *R/depmix.R
 7ae7b1dddd52b6bc6bf7e9350ffa5977 *R/depmixfit-class.R
-cd390555e80ceb5878f21d46646a1638 *R/depmixfit.R
+c808e25052c817d8cc2e6a45fa772e2b *R/depmixfit.R
 92f2db8d4ae1d970af577e73a4535850 *R/depmixsim-class.R
 84266cff450e5d70c49401e546896cc8 *R/em.control.R
 ce52552313bcc22283367106a2ddf9c8 *R/fb.R
@@ -51,7 +51,7 @@ b3e45c1f8c10c22c5c4a27506ddfba8b *data/speed.rda
 cf783bb00e78e646ece3cc58af47785f *inst/CITATION
 52897cb895eeba85d9ad03e6f46751f6 *inst/doc/depmixS4.R
 be529aff70077601a0c7d7833963a53b *inst/doc/depmixS4.Rnw
-eb15bbaa6b510f4e3dda58ef27f36df2 *inst/doc/depmixS4.pdf
+5792e99a8e152274e1fe4738a1cace71 *inst/doc/depmixS4.pdf
 55a7e584b631689a190bc4c8e5c96e87 *man/GLMresponse.Rd
 a19f6d5540f45662788e30223e50bf3a *man/balance.Rd
 cd2ed7e0a56a29d231a84a5a66e20c3f *man/depmix-class.Rd
