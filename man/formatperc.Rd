@@ -12,3 +12,5 @@
 	\item{x}{a vector of probabilities to be formatted as percentages.}
 	\item{digits}{the number of required digits in the percentages.}
 }
+
+\author{Ingmar Visser}

@@ -176,7 +176,7 @@ data(speed)
 
 # 2-state model on rt and corr from speed data set 
 # with Pacc as covariate on the transition matrix
-# ntimes is used to specify the lengths of 3 separate series
+# ntimes is used to specify the lengths of 3 separate time-series
 mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
 	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
 # fit the model
@@ -186,8 +186,15 @@ fmod1 # to see the logLik and optimization information
 # to see the parameters
 summary(fmod1)
 
-# to see the posterior state sequence and associated delta probabilties
-pst <- posterior(fmod1)
+# to obtain the posterior most likely state sequence, as computed by the 
+# Viterbi algorithm
+pst_global <- posterior(fmod1, type = "global")
+# local decoding provides a different method for state classification:
+pst_local <- posterior(fmod1,type="local")
+identical(pst_global, pst_local)
+# smoothing probabilities are used for local decoding, and may be used as 
+# easily interpretable posterior state probabilities
+pst_prob <- posterior(fmod1, type = "smoothing")
 
 # testing viterbi states for new data
 df <- data.frame(corr=c(1,0,1),rt=c(6.4,5.5,5.3),Pacc=c(0.6,0.1,0.1))
@@ -197,7 +204,7 @@ modNew <- depmix(list(rt~1,corr~1),data=df,transition=~Pacc,nstates=2,
 # get parameters from estimated model
 modNew <- setpars(modNew,getpars(fmod1))
 # check the state sequence and probabilities
-viterbi(modNew)
+pst_new <- posterior(modNew, type="global")
 
 # same model, now with missing data
 \dontrun{

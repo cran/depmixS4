@@ -33,11 +33,6 @@ setClass("mix.fitted.classLik",
 
 # accessor functions
 
-setMethod("posterior","mix.fitted",
-	function(object) {
-		return(object@posterior)
-	}
-)
 
 setMethod("show","mix.fitted",
 	function(object) {
@@ -78,11 +73,7 @@ setClass("depmix.fitted.classLik",
 )
 # accessor functions
 
-setMethod("posterior","depmix.fitted",
-	function(object) {
-		return(object@posterior)
-	}
-)
+
 
 setMethod("show","depmix.fitted",
 	function(object) {

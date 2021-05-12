@@ -81,6 +81,17 @@ major changes are mentioned.
 
 \begin{description}
 		
+		\item[1.5-0] Changed interface of the posterior function to include an 
+		additional argument type, allowing returning of the global and local state
+		sequence, smoothing and filtering probabilities, as well as the full
+		output of the viterbi function (which is what the posterior function 
+		used to the return, and still is the default for backwards 
+		compatibility).
+		
+		\item[1.4-0] Added functionality for computing a finite differences 
+		Hessian of fitted models, which is returned by default from the fit
+		function. 
+		
 		\item[1.3-0] Added option `classification' likelihood to EM; 
 		model output is now pretty-printed and parameters are given 
 		proper names; the fit function has gained arguments for fine 

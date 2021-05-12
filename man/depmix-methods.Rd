@@ -142,7 +142,7 @@ Various methods for \code{depmix} and \code{mix} objects.
 
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \examples{
 

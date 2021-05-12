@@ -1,3 +1,28 @@
+Changes in depmixS4 version 1.5-0
+
+Major changes
+  o  Changed interface of the posterior function to include an additional argument
+     type, allowing returning of the global and local state sequence, smoothing
+     and filtering probabilities, as well as the full output of the viterbi 
+     function (which is what the posterior function used to the return, and still
+     is the default for backwards compatibility).
+
+Minor changes
+  o Changed examples in the "fit" and "depmix" documentation to use the smoothing
+    probabilities rather than the delta probabilities.
+  o Rewritten documentation for the posterior method, explaining the differences
+    between the "type" options.
+  o Added documentation for the viterbi function
+
+
+Changes in depmixS4 version 1.4-2
+
+Minor changes
+
+  o Changed rdirichlet to reliably give a vector of 1's when alpha has length 1. 
+    This fixes issue with random.start in EM for nclasses = 1 (see 
+    https://stackoverflow.com/q/56735420/13797727)
+
 Changes in depmixS4 version 1.4-1
 
 Major changes

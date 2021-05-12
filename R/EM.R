@@ -6,9 +6,10 @@
 rdirichlet <- function(n, alpha) {
   # taken from gtools
     l <- length(alpha)
+    if(l == 1) return(as.matrix(rep(1,n)))
     x <- matrix(rgamma(l * n, alpha), ncol = l, byrow = TRUE)
     sm <- x %*% rep(1, l)
-    x/as.vector(sm)
+    return(x/as.vector(sm))
 }
 
 which.is.max <- function(x) {

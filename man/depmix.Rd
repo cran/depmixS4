@@ -211,7 +211,7 @@ set.seed(1)
 fmsp <- fit(msp)	
 
 # plot posterior state sequence for the 2-state model
-plot(ts(posterior(fmsp)[,2], start=c(1950,2),deltat=1/12),ylab="probability",
+plot(ts(posterior(fmsp, type="smoothing")[,1], start=c(1950,2),deltat=1/12),ylab="probability",
 main="Posterior probability of state 1 (volatile, negative markets).",
 frame=FALSE)
 

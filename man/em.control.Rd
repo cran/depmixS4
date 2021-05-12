@@ -85,7 +85,7 @@ Statistics and Data Analysis, 14}, p. 315-332.
 	
 }
 
-\author{Ingmar Visser & Maarten Speekenbrink}
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \keyword{methods}
 

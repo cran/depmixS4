@@ -63,7 +63,7 @@
 
 }
 
-\author{ Maarten Speekenbrink & Ingmar Visser }
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \examples{
 

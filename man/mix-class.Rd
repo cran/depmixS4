@@ -57,7 +57,7 @@ Objects can be created by calls to \code{\link{mix}}.
 	}
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \examples{
 	showClass("mix")

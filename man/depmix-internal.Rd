@@ -16,9 +16,7 @@
 \alias{multinomial}
 
 \alias{pa2conr}
-\alias{viterbi}
-\alias{viterbi2}
-\alias{viterbi.fb}
+
 
 \alias{cov2par}
 \alias{par2cov}
@@ -84,7 +82,7 @@
 
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{internal}
 

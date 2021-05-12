@@ -9,12 +9,12 @@ citEntry(entry = "Article",
   volume       = "36",
   number       = "7",
   pages        = "1--21",
-  url          = "http://www.jstatsoft.org/v36/i07/",
+  url          = "https://www.jstatsoft.org/v36/i07/",
 
   textVersion  =
   paste("Ingmar Visser, Maarten Speekenbrink (2010).",
         "depmixS4: An R Package for Hidden Markov Models.",
         "Journal of Statistical Software, 36(7), 1-21.",
-        "URL http://www.jstatsoft.org/v36/i07/.")
+        "URL https://www.jstatsoft.org/v36/i07/.")
 )
 

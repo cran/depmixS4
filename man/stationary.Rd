@@ -13,3 +13,5 @@
 }
 
 \value{A vector with the stationary distribution such that p=tpm*p.}
+
+\author{Ingmar Visser}

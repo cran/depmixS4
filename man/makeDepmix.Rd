@@ -159,7 +159,7 @@ mod <- makeDepmix(response=rModels,transition=transition,prior=inMod)
 fm2 <- fit(mod,emc=em.control(random=FALSE))
 
 # where is the switch point?
-plot(as.ts(posterior(fm2)[,2]))
+plot(as.ts(posterior(fm2, type="smoothing")[,1]))
 
 
 # in below example we add the exgaus distribution as a response model and fit

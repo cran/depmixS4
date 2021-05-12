@@ -124,7 +124,7 @@ following slots:
 
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \seealso{
 

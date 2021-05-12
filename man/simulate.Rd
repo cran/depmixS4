@@ -96,6 +96,6 @@ mod <- depmix(y~1,data=df,respst=respst,trst=trst,inst=c(0.5,0.5),nti=1000,nst=2
 mod <- simulate(mod)
 
 }
-\author{Maarten Speekenbrink}
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \keyword{methods}
