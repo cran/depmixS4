@@ -3,6 +3,8 @@ setMethod(
 	signature(object="mix"),
 	function(object, nstart=10, initIters=10, ...) {
 		llbest <- as.numeric(logLik(object))
+		# below will fail if llbest = NA, so in that case replace with largest number
+		if(is.na(llbest)) llbest <- .Machine$double.xmax
 		bestmodel <- object
 		nfailed <- 0
 		for(i in 1:nstart) {

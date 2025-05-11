@@ -64,7 +64,7 @@
 		algorithm (see \code{\link{em.control}}).}
   
 	\item{solnpcntrl}{Control parameters passed to the 'rsolnp' optimizer;
-	  see \code{\link{solnp}} for explanation and defaults used there.}
+	  see \code{\link[Rsolnp]{solnp}} for explanation and defaults used there.}
 	
 	\item{donlpcntrl}{Control parameters passed to 'donlp' optimizer; see
 	\code{?donlp2Control} for explanation and defaults used there; this can 

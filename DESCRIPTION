@@ -1,10 +1,16 @@
 Package: depmixS4
-Version: 1.5-0
-Date: 2021-05-12
+Version: 1.5-1
+Date: 2025-05-10
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and
         Other Distributions in S4
-Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink <m.speekenbrink@ucl.ac.uk>
-Maintainer: Ingmar Visser <i.visser@uva.nl>
+Authors@R: c(person(given = "Ingmar",
+                      family = "Visser",
+                      role = c("aut", "cre"),
+                      email = "i.visser@uva.nl"),
+               person(given = "Maarten",
+                      family = "Speekenbrink",
+                      role = "aut",
+                      email = "m.speekenbrink@ucl.ac.uk"))
 Depends: R (>= 4.0.0), nnet, MASS, Rsolnp, nlme
 Imports: stats, stats4, methods
 Suggests: gamlss, gamlss.dist, Rdonlp2
@@ -14,6 +20,9 @@ License: GPL (>= 2)
 URL: https://depmix.github.io/
 RoxygenNote: 6.1.0
 NeedsCompilation: yes
-Packaged: 2021-05-12 07:59:42 UTC; ingmar
+Packaged: 2025-05-10 18:53:38 UTC; ingmar
+Author: Ingmar Visser [aut, cre],
+  Maarten Speekenbrink [aut]
+Maintainer: Ingmar Visser <i.visser@uva.nl>
 Repository: CRAN
-Date/Publication: 2021-05-12 12:12:20 UTC
+Date/Publication: 2025-05-11 07:10:05 UTC

@@ -52,7 +52,7 @@
   they are ignored in these functions.}
   
   \item{method}{The method used for computing the Hessian matrix of the parameters; currently only a finite 
-  differences method (using \code{fdHess} from package \code{\link{nlme}}) is implemented and hence used by default.}
+  differences method (using \code{fdHess} from package \code{\link[nlme]{nlme}}) is implemented and hence used by default.}
   
   \item{level}{The desired significance level for the confidence intervals.}
   

@@ -1,8 +1,9 @@
 citHeader("To cite depmixS4 in publications use:")
 
-citEntry(entry = "Article",
+bibentry(
+  bibtype      = "Article",
   title        = "{depmixS4}: An {R} Package for Hidden Markov Models",
-  author       = personList(as.person("Ingmar Visser"),
+  author       = c(as.person("Ingmar Visser"),
                    as.person("Maarten Speekenbrink")),
   journal      = "Journal of Statistical Software",
   year         = "2010",

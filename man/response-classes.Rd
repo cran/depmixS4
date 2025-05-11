@@ -41,7 +41,7 @@ models.}
 	use of a multinomial logistic model, the difference being that in fact
 	the response is missing as the transitions between states are not
 	observed.  This class has its own fit function which is an interface to
-	the multinom function in \code{\link{nnet}}.
+	the multinom function in \code{\link[nnet]{nnet}}.
 	
 }
 

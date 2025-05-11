@@ -1,3 +1,8 @@
+Changes in depmixS4 version 1.5-1
+
+Minor changes
+  o Documentation updates to maintain CRAN compatibility
+
 Changes in depmixS4 version 1.5-0
 
 Major changes
@@ -199,7 +204,7 @@ Major changes
     
 Changes in depmixS4 version 1.1-0
   
-  Major changes
+Major changes
   
   o The main loop computing the forward and backward variables for use in 
     the EM algorithm is now implemented in C. Depending on model specifics 
@@ -213,7 +218,7 @@ Changes in depmixS4 version 1.1-0
     ?depmix page (model for S&P 500 returns; thanks to Chen Haibo for
     sending this). 
 
-  Minor changes
+Minor changes
   
   o Corrected a typo in the vignette in Equation 1; the first occurrence 
     of S read S_t instead of S_1 (thanks to Peng Yu for reporting this).

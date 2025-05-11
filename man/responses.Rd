@@ -65,7 +65,7 @@ brief description of these here.}
 \section{MVNresponse}{
 
 	\code{MVNresponse} is a model for a multivariate normal distributed
-	response.  See code{\link{makeDepmix}} for an example of how to use
+	response.  See \code{\link{makeDepmix}} for an example of how to use
 	this and other non-glm like distributions.
 
   \describe{
