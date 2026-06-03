@@ -207,7 +207,6 @@ modNew <- setpars(modNew,getpars(fmod1))
 pst_new <- posterior(modNew, type="global")
 
 # same model, now with missing data
-\dontrun{
 speed[2,1] <- NA
 speed[3,2] <- NA
 
@@ -219,7 +218,6 @@ mod1ms <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
 # fit the model
 set.seed(3)
 fmod1ms <- fit(mod1ms)
-}
 
 # instead of the normal likelihood, we can also maximise the "classification" likelihood
 # this uses the maximum a posteriori state sequence to assign observations to states
@@ -300,8 +298,6 @@ mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
 set.seed(1)
 fmod4 <- fit(mod4)
 
-\dontrun{
-
 # add age as covariate on class membership by using the prior argument
 mod5 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
 	family=list(multinomial("identity"),multinomial("identity"),
@@ -313,8 +309,6 @@ fmod5 <- fit(mod5)
 
 # check the likelihood ratio; adding age significantly improves the goodness-of-fit
 llratio(fmod5,fmod4)
-
-}
 
 }
 

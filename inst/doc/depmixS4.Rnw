@@ -64,7 +64,7 @@
   Roetersstraat 15\\
   1018 WB, Amsterdam, The Netherlands\\
   E-mail: \email{i.visser@uva.nl} \\
-  URL: \url{http://www.ingmar.org/}
+  URL: \url{https://ingmar.org/}
 }
 
 \begin{document}
@@ -169,7 +169,7 @@ likelihood equations.
 The \pkg{depmixS4} package is implemented using the \proglang{R}
 system for statistical computing \citep{R2010} and is available from
 the Comprehensive \proglang{R} Archive Network at
-\url{http://CRAN.R-project.org/package=depmixS4}.
+\url{https://CRAN.R-project.org/package=depmixS4}.
 
 
 \section{The dependent mixture model} \label{sec:outline}
@@ -1125,5 +1125,4 @@ help files use both of these data sets.
 \bibliography{depmixS4}
 
 \end{document}
-
 

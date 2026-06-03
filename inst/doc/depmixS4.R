@@ -293,5 +293,3 @@ inMod <- transInit(~ 1, ns = 2, pstart = c(0.1, 0.9),
 mod <- makeDepmix(response = rModels, transition = transition,
   prior = inMod, homogeneous = FALSE)
 fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
-
-

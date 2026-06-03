@@ -47,7 +47,7 @@ done using Rsolnp (available from CRAN).  Optionally the Rdonlp2 package
 can be used; Rdonlp2 was written by Ryuichi Tamura(ry.tamura @ gmail.com),
 and can currently be installed using:
 
-install.packages("Rdonlp2", repos= c("http://R-Forge.R-project.org", getOption("repos")))
+install.packages("Rdonlp2", repos= c("https://R-Forge.R-project.org", getOption("repos")))
 
 Note the licence information which says, among other things: "The free use
 of donlp2 and parts of it is restricted for research purposes ..."
