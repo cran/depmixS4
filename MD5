@@ -1,6 +1,6 @@
-66f38dba8d77db253dad2fb542b36403 *DESCRIPTION
+6eb47db858998c0de27a5bbf65ed9417 *DESCRIPTION
 1f1f5b117b5c0a7c62cfc6dbd6bbbaa1 *NAMESPACE
-93a5f4b549303790068274761bac9bfa *NEWS
+38dee5a5d60b1a8bfefa37cc1fcadef6 *NEWS
 f4373bf666c8084f114872add9e29ef5 *R/EM.R
 773f023f5f846185462a7db9f44f2e8c *R/allGenerics.R
 62df51abac6d1989353cd39360d21dd9 *R/confint.R
@@ -44,7 +44,7 @@ f7b9f4dfc54efe188b83022db25c850c *R/standardError.R
 460e0c79781690b23e481764647c1429 *R/transInit.R
 9e6383d8532a8ae119942141d6a212f1 *R/vcov.R
 2e964f42e769163602934dad8a2f5f07 *R/viterbi.R
-07307d87a4b41d4f27e199f295b8689f *README
+d735194463049f9173e6fcd8b0ca8a60 *README
 684b5a1fa4821c15bcb88234f01b3780 *build/vignette.rds
 c3fb9ac041f6518969a6704e4c30223d *data/balance.rda
 854fd814acd65f40652feddbd3b56f79 *data/sp500.rda
@@ -52,7 +52,7 @@ b3e45c1f8c10c22c5c4a27506ddfba8b *data/speed.rda
 cfc4209b175c3e96744ecf9bd5ff2301 *inst/CITATION
 2e3bdea0b14da0c172dd88d709da5852 *inst/doc/depmixS4.R
 1bb16cd3e38e541c338d26cbb2099607 *inst/doc/depmixS4.Rnw
-b3e7f419a847597947e7e62d85e441f5 *inst/doc/depmixS4.pdf
+065d92e7720f6ec034098623e8710b03 *inst/doc/depmixS4.pdf
 55a7e584b631689a190bc4c8e5c96e87 *man/GLMresponse.Rd
 a19f6d5540f45662788e30223e50bf3a *man/balance.Rd
 4450adcc030b9c47d4ac231fcc61db2c *man/depmix-class.Rd
@@ -92,7 +92,8 @@ c92cb9cf5f580cdfc2dcec08fdf66429 *tests/test1speed.Rout.save
 966ebcba093806363162081e31a1fbcd *tests/test2getsetpars.R
 3539bdfe7da6003e6beccd1f935db6a2 *tests/test2getsetpars.Rout.save
 a94fc537791acba32b2abc9a4a15348c *tests/test3responses.R
-33a43c734696c4ba958fded85f7a1707 *tests/test4examples.R
+28f75a7b832e683396359014a28379f1 *tests/test4examples.R
+7dd6b282ff4a053a0c905d594e8729d6 *tools/refactor-checks/run_refactor_checks.R
 aa9a76dcc11642de63eeba9bdb02f482 *vignettes/baldist.pdf
 1bb16cd3e38e541c338d26cbb2099607 *vignettes/depmixS4.Rnw
 a75392555de5ca654365c0c961478b7c *vignettes/depmixS4.bib

@@ -1,3 +1,9 @@
+Changes in depmixS4 version 1.5-3
+
+Minor changes
+  o Made regression checks for constrained optimizer examples more robust
+    across CRAN platforms without changing package behaviour.
+
 Changes in depmixS4 version 1.5-2
 
 Minor changes

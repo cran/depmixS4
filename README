@@ -22,7 +22,7 @@ example of this is provided on the ?makeDepmix help page.  depmixS4 also
 fits latent class and mixture models, see ?mix for an example. 
 
 The latest development versions of depmixS4 (and depmix) can be found at: 
-https://r-forge.r-project.org/projects/depmix/
+https://github.com/depmix/depmixS4
 
 
 FOR DEPMIX USERS
