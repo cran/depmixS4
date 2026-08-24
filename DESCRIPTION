@@ -1,6 +1,6 @@
 Package: depmixS4
-Version: 1.5-3
-Date: 2026-06-16
+Version: 1.5-4
+Date: 2026-08-24
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and
         Other Distributions in S4
 Authors@R: c(person(given = "Ingmar",
@@ -15,13 +15,25 @@ Maintainer: Ingmar Visser <i.visser@uva.nl>
 Depends: R (>= 4.0.0), nnet, MASS, Rsolnp, nlme
 Imports: stats, stats4, methods
 Suggests: gamlss, gamlss.dist
-Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models, see Visser & Speekenbrink (2010, <DOI:10.18637/jss.v036.i07>).
+Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models, see Visser & Speekenbrink (2010, <doi:10.18637/jss.v036.i07>).
 License: GPL (>= 2)
 URL: https://depmix.github.io/
 RoxygenNote: 6.1.0
+Collate: 'allGenerics.R' 'format.perc.R' 'multinomial.R'
+        'response-class.R' 'responseGLM.R' 'responseGLMBINOM.R'
+        'responseGLMGAMMA.R' 'responseGLMMULTINOM.R'
+        'responseGLMPOISSON.R' 'responseNORM.R' 'responseMVN.R'
+        'transInit.R' 'depmix-class.R' 'depmixfit-class.R'
+        'depmixsim-class.R' 'makeResponseModels.R' 'makePriorModel.R'
+        'makeTransModels.R' 'makeDepmix.R' 'depmix.R' 'em.control.R'
+        'EM.R' 'fb.R' 'forwardbackward.R' 'freepars.R' 'getpars.R'
+        'hessian.R' 'hessian2vcov.R' 'llratio.R' 'logLik.R' 'lystig.R'
+        'mlogit.R' 'multistart.R' 'nobs.R' 'pa2conr.R' 'depmixfit.R'
+        'posterior.R' 'setpars.R' 'standardError.R' 'stationary.R'
+        'vcov.R' 'confint.R' 'viterbi.R'
 NeedsCompilation: yes
-Packaged: 2026-06-16 16:07:52 UTC; ingmar
+Packaged: 2026-08-24 12:35:23 UTC; ingmar
 Author: Ingmar Visser [aut, cre],
   Maarten Speekenbrink [aut]
 Repository: CRAN
-Date/Publication: 2026-06-17 05:30:02 UTC
+Date/Publication: 2026-08-24 13:40:19 UTC

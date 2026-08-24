@@ -12,10 +12,6 @@ A generic \code{response} model for \code{\link{depmix}} models.
 
 }
 
-\arguments{
-	\item{object}{An object of class "response".}
-}
-
 \section{Slots}{
 
 	\describe{

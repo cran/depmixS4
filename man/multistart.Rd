@@ -50,19 +50,24 @@
 
 \examples{
 
-data(speed)
+  \dontrun{
+  
+  data(speed)
 
-# this example is from ?fit with fit now replaced by multistart and the 
-# set.seed statement is left out
-mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
-	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
-set.seed(3)
-fmod1 <- fit(mod1)
-fmod2 <- multistart(mod1)
-fmod1
-fmod2
-
+  # this example is from ?fit with fit now replaced by multistart and the 
+  # set.seed statement is left out
+  mod1 <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+  	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+  set.seed(3)
+  fmod1 <- fit(mod1)
+  fmod2 <- multistart(mod1)
+  fmod1
+  fmod2
+  
+  }
+  
 }
+
 \author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}

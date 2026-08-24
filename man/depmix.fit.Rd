@@ -206,6 +206,9 @@ modNew <- setpars(modNew,getpars(fmod1))
 # check the state sequence and probabilities
 pst_new <- posterior(modNew, type="global")
 
+
+\dontrun{
+
 # same model, now with missing data
 speed[2,1] <- NA
 speed[3,2] <- NA
@@ -256,8 +259,6 @@ llratio(fmod1,fmod2)
 
 # set the starting values of this model to the optimized 
 # values of the previously fitted model to speed optimization
-
-\dontrun{
 
 pars <- c(unlist(getpars(fmod2)))
 pars[4] <- pars[8] <- -4

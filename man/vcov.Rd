@@ -135,7 +135,8 @@
 
 
 \examples{
-
+  
+  \dontrun{
 	data(speed)
 
 	# 2-state model on rt and corr from speed data set 
@@ -148,9 +149,10 @@
 	set.seed(3)
 	fmod1 <- fit(mod1)
 	
-	vcov(fmod1)$vcov # $
+	vcov(fmod1)$vcov 
 	standardError(fmod1)
 	confint(fmod1)
+	}
 	
 }
 
